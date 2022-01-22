@@ -1,0 +1,63 @@
+﻿@page "/grid"
+@using System.Drawing
+
+<PageTitle>Piet</PageTitle>
+
+<h3>Piet</h3>
+
+
+<table class="table">
+    <tbody>
+        @*@foreach (var row in GridData)*@
+        @for (var i = 0; i < 3; i++)
+        {
+            <tr>
+            @*@foreach (var value in row)*@
+            @for (var j = 0; j < 3; j++)
+            {
+                int local_i = i;
+                int local_j = j;
+                @*<td style='background:#@value;'>@value</td>*@
+                @*<td style='max-height: 30px; max-width: 30px; height: 30px; width: 30px; border: 1px solid black; background-color: rgb(@value.R, @value.G, @value.B); none repeat scroll 0% 0%; color: white; font-size: 11px; text-shadow: black 1px 1px 1px; text-align: center; cursor: url("img/pencil.png") 5 30, auto;'>@value</td>*@
+
+                @*<td style='background-color: rgb(@value.R, @value.G, @value.B)' @onclick="@(e => UpdateColor(i, j))">@value</td>*@
+
+                var value = GridData[i][j];
+                <td style='background-color: rgb(@value.R, @value.G, @value.B)' @onclick="@(e => UpdateColor(@local_i, @local_j))">@i @j</td>
+            }
+            </tr>
+       
+    }
+    </tbody>
+</table>
+
+@code {
+
+    private List<List<Color>> GridData = new List<List<Color>>() {
+        new List<Color>() {Color.AliceBlue, Color.Aqua, Color.BlueViolet},
+        new List<Color>() {Color.Red, Color.Firebrick, Color.Honeydew},
+        new List<Color>() {Color.Red, Color.Blue, Color.Yellow},
+    };
+
+    private void HandleOnClickEvent(MouseEventArgs mouseEventArgs)
+    {
+        System.Console.WriteLine(mouseEventArgs.OffsetX);
+        System.Console.WriteLine(mouseEventArgs.OffsetY);
+        System.Console.WriteLine(mouseEventArgs.ClientX);
+        System.Console.WriteLine(mouseEventArgs.ClientY);
+
+        GridData.Add(new List<Color>() { Color.AliceBlue, Color.DarkBlue, Color.FloralWhite});
+    }
+
+    private void UpdateColor(int i, int j)
+    {
+        System.Console.WriteLine($"i: {i} j: {j}");
+
+        Random random = new Random();
+
+        GridData[i][j] = Color.FromArgb(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255));
+    }
+
+}
+
+@*https://gabriellesc.github.io/piet/index.html*@
