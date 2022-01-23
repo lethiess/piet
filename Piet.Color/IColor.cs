@@ -2,9 +2,9 @@
 {
     internal interface IColor 
     {
-        int R { get; init; }
-        int G { get; init; }
-        int B { get; init; }
-        double Alpha { get; init; }
+        int R { get; }
+        int G { get; }
+        int B { get; }
+        double Alpha { get; }
     }
 }

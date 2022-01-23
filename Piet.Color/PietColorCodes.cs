@@ -2,7 +2,7 @@
 
 namespace Piet.Color
 {
-    internal static class PietColorDefinitions
+    internal static class PietColorCodes
     {
         private static readonly ImmutableList<(int R, int G, int B)> _validPietColor = new List<(int R, int G, int B)>
         {
