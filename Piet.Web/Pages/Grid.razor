@@ -1,46 +1,58 @@
 ﻿@page "/grid"
-@using System.Drawing
 @using Piet.Grid
 
 <PageTitle>Piet</PageTitle>
 
 <h3>Piet</h3>
 
+<p>
+    <input @bind="Height"/>
+</p>
 
-<table class="table">
+<p>
+    <input @bind="Width"/>
+</p>
+
+<button class="btn btn-primary" @onclick="ResizeGrid">Resize Grid</button>
+
+
+<table>
     <tbody>
         @*@foreach (var row in GridData)*@
-        @for (var i = 0; i < 3; i++)
+        @for (var i = 0; i < GridData.Height; i++)
         {
             <tr>
             @*@foreach (var value in row)*@
-            @for (var j = 0; j < 3; j++)
+            @for (var j = 0; j < GridData.Width; j++)
             {
-                int local_i = i;
-                int local_j = j;
-                    @*<td style='background:#@value;'>@value</td>*@
-                    @*<td style='max-height: 30px; max-width: 30px; height: 30px; width: 30px; border: 1px solid black; background-color: rgb(@value.R, @value.G, @value.B); none repeat scroll 0% 0%; color: white; font-size: 11px; text-shadow: black 1px 1px 1px; text-align: center; cursor: url("img/pencil.png") 5 30, auto;'>@value</td>*@
-
-                    @*<td style='background-color: rgb(@value.R, @value.G, @value.B)' @onclick="@(e => UpdateColor(i, j))">@value</td>*@
-
+                int i_local = i;
+                int j_local = j;
                 var value = GridData.GetCell(i, j);
-                <td style='background-color: rgb(@value.R, @value.G, @value.B)' @onclick="@(e => UpdateColor(@local_i, @local_j))">@i @j</td>
+
+                <td style='height: 30px; max-height: 30px; width: 30px; max-width:30px; border: 1px solid black; background-color: rgb(@value.R, @value.G, @value.B)' @onclick="@(e => UpdateColor(i_local, j_local))"></td>
             }
             </tr>
-       
     }
     </tbody>
 </table>
 
 @code {
 
-    private PietDataGrid GridData = new PietDataGrid(4, 4);
+    private PietDataGrid GridData = new PietDataGrid(4, 8);
 
     private void UpdateColor(int i, int j)
     {
         System.Console.WriteLine($"i: {i} j: {j}");
         GridData.SetRandomCellColor(i, j);
     }
+
+    private void ResizeGrid()
+    {
+        GridData = new PietDataGrid(Height, Width);
+    }
+
+    private int Height { get; set; }
+    private int Width { get; set; }
 
 }
 
