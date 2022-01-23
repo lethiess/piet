@@ -1,10 +1,8 @@
-﻿namespace Piet.Color
+﻿namespace Piet.Color;
+internal interface IColor 
 {
-    internal interface IColor 
-    {
-        int R { get; }
-        int G { get; }
-        int B { get; }
-        double Alpha { get; }
-    }
+    int R { get; }
+    int G { get; }
+    int B { get; }
+    double Alpha { get; }
 }
