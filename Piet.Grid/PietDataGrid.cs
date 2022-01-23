@@ -1,10 +1,10 @@
-﻿using System.Drawing;
+﻿using Piet.Color;
 using System.Linq;
 
 namespace Piet.Grid;
 public sealed class PietDataGrid
 {
-    private Color[,] _girdData;
+    private PietColor[,] _girdData;
 
     public int Height { get; init; }
     public int Width { get; init; }
@@ -13,7 +13,7 @@ public sealed class PietDataGrid
     {
         Height = height;
         Width = width;
-        _girdData = new Color[height, width];
+        _girdData = new PietColor[height, width];
         FillWithRandomValues();
     }
 
@@ -24,7 +24,7 @@ public sealed class PietDataGrid
         {
             for (int j = 0; j < Width; j++)
             {
-                _girdData[i, j] = Color.FromArgb(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255));
+                _girdData[i, j] = new PietColor().GetRandomColor();
             }
         }
     }
@@ -32,10 +32,10 @@ public sealed class PietDataGrid
     public void SetRandomCellColor(int i, int j)
     {
         Random random = new Random();
-        _girdData[i, j] = Color.FromArgb(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255));
+        _girdData[i, j] = new PietColor().GetRandomColor();
     }
 
-    public Color GetCell(int i, int j)
+    public PietColor GetCell(int i, int j)
     {
         return _girdData[i, j];
     }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 
 namespace Piet.Color;
-internal sealed class PietColor : Color
+public sealed class PietColor : Color
 {
     private static readonly
         ImmutableDictionary<PietColorNames, (int red, int green, int blue)>
@@ -63,9 +63,6 @@ internal sealed class PietColor : Color
                     PietColorNames.DarkMagenta, (0xC0, 0x00, 0xC0)
                 },
                 {
-                    PietColorNames.Blue, (0x00, 0x00, 0x00)
-                },
-                {
                     PietColorNames.White, (0x00, 0x00, 0x00)
                 },
                 {
@@ -78,5 +75,10 @@ internal sealed class PietColor : Color
     public PietColor(PietColorNames pietColorName)
     {
         (R, G, B) = _pietColorMapping.GetValueOrDefault(pietColorName);
+    }
+
+    public PietColor()
+    {
+        
     }
 }

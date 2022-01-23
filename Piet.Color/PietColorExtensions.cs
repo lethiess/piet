@@ -2,7 +2,7 @@
 
 public static class PietColorExtensions
 {
-    internal static PietColor GetRandomColor(this PietColor me)
+    public static PietColor GetRandomColor(this PietColor me)
     {
         Random random = new Random();
         var pietColorNameList = Enum.GetValues<PietColorNames>();
@@ -11,7 +11,9 @@ public static class PietColorExtensions
                                  random.Next(pietColorNameList.Length)) ??
                              throw new InvalidOperationException($"The enum {typeof(PietColorNames)} contains no elements"));
 
-        return new PietColor(colorName);
+        me = new PietColor(colorName);
+
+        return me;
     }
 
 }

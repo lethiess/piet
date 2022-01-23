@@ -1,5 +1,5 @@
 ﻿namespace Piet.Color;
-internal interface IColor 
+public interface IColor 
 {
     int R { get; }
     int G { get; }
