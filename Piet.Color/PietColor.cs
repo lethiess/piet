@@ -63,10 +63,10 @@ public sealed class PietColor : Color
                     PietColorNames.DarkMagenta, (0xC0, 0x00, 0xC0)
                 },
                 {
-                    PietColorNames.White, (0x00, 0x00, 0x00)
+                    PietColorNames.Black, (0x00, 0x00, 0x00)
                 },
                 {
-                    PietColorNames.Black, (0xFF, 0xFF, 0xFF)        
+                    PietColorNames.White, (0xFF, 0xFF, 0xFF)        
                 }
 
             }.ToImmutableDictionary();

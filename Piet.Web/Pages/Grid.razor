@@ -6,11 +6,17 @@
 <h3>Piet</h3>
 
 <p>
-    <input @bind="Height"/>
+    <label>
+        Height
+        <input type="number" @bind="_height"/>
+    </label>
 </p>
 
 <p>
-    <input @bind="Width"/>
+    <label>
+        Width 
+        <input type="number" @bind="_width"/>
+    </label>
 </p>
 
 <button class="btn btn-primary" @onclick="ResizeGrid">Resize Grid</button>
@@ -38,7 +44,7 @@
 
 @code {
 
-    private PietDataGrid GridData = new PietDataGrid(4, 8);
+    private PietDataGrid GridData = new PietDataGrid(_height, _width);
 
     private void UpdateColor(int i, int j)
     {
@@ -48,11 +54,11 @@
 
     private void ResizeGrid()
     {
-        GridData = new PietDataGrid(Height, Width);
+        GridData = new PietDataGrid(_height, _width);
     }
 
-    private int Height { get; set; }
-    private int Width { get; set; }
+    private static int _height = 5;
+    private static int _width = 5;
 
 }
 
