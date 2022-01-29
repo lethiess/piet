@@ -35,6 +35,17 @@ public sealed class PietDataGrid
         _girdData[i, j] = new PietColor().GetRandomColor();
     }
 
+    public void SetUniqueGridColor(PietColor color)
+    {
+        for (int i = 0; i < Height; i++)
+        {
+            for (int j = 0; j < Width; j++)
+            {
+                _girdData[i, j] = color;
+            }
+        }
+    }
+
     public PietColor GetCell(int i, int j)
     {
         return _girdData[i, j];

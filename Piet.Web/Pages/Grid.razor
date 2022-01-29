@@ -1,5 +1,6 @@
 ﻿@page "/grid"
 @using Piet.Grid
+@using Piet.Color
 
 <PageTitle>Piet</PageTitle>
 
@@ -19,21 +20,27 @@
     </label>
 </p>
 
-<button class="btn btn-primary" @onclick="ResizeGrid">Resize Grid</button>
+<p>
+    <button class="btn btn-primary" @onclick="ResizeGrid">Resize Grid</button>
+
+    <button class="btn btn-primary" @onclick="Reset">Reset</button>
+
+    <button class="btn btn-primary" @onclick="Run">Run</button>
+</p>
 
 
 <table>
     <tbody>
         @*@foreach (var row in GridData)*@
-        @for (var i = 0; i < GridData.Height; i++)
+        @for (var i = 0; i < _gridData.Height; i++)
         {
             <tr>
             @*@foreach (var value in row)*@
-            @for (var j = 0; j < GridData.Width; j++)
+            @for (var j = 0; j < _gridData.Width; j++)
             {
                 int i_local = i;
                 int j_local = j;
-                var value = GridData.GetCell(i, j);
+                var value = _gridData.GetCell(i, j);
 
                 <td style='height: 30px; max-height: 30px; width: 30px; max-width:30px; border: 1px solid black; background-color: rgb(@value.R, @value.G, @value.B)' @onclick="@(e => UpdateColor(i_local, j_local))"></td>
             }
@@ -44,22 +51,32 @@
 
 @code {
 
-    private PietDataGrid GridData = new PietDataGrid(_height, _width);
+    @*inspiration from: https://gabriellesc.github.io/piet/index.html*@
+
+    private static int _height = 15; 
+    private static int _width = 25;
+    private static PietDataGrid _gridData = new (_height, _width);
 
     private void UpdateColor(int i, int j)
     {
         System.Console.WriteLine($"i: {i} j: {j}");
-        GridData.SetRandomCellColor(i, j);
+        _gridData.SetRandomCellColor(i, j);
+    }
+
+    private void Reset()
+    {
+        _gridData.SetUniqueGridColor(new PietColor(PietColorNames.White));
     }
 
     private void ResizeGrid()
     {
-        GridData = new PietDataGrid(_height, _width);
+        _gridData = new PietDataGrid(_height, _width);
     }
 
-    private static int _height = 5;
-    private static int _width = 5;
+    private void Run()
+    {
+        System.Console.WriteLine("Run");
+    }
 
 }
 
-@*https://gabriellesc.github.io/piet/index.html*@
