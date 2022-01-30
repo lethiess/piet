@@ -2,7 +2,7 @@
 
 namespace Piet.Color;
 
-public abstract class Color : IColor
+public record Color : IColor
 {
     public int R { get; protected set; }
     public int G { get; protected set; }

@@ -26,6 +26,8 @@
     <button class="btn btn-primary" @onclick="Reset">Reset</button>
 
     <button class="btn btn-primary" @onclick="Run">Run</button>
+    
+    <button class="btn btn-primary" @onclick="FillGridRandom">Fill random</button>
 </p>
 
 
@@ -65,7 +67,7 @@
 
     private void Reset()
     {
-        _gridData.SetUniqueGridColor(new PietColor(PietColorNames.White));
+        _gridData.SetUniqueGridColor(PietColors.White);
     }
 
     private void ResizeGrid()
@@ -76,6 +78,11 @@
     private void Run()
     {
         System.Console.WriteLine("Run");
+    }
+
+    private void FillGridRandom()
+    {
+        _gridData.FillWithRandomValues();
     }
 
 }
