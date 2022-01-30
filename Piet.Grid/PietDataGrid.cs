@@ -1,10 +1,10 @@
-﻿using Piet.Color;
-using System.Linq;
+﻿using Dawn;
+using Piet.Color;
 
 namespace Piet.Grid;
 public sealed class PietDataGrid
 {
-    private PietColor[,] _girdData;
+    private readonly PietColor[,] _girdData;
 
     public int Height { get; init; }
     public int Width { get; init; }
@@ -14,41 +14,60 @@ public sealed class PietDataGrid
         Height = height;
         Width = width;
         _girdData = new PietColor[height, width];
-        FillWithRandomValues();
     }
 
     public void FillWithRandomValues()
     {
         Random random = new Random();
-        for (int i = 0; i < Height; i++)
+        for (int yPosition = 0; yPosition < Height; yPosition++)
         {
-            for (int j = 0; j < Width; j++)
+            for (int xPosition = 0; xPosition < Width; xPosition++)
             {
-                _girdData[i, j] = new PietColor().GetRandomColor();
+                _girdData[yPosition, xPosition] = new PietColor().GetRandomColor();
             }
         }
     }
 
-    public void SetRandomCellColor(int i, int j)
+    public void SetRandomCellColor(int yPosition, int xPosition)
     {
+        Guard.Argument(xPosition, nameof(xPosition))
+            .InRange(0, Height - 1);
+        Guard.Argument(yPosition, nameof(yPosition))
+            .InRange(0, Width - 1);
+
         Random random = new Random();
-        _girdData[i, j] = new PietColor().GetRandomColor();
+        _girdData[yPosition, xPosition] = new PietColor().GetRandomColor();
     }
 
     public void SetUniqueGridColor(PietColor color)
     {
-        for (int i = 0; i < Height; i++)
+        for (int yPosition = 0; yPosition < Height; yPosition++)
         {
-            for (int j = 0; j < Width; j++)
+            for (int xPosition = 0; xPosition < Width; xPosition++)
             {
-                _girdData[i, j] = color;
+                _girdData[yPosition, xPosition] = color;
             }
         }
     }
 
-    public PietColor GetCell(int i, int j)
+    public void SetCellColor(int yPosition, int xPosition, PietColor color)
     {
-        return _girdData[i, j];
+        Guard.Argument(xPosition, nameof(xPosition))
+            .InRange(0, Height - 1);
+        Guard.Argument(yPosition, nameof(yPosition))
+            .InRange(0, Width - 1);
+
+        _girdData[yPosition, xPosition] = color;
+    }
+
+    public PietColor GetCell(int yPosition, int xPosition)
+    {
+        Guard.Argument(xPosition, nameof(xPosition))
+            .InRange(0, Height - 1);
+        Guard.Argument(yPosition, nameof(yPosition))
+            .InRange(0, Width - 1);
+
+        return _girdData[yPosition, xPosition];
     }
 
 }
