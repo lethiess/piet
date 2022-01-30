@@ -1,0 +1,8 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=cf5ec4df_002D6e72_002D4d0c_002D9e0f_002D563e521c5607/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ColorFactoryTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::54832964-4B30-4E49-864C-F77C233EA9F6::net6.0::Piet.Color.UnitTests.ColorFactoryTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::725E3A16-9812-4A4E-9729-E62FBB6038A7::net6.0::Piet.Grid.UnitTests.PietDataGridTests.SetCellColor_ValidInput_MustNotThrow&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::725E3A16-9812-4A4E-9729-E62FBB6038A7::net6.0::Piet.Grid.UnitTests.PietDataGridTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

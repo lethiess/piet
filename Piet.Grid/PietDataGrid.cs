@@ -37,9 +37,9 @@ public sealed class PietDataGrid
     public void SetRandomCellColor(int yPosition, int xPosition)
     {
         Guard.Argument(xPosition, nameof(xPosition))
-            .InRange(0, Width);
+            .InRange(0, Width-1);
         Guard.Argument(yPosition, nameof(yPosition))
-            .InRange(0, Height);
+            .InRange(0, Height-1);
 
         Random random = new Random();
         _girdData[yPosition, xPosition] = PietColorFactory.CreateRandomColor();
@@ -59,9 +59,9 @@ public sealed class PietDataGrid
     public void SetCellColor(int yPosition, int xPosition, PietColor color)
     {
         Guard.Argument(xPosition, nameof(xPosition))
-            .InRange(0, Width);
+            .InRange(0, Width-1);
         Guard.Argument(yPosition, nameof(yPosition))
-            .InRange(0, Height);
+            .InRange(0, Height-1);
 
         _girdData[yPosition, xPosition] = color;
     }
@@ -69,9 +69,9 @@ public sealed class PietDataGrid
     public PietColor GetCell(int yPosition, int xPosition)
     {
         Guard.Argument(xPosition, nameof(xPosition))
-            .InRange(0, Width);
+            .InRange(0, Width-1);
         Guard.Argument(yPosition, nameof(yPosition))
-            .InRange(0, Height);
+            .InRange(0, Height-1);
 
         return _girdData[yPosition, xPosition];
     }
