@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.Color.UnitTests", "Pie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.Grid.UnitTests", "Piet.Grid.UnitTests\Piet.Grid.UnitTests.csproj", "{725E3A16-9812-4A4E-9729-E62FBB6038A7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piet.Command", "Piet.Command\Piet.Command.csproj", "{E06443E5-40C4-4B89-8D5A-6C1C1DB8D520}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{725E3A16-9812-4A4E-9729-E62FBB6038A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{725E3A16-9812-4A4E-9729-E62FBB6038A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{725E3A16-9812-4A4E-9729-E62FBB6038A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E06443E5-40C4-4B89-8D5A-6C1C1DB8D520}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E06443E5-40C4-4B89-8D5A-6C1C1DB8D520}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E06443E5-40C4-4B89-8D5A-6C1C1DB8D520}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E06443E5-40C4-4B89-8D5A-6C1C1DB8D520}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

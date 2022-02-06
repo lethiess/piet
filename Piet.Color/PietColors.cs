@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography;
-
-namespace Piet.Color;
+﻿namespace Piet.Color;
 
 public static class PietColors
 {
