@@ -9,19 +9,19 @@ public static class PietCommandControl
     private const int HueLevels = 6;
     private const int SatuationLevels = 3;
 
-    private static readonly ImmutableArray<ImmutableArray<Command>> _commandLookup = new()
-    {
-        new() {Command.None, Command.Add,      Command.Divide, Command.Greater, Command.Duplicate,   Command.InputCharacter},
-        new() {Command.Push, Command.Subtract, Command.Modulo, Command.Pointer, Command.Roll,        Command.OutputNumber},
-        new() {Command.Pop,  Command.Multiply, Command.Not,    Command.Switch,  Command.InputNumber, Command.OutputCharacter}
-    };
-    
-    private static readonly ImmutableArray<ImmutableArray<PietColor>> _colorLookup = new()
-    {
-        new () {PietColors.LightRed, PietColors.LightYellow, PietColors.LightGreen, PietColors.LightCyan, PietColors.LightBlue, PietColors.LightMagenta},
-        new () {PietColors.Red,      PietColors.Yellow,      PietColors.Green,      PietColors.Cyan,      PietColors.Blue,      PietColors.Magenta},
-        new () {PietColors.DarkRed,  PietColors.DarkYellow,  PietColors.DarkGreen,  PietColors.DarkCyan,  PietColors.DarkBlue,  PietColors.DarkMagenta }
-    };
+    private static readonly ImmutableArray<ImmutableArray<Command>> _commandLookup =
+        ImmutableArray.Create<ImmutableArray<Command>>(
+            ImmutableArray.Create<Command>(Command.None, Command.Add,      Command.Divide, Command.Greater, Command.Duplicate,   Command.InputCharacter),
+            ImmutableArray.Create<Command>(Command.Push, Command.Subtract, Command.Modulo, Command.Pointer, Command.Roll,        Command.OutputNumber),
+            ImmutableArray.Create<Command>(Command.Pop,  Command.Multiply, Command.Not,    Command.Switch,  Command.InputNumber, Command.OutputCharacter)
+    );
+
+    private static readonly ImmutableArray<ImmutableArray<PietColor>> _colorLookup =
+        ImmutableArray.Create<ImmutableArray<PietColor>>(
+            ImmutableArray.Create<PietColor>(PietColors.LightRed, PietColors.LightYellow, PietColors.LightGreen, PietColors.LightCyan, PietColors.LightBlue, PietColors.LightMagenta),
+            ImmutableArray.Create<PietColor>(PietColors.Red,      PietColors.Yellow,      PietColors.Green,      PietColors.Cyan,      PietColors.Blue,      PietColors.Magenta),
+            ImmutableArray.Create<PietColor>(PietColors.DarkRed,  PietColors.DarkYellow,  PietColors.DarkGreen,  PietColors.DarkCyan,  PietColors.DarkBlue,  PietColors.DarkMagenta )
+    );
 
     private static (int,int) GetIndicesOfCurrentColor(PietColor color)
     {
@@ -49,23 +49,35 @@ public static class PietCommandControl
     {
         return satuationIndex++ < SatuationLevels-1 ? satuationIndex : 0;
     }
+
+    private static Command GetCommand(int satuarionIndex, int hueIndex,
+        int currentColorSatuationIndex, int currentColorHueIndex)
+    {
+
+        var x = hueIndex - currentColorHueIndex;
+        var commandIndexX = x >= 0 ? x : HueLevels - Math.Abs(x);
+        var y = satuarionIndex - currentColorSatuationIndex;
+        var commandIndexY = y >= 0 ? y: SatuationLevels - Math.Abs(y);
+
+        return _commandLookup[commandIndexY][commandIndexX];
+    }
     
     public static PietColorCommand[,] GetColorCommands(PietColor currentColor)
     {
         var (currentColorSatuationIndex, currentColorHueIndex) = GetIndicesOfCurrentColor(currentColor);
 
-        var colorCommands = new PietColorCommand[HueLevels, SatuationLevels];
+        var colorCommands = new PietColorCommand[SatuationLevels, HueLevels];
 
         for (int satuation = 0; satuation < SatuationLevels; satuation++)
         {
             for (int hue = 0; hue < HueLevels; hue++)
             {
                 colorCommands[satuation, hue] = new PietColorCommand(_colorLookup[satuation][hue],
-                    _commandLookup[currentColorSatuationIndex][currentColorHueIndex]);
+                    GetCommand(satuation, hue, currentColorSatuationIndex, currentColorHueIndex));
 
-                currentColorHueIndex = IncrementHueIndex(currentColorHueIndex);
+                //currentColorHueIndex = IncrementHueIndex(currentColorHueIndex);
             }
-            currentColorSatuationIndex = IncrementHueIndex(currentColorSatuationIndex);
+            //currentColorSatuationIndex = IncrementSatuationIndex(currentColorSatuationIndex);
         }
 
         return colorCommands;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 
 namespace Piet.Color;
 
@@ -6,7 +7,7 @@ public static class PietColorFactory
 {
     private static readonly
         ImmutableDictionary<PietColorNames, (int red, int green, int blue)>
-        _pietColorMapping =
+        s_pietColorMapping =
             new Dictionary<PietColorNames, (int red, int green, int blue)>
             {
                 {
@@ -74,17 +75,20 @@ public static class PietColorFactory
 
     public static PietColor Create(PietColorNames pietColorName)
     {
-        var (red, green, blue) = _pietColorMapping.GetValueOrDefault(pietColorName);
-        return new PietColor(red, green, blue);
+        var (red, green, blue) = s_pietColorMapping.GetValueOrDefault(pietColorName);
+        return new PietColor(red, green, blue, pietColorName);
     }
 
     public static PietColor Create(int red, int green, int blue)
     {
-        if (_pietColorMapping.ContainsValue((red, green, blue)) is false)
+        if (s_pietColorMapping.ContainsValue((red, green, blue)) is false)
         {
             throw new InvalidPietColorCodeException($"Color code R:{red} G:{green} B:{blue} is a invalid Piet color");
         }
-        return new PietColor(red, green, blue);
+
+        var color = s_pietColorMapping.Single(x => x.Value == (red, green, blue));
+
+        return new PietColor(red, green, blue, color.Key);
     }
 
     public static PietColor CreateRandomColor()
