@@ -2,21 +2,23 @@
 using Piet.Color;
 
 namespace Piet.Grid;
+
 public sealed class PietDataGrid
 {
     private readonly PietColor[,] _girdData;
-    private readonly PietColor _defaultColor = PietColors.White;
+    private readonly PietColor _initialColor;
     public int Height { get; init; }
     public int Width { get; init; }
 
     private void InitializeGrid()
     {
-        SetUniqueGridColor(_defaultColor);
+        SetUniqueGridColor(_initialColor);
     }
-    public PietDataGrid(int height, int width)
+    public PietDataGrid(int height, int width, PietColor? initialColor)
     {
         Height    = height;
         Width     = width;
+        _initialColor = initialColor ?? PietColors.White;
         _girdData = new PietColor[height, width];
         InitializeGrid();
     }

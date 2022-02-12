@@ -64,7 +64,12 @@
 
     private static int _height = 15; 
     private static int _width = 25;
-    private static PietDataGrid _gridData = new (_height, _width);
+
+    private static PietDataGrid _gridData = new PietDataGridBuilder()
+        .WithHeight(_height)
+        .WithWidth(_width)
+        .WithInitialColor(PietColors.White)
+        .Build();
 
     private void UpdateColor(int i, int j)
     {
@@ -79,7 +84,12 @@
 
     private void ResizeGrid()
     {
-        _gridData = new PietDataGrid(_height, _width);
+        _gridData = new PietDataGridBuilder()
+            .WithHeight(_height)
+            .WithWidth(_width)
+            .WithInitialColor(PietColors.White)
+            .Build();
+
     }
 
     private void Run()
