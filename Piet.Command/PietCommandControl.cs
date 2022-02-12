@@ -40,26 +40,23 @@ public static class PietCommandControl
             $"PietColor ({color}) has no matching color in the lookup table");
     }
 
-    internal static int IncrementHueIndex(int hueIndex)
+    private static int GetHueIndexOffset(int hueIndex, int currentColorHueIndex)
     {
-        return hueIndex++ < HueLevels-1 ? hueIndex : 0;
+        var offset = hueIndex - currentColorHueIndex;
+        return offset >= 0 ? offset : HueLevels - Math.Abs(offset);
     }
 
-    internal static int IncrementSatuationIndex(int satuationIndex)
+    private static int GetSatuationIndexOffset(int satuationIndex, int currentColorSatuationIndex)
     {
-        return satuationIndex++ < SatuationLevels-1 ? satuationIndex : 0;
+        var offset = satuationIndex - currentColorSatuationIndex;
+        return offset >= 0 ? offset : SatuationLevels - Math.Abs(offset);
     }
 
-    private static Command GetCommand(int satuarionIndex, int hueIndex,
+    private static Command GetCommand(int satuationIndex, int hueIndex,
         int currentColorSatuationIndex, int currentColorHueIndex)
     {
-
-        var x = hueIndex - currentColorHueIndex;
-        var commandIndexX = x >= 0 ? x : HueLevels - Math.Abs(x);
-        var y = satuarionIndex - currentColorSatuationIndex;
-        var commandIndexY = y >= 0 ? y: SatuationLevels - Math.Abs(y);
-
-        return _commandLookup[commandIndexY][commandIndexX];
+        return _commandLookup[GetSatuationIndexOffset(satuationIndex, currentColorSatuationIndex)][
+            GetHueIndexOffset(hueIndex, currentColorHueIndex)];
     }
     
     public static PietColorCommand[,] GetColorCommands(PietColor currentColor)
@@ -68,16 +65,15 @@ public static class PietCommandControl
 
         var colorCommands = new PietColorCommand[SatuationLevels, HueLevels];
 
-        for (int satuation = 0; satuation < SatuationLevels; satuation++)
+        for (int satuationIndex = 0; satuationIndex < SatuationLevels; satuationIndex++)
         {
-            for (int hue = 0; hue < HueLevels; hue++)
+            for (int hueIndex = 0; hueIndex < HueLevels; hueIndex++)
             {
-                colorCommands[satuation, hue] = new PietColorCommand(_colorLookup[satuation][hue],
-                    GetCommand(satuation, hue, currentColorSatuationIndex, currentColorHueIndex));
-
-                //currentColorHueIndex = IncrementHueIndex(currentColorHueIndex);
+                colorCommands[satuationIndex, hueIndex] = new PietColorCommand(
+                    _colorLookup[satuationIndex][hueIndex],
+                    GetCommand(satuationIndex, hueIndex, currentColorSatuationIndex,
+                        currentColorHueIndex));
             }
-            //currentColorSatuationIndex = IncrementSatuationIndex(currentColorSatuationIndex);
         }
 
         return colorCommands;
