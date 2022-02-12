@@ -4,10 +4,10 @@ using Piet.Color;
 namespace Piet.Command;
 
 
-public static class PietCommandControl
+public static class PietColorCommandControl
 {
-    private const int HueLevels = 6;
-    private const int SatuationLevels = 3;
+    public const int HueLevels = 6;
+    public const int SatuationLevels = 3;
 
     private static readonly ImmutableArray<ImmutableArray<Command>> _commandLookup =
         ImmutableArray.Create<ImmutableArray<Command>>(

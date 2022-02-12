@@ -8,14 +8,14 @@ public partial class CommandControlUnitTests
     [Fact]
     public void GetColorCommands_ValidInput_ColorLightMagenta_MustReturn_NotNull()
     {
-        var colorCommands = PietCommandControl.GetColorCommands(PietColors.LightMagenta);
+        var colorCommands = PietColorCommandControl.GetColorCommands(PietColors.LightMagenta);
         Assert.NotNull(colorCommands);
     }
 
     [Fact]
     public void GetColorCommands_ValidInput_ColorLightMagenta_MustReturn_MustMatch()
     {
-        var colorCommands = PietCommandControl.GetColorCommands(PietColors.LightMagenta);
+        var colorCommands = PietColorCommandControl.GetColorCommands(PietColors.LightMagenta);
         Assert.NotNull(colorCommands);
 
         // validate commands
