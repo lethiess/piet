@@ -1,6 +1,7 @@
 ﻿@page "/grid"
 @using Piet.Grid
 @using Piet.Color
+@using Piet.Command
 
 <PageTitle>Piet</PageTitle>
 
@@ -9,14 +10,14 @@
 <p>
     <label>
         Height
-        <input type="number" @bind="_height"/>
+        <input type="number" @bind="_gridHeight"/>
     </label>
 </p>
 
 <p>
     <label>
         Width 
-        <input type="number" @bind="_width"/>
+        <input type="number" @bind="_gridWidth"/>
     </label>
 </p>
 
@@ -30,20 +31,45 @@
     <button class="btn btn-primary" @onclick="FillGridRandom">Fill random</button>
 </p>
 
+<p>
+    <table>
+        <tbody>
+            @for (var satuationIndex = 0; satuationIndex < PietColorCommandControl.SatuationLevels; satuationIndex++)
+            {
+                <tr>
+                    @for (var hueIndex = 0; hueIndex < PietColorCommandControl.HueLevels; hueIndex++)
+                    {
+                        int i_local = satuationIndex;
+                        int j_local = hueIndex;
+                        var colorCommand = _colorCommands[satuationIndex, hueIndex];
+                        var commandName = @colorCommand.Command;
+
+                        <td style='height: 30px; max-height: 30px; width: 130px; max-width:130px; border: 1px solid black; background-color: rgb(@colorCommand.Color.R, @colorCommand.Color.G, @colorCommand.Color.B)' @onclick="@(e => UpdateColorCommand(i_local, j_local))">@GetCellName(colorCommand)</td>}</tr>
+            }
+
+        </tbody>
+    </table>
+</p>
+
+<p>
+    <table>
+        <tbody>
+        <tr>
+            <td style='height: 30px; max-height: 30px; width: 50px; max-width: 50px; border: 1px solid black; background-color: rgb(@_colorBlack.R, @_colorBlack.G, @_colorBlack.B)' @onclick="@(e => SetCurrentColor(_colorBlack))"></td>
+        </tr>
+        <tr>
+            <td style='height: 30px; max-height: 30px; width: 50px; max-width: 50px; border: 1px solid black; background-color: rgb(@_colorWhite.R, @_colorWhite.G, @_colorWhite.B)' @onclick="@(e => SetCurrentColor(_colorWhite))"></td>
+        </tr>
+        </tbody>
+    </table>
+</p>
+
 <table>
     <tbody>
-        
-
-    </tbody>
-</table>
-
-
-<table>
-    <tbody>
-        @*@foreach (var row in GridData)*@
-        @for (var i = 0; i < _gridData.Height; i++)
-        {
-            <tr>
+    @*@foreach (var row in GridData)*@
+    @for (var i = 0; i < _gridData.Height; i++)
+    {
+        <tr>
             @*@foreach (var value in row)*@
             @for (var j = 0; j < _gridData.Width; j++)
             {
@@ -53,48 +79,76 @@
 
                 <td style='height: 30px; max-height: 30px; width: 30px; max-width:30px; border: 1px solid black; background-color: rgb(@value.R, @value.G, @value.B)' @onclick="@(e => UpdateColor(i_local, j_local))"></td>
             }
-            </tr>
+        </tr>
     }
     </tbody>
 </table>
 
+
 @code {
+    @*inspiration for html content: https://gabriellesc.github.io/piet/index.html*@
 
-    @*inspiration from: https://gabriellesc.github.io/piet/index.html*@
+    public const int InitialGridHeight = 15;
+    public const int InitialGridWidth = 25;
 
-    private static int _height = 15; 
-    private static int _width = 25;
+    private static int _gridHeight = InitialGridHeight; 
+    private static int _gridWidth = InitialGridWidth;
+    private static PietColor _currentColor = PietColors.LightRed;
+    private static PietColor _colorBlack = PietColors.Black;
+    private static PietColor _colorWhite = PietColors.White;
 
-    private static PietDataGrid _gridData = new PietDataGridBuilder()
-        .WithHeight(_height)
-        .WithWidth(_width)
-        .WithInitialColor(PietColors.White)
-        .Build();
+    private static PietDataGrid _gridData = 
+        new PietDataGridBuilder()
+            .WithHeight(_gridHeight)
+            .WithWidth(_gridWidth)
+            .WithInitialColor(PietColors.White)
+            .Build();
 
-    private void UpdateColor(int i, int j)
+    private static PietColorCommand[,] _colorCommands = 
+        PietColorCommandControl.GetColorCommands(_currentColor);
+
+    private void UpdateColor(int yPosition, int xPosition)
     {
-        System.Console.WriteLine($"i: {i} j: {j}");
-        _gridData.SetRandomCellColor(i, j);
+        System.Console.WriteLine($"yPosition: {yPosition} xPosition: {xPosition}");
+        _gridData.SetCellColor(yPosition, xPosition, _currentColor);
+    }
+
+    private void UpdateColorCommand(int satuationIndex, int hueIndex)
+    {
+        System.Console.WriteLine($"satuationIndex: {satuationIndex} hueIndex: {hueIndex}");
+        _currentColor = _colorCommands[satuationIndex, hueIndex].Color;
+        _colorCommands = PietColorCommandControl.GetColorCommands(_currentColor);
+        
+    }
+
+    private void SetCurrentColor(PietColor color)
+    {
+        _currentColor = color;
     }
 
     private void Reset()
     {
-        _gridData.SetUniqueGridColor(PietColors.White);
+        _gridHeight = InitialGridHeight;
+        _gridWidth = InitialGridWidth;
+        _currentColor = PietColors.LightRed;
+
+        _gridData = new PietDataGridBuilder()
+            .WithHeight(_gridHeight)
+            .WithWidth(_gridWidth)
+            .WithInitialColor(PietColors.White)
+            .Build();
+
+        _colorCommands = PietColorCommandControl.GetColorCommands(_currentColor);
     }
 
     private void ResizeGrid()
     {
         _gridData = new PietDataGridBuilder()
-            .WithHeight(_height)
-            .WithWidth(_width)
+            .WithHeight(_gridHeight)
+            .WithWidth(_gridWidth)
             .WithInitialColor(PietColors.White)
             .Build();
 
-    }
-
-    private void Run()
-    {
-        System.Console.WriteLine("Run");
     }
 
     private void FillGridRandom()
@@ -102,5 +156,19 @@
         _gridData.FillWithRandomValues();
     }
 
+    private void Run()
+    {
+        System.Console.WriteLine("Run");
+
+    }
+
+    private string GetCellName(PietColorCommand colorCommand)
+    {
+        if (_currentColor != _colorWhite && _currentColor != _colorBlack && colorCommand.Command != Command.None)
+        {
+            return colorCommand.Command.ToString();
+        }
+        return "";
+    }
 }
 

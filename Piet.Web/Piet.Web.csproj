@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Piet.Command\Piet.Command.csproj" />
     <ProjectReference Include="..\Piet.Grid\Piet.Grid.csproj" />
   </ItemGroup>
 
