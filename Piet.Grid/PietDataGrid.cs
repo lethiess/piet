@@ -25,7 +25,6 @@ public sealed class PietDataGrid
 
     public void FillWithRandomValues()
     {
-        Random random = new Random();
         for (int yPosition = 0; yPosition < Height; yPosition++)
         {
             for (int xPosition = 0; xPosition < Width; xPosition++)
@@ -43,7 +42,6 @@ public sealed class PietDataGrid
         Guard.Argument(yPosition, nameof(yPosition))
             .InRange(0, Height-1);
 
-        Random random = new Random();
         _girdData[yPosition, xPosition] = PietColorFactory.CreateRandomColor();
     }
 
