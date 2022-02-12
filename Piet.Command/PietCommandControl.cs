@@ -4,27 +4,19 @@ using Piet.Color;
 namespace Piet.Command;
 
 
-// input: cell color (current)
-// output: command behind all colors based in input
-
-
-
 public static class PietCommandControl
 {
-    private const int Hue = 6;
-    private const int Satuation = 3;
+    private const int HueLevels = 6;
+    private const int SatuationLevels = 3;
 
-    private static readonly Command[,] _commands = new Command[,]
+    private static readonly Command[,] _commandLookup = new Command[,]
     {
-        { Command.None, Command.Push, Command.Pop },
-        { Command.Add, Command.Subtract, Command.Multiply},
-        { Command.Divide, Command.Modulo, Command.Not},
-        { Command.Greater, Command.Pointer, Command.Switch},
-        { Command.Duplicate, Command.Roll, Command.InputNumber},
-        { Command.InputCharacter, Command.OuputNumber, Command.OutputCharacter}
+        {Command.None, Command.Add,      Command.Divide, Command.Greater, Command.Duplicate,   Command.InputCharacter},
+        {Command.Push, Command.Subtract, Command.Modulo, Command.Pointer, Command.Roll,        Command.OutputNumber},
+        {Command.Pop,  Command.Multiply, Command.Not,    Command.Switch,  Command.InputNumber, Command.OutputCharacter}
     };
 
-    private static readonly PietColor[,] _colors = new PietColor[,]
+    private static readonly PietColor[,] _colorLookup = new PietColor[,]
     {
         {PietColors.LightRed, PietColors.LightYellow, PietColors.LightGreen, PietColors.LightCyan, PietColors.LightBlue, PietColors.LightMagenta},
         {PietColors.Red,      PietColors.Yellow,      PietColors.Green,      PietColors.Cyan,      PietColors.Blue,      PietColors.Magenta},
@@ -33,11 +25,11 @@ public static class PietCommandControl
 
     private static (int,int) GetIndicesOfCurrentColor(PietColor color)
     {
-        for (int satuation = 0; satuation < Satuation; satuation++)
+        for (int satuation = 0; satuation < SatuationLevels; satuation++)
         {
-            for (int hue = 0; hue < Hue; hue++)
+            for (int hue = 0; hue < HueLevels; hue++)
             {
-                if (_colors[satuation,hue] == color)
+                if (_colorLookup[satuation,hue] == color)
                 {
                     return (satuation, hue);
                 }
@@ -48,31 +40,32 @@ public static class PietCommandControl
             $"PietColor ({color}) has no matching color in the lookup table");
     }
 
-    private static Command GetColorCommand(
-        int satuation, 
-        int hue, 
-        int satuationOffset,
-        int hueOffset)
+    internal static int IncrementHueIndex(int hueIndex)
     {
-
-        // todo: return corresponding to current colors offset
-
-        throw new NotImplementedException();
+        return hueIndex++ < HueLevels-1 ? hueIndex : 0;
     }
 
+    internal static int IncrementSatuationIndex(int satuationIndex)
+    {
+        return satuationIndex++ < SatuationLevels-1 ? satuationIndex : 0;
+    }
+    
     public static PietColorCommand[,] GetColorCommands(PietColor currentColor)
     {
-        var (satuationIndex, hueIndex) = GetIndicesOfCurrentColor(currentColor);
+        var (currentColorSatuationIndex, currentColorHueIndex) = GetIndicesOfCurrentColor(currentColor);
 
-        var colorCommands = new PietColorCommand[Hue, Satuation];
+        var colorCommands = new PietColorCommand[HueLevels, SatuationLevels];
 
-        for (int satuation = 0; satuation < Hue; satuation++)
+        for (int satuation = 0; satuation < SatuationLevels; satuation++)
         {
-            for (int hue = 0; hue < Hue; hue++)
+            for (int hue = 0; hue < HueLevels; hue++)
             {
-                colorCommands[satuation, hue] = new PietColorCommand(_colors[satuation, hue],
-                    GetColorCommand(satuation, hue, satuationIndex, hueIndex));
+                colorCommands[satuation, hue] = new PietColorCommand(_colorLookup[satuation, hue],
+                    _commandLookup[currentColorSatuationIndex, currentColorHueIndex]);
+
+                currentColorHueIndex = IncrementHueIndex(currentColorHueIndex);
             }
+            currentColorSatuationIndex = IncrementHueIndex(currentColorSatuationIndex);
         }
 
         return colorCommands;
@@ -104,6 +97,6 @@ public enum Command
     Roll, 
     InputNumber,
     InputCharacter,
-    OuputNumber,
+    OutputNumber,
     OutputCharacter
 }
