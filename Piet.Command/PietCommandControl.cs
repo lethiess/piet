@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Immutable;
 using Piet.Color;
 
 namespace Piet.Command;
@@ -9,18 +9,18 @@ public static class PietCommandControl
     private const int HueLevels = 6;
     private const int SatuationLevels = 3;
 
-    private static readonly Command[,] _commandLookup = new Command[,]
+    private static readonly ImmutableArray<ImmutableArray<Command>> _commandLookup = new()
     {
-        {Command.None, Command.Add,      Command.Divide, Command.Greater, Command.Duplicate,   Command.InputCharacter},
-        {Command.Push, Command.Subtract, Command.Modulo, Command.Pointer, Command.Roll,        Command.OutputNumber},
-        {Command.Pop,  Command.Multiply, Command.Not,    Command.Switch,  Command.InputNumber, Command.OutputCharacter}
+        new() {Command.None, Command.Add,      Command.Divide, Command.Greater, Command.Duplicate,   Command.InputCharacter},
+        new() {Command.Push, Command.Subtract, Command.Modulo, Command.Pointer, Command.Roll,        Command.OutputNumber},
+        new() {Command.Pop,  Command.Multiply, Command.Not,    Command.Switch,  Command.InputNumber, Command.OutputCharacter}
     };
-
-    private static readonly PietColor[,] _colorLookup = new PietColor[,]
+    
+    private static readonly ImmutableArray<ImmutableArray<PietColor>> _colorLookup = new()
     {
-        {PietColors.LightRed, PietColors.LightYellow, PietColors.LightGreen, PietColors.LightCyan, PietColors.LightBlue, PietColors.LightMagenta},
-        {PietColors.Red,      PietColors.Yellow,      PietColors.Green,      PietColors.Cyan,      PietColors.Blue,      PietColors.Magenta},
-        {PietColors.DarkRed,  PietColors.DarkYellow,  PietColors.DarkGreen,  PietColors.DarkCyan,  PietColors.DarkBlue,  PietColors.DarkMagenta }
+        new () {PietColors.LightRed, PietColors.LightYellow, PietColors.LightGreen, PietColors.LightCyan, PietColors.LightBlue, PietColors.LightMagenta},
+        new () {PietColors.Red,      PietColors.Yellow,      PietColors.Green,      PietColors.Cyan,      PietColors.Blue,      PietColors.Magenta},
+        new () {PietColors.DarkRed,  PietColors.DarkYellow,  PietColors.DarkGreen,  PietColors.DarkCyan,  PietColors.DarkBlue,  PietColors.DarkMagenta }
     };
 
     private static (int,int) GetIndicesOfCurrentColor(PietColor color)
@@ -29,7 +29,7 @@ public static class PietCommandControl
         {
             for (int hue = 0; hue < HueLevels; hue++)
             {
-                if (_colorLookup[satuation,hue] == color)
+                if (_colorLookup[satuation][hue] == color)
                 {
                     return (satuation, hue);
                 }
@@ -60,8 +60,8 @@ public static class PietCommandControl
         {
             for (int hue = 0; hue < HueLevels; hue++)
             {
-                colorCommands[satuation, hue] = new PietColorCommand(_colorLookup[satuation, hue],
-                    _commandLookup[currentColorSatuationIndex, currentColorHueIndex]);
+                colorCommands[satuation, hue] = new PietColorCommand(_colorLookup[satuation][hue],
+                    _commandLookup[currentColorSatuationIndex][currentColorHueIndex]);
 
                 currentColorHueIndex = IncrementHueIndex(currentColorHueIndex);
             }
@@ -70,33 +70,4 @@ public static class PietCommandControl
 
         return colorCommands;
     }
-}
-
-
-public record PietColorCommand(
-   PietColor Color,
-   Command Command)
-{
-}
-
-public enum Command
-{
-    None,
-    Push, 
-    Pop,
-    Add, 
-    Subtract,
-    Multiply,
-    Divide,
-    Modulo,
-    Not,
-    Greater,
-    Pointer,
-    Switch,
-    Duplicate,
-    Roll, 
-    InputNumber,
-    InputCharacter,
-    OutputNumber,
-    OutputCharacter
 }
