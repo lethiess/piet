@@ -72,7 +72,6 @@ public sealed class PietInterpreter
     private void ExecuteCommand(ColorCommand command, int codelBlockSize)
     {
         // todo: execute command
-
         throw new NotImplementedException();
     }
     
