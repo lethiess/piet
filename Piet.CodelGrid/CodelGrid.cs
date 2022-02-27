@@ -3,7 +3,7 @@ using Piet.Color;
 
 namespace Piet.Grid;
 
-public sealed class CodelGrid
+public sealed class CodelGrid : ICodelGrid
 {
     private readonly Codel[,] _codelGrid;
     private readonly PietColor _initialColor;
@@ -40,28 +40,6 @@ public sealed class CodelGrid
             }
         }
     }
-
-    public void SetRandomCodelColor(int xPosition, int yPosition)
-    {
-        Guard.Argument(xPosition, nameof(xPosition))
-            .InRange(0, Width-1);
-        Guard.Argument(yPosition, nameof(yPosition))
-            .InRange(0, Height-1);
-
-        _codelGrid[yPosition, xPosition].Color = PietColorFactory.CreateRandomColor();
-    }
-
-    public void SetUniqueCodelColor(PietColor color)
-    {
-        for (int yPosition = 0; yPosition < Height; yPosition++)
-        {
-            for (int xPosition = 0; xPosition < Width; xPosition++)
-            {
-                _codelGrid[yPosition, xPosition].Color = color;
-            }
-        }
-    }
-
     public void SetCodelColor(int xPosition, int yPosition, PietColor color)
     {
         Guard.Argument(xPosition, nameof(xPosition))

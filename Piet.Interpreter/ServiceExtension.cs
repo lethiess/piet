@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Piet.Grid;
 
 namespace Piet.Interpreter;
 
@@ -9,8 +10,8 @@ public static class ServiceExtension
     )
     {
         services.AddTransient<PietInterpreter>();
-        services.AddTransient<DirectionPointer>();
-        services.AddTransient<CodelChooser>();
+        services.AddTransient<ICodelChooser, CodelChooser>();
+        services.AddTransient<ICodelGrid, CodelGrid>();
         return services;
     }
 }

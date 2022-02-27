@@ -9,11 +9,6 @@ public sealed class CodelGridBuilder
     private int _width;
     private PietColor? _initialColor;
     private bool _randomCellColors = false;
-
-    public CodelGridBuilder()
-    {
-    }
-
     public CodelGridBuilder WithHeight(int height)
     {
         _height = height;

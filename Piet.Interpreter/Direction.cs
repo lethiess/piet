@@ -1,6 +1,6 @@
 ﻿namespace Piet.Interpreter;
 
-public enum Direction
+internal enum Direction
 {
     Up,
     Left,
