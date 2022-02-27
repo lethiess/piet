@@ -78,4 +78,16 @@ public static class ColorCommandControl
 
         return colorCommands;
     }
+
+    public static ColorCommand GetColorCommand(PietColor currentColor, PietColor nextColor)
+    {
+        if (nextColor == PietColors.Black || nextColor == PietColors.White)
+        {
+            return new ColorCommand(nextColor, Command.None);
+        }
+        var currentColorCommands = GetColorCommands(currentColor);
+        var (nextColorIndexX, nextColorIndexY) = GetIndicesOfCurrentColor(nextColor);
+        
+        return currentColorCommands[nextColorIndexX, nextColorIndexY];
+    }
 }
