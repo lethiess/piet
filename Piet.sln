@@ -5,13 +5,13 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.Web", "Piet.Web\Piet.Web.csproj", "{71AD7C1D-E2AA-4C0E-8609-6351A5E0EA2C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.Grid", "Piet.Grid\Piet.Grid.csproj", "{13DA9880-7D42-420F-9EC3-5BC3E4D9DBF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.CodelGrid", "Piet.CodelGrid\Piet.CodelGrid.csproj", "{13DA9880-7D42-420F-9EC3-5BC3E4D9DBF8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.Color", "Piet.Color\Piet.Color.csproj", "{9AB4BE48-C3E7-427D-8096-62A441B746AF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.Color.UnitTests", "Piet.Color.UnitTests\Piet.Color.UnitTests.csproj", "{54832964-4B30-4E49-864C-F77C233EA9F6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.Grid.UnitTests", "Piet.Grid.UnitTests\Piet.Grid.UnitTests.csproj", "{725E3A16-9812-4A4E-9729-E62FBB6038A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.CodelGrid.UnitTests", "Piet.CodelGrid.UnitTests\Piet.CodelGrid.UnitTests.csproj", "{725E3A16-9812-4A4E-9729-E62FBB6038A7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.Command", "Piet.Command\Piet.Command.csproj", "{E06443E5-40C4-4B89-8D5A-6C1C1DB8D520}"
 EndProject

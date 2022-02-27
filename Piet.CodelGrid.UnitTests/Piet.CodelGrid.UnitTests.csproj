@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
+
+    <RootNamespace>Piet.Grid.UnitTests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Piet.Grid\Piet.Grid.csproj" />
+    <ProjectReference Include="..\Piet.CodelGrid\Piet.CodelGrid.csproj" />
   </ItemGroup>
 
 </Project>
