@@ -75,9 +75,9 @@
             {
                 int i_local = i;
                 int j_local = j;
-                var value = _gridCodel.GetCodel(i, j).Color;
+                var value = _gridCodel.GetCodel(j, i).Color;
 
-                <td style='height: 30px; max-height: 30px; width: 30px; max-width:30px; border: 1px solid black; background-color: rgb(@value.R, @value.G, @value.B)' @onclick="@(e => UpdateColor(i_local, j_local))"></td>
+                <td style='height: 30px; max-height: 30px; width: 30px; max-width:30px; border: 1px solid black; background-color: rgb(@value.R, @value.G, @value.B)' @onclick="@(e => UpdateColor(j_local, i_local))"></td>
             }
         </tr>
     }
@@ -107,10 +107,10 @@
     private static ColorCommand[,] _colorCommands = 
         ColorCommandControl.GetColorCommands(_currentColor);
 
-    private void UpdateColor(int yPosition, int xPosition)
+    private void UpdateColor(int xPosition, int yPosition)
     {
-        System.Console.WriteLine($"yPosition: {yPosition} xPosition: {xPosition}");
-        _gridCodel.SetCodelColor(yPosition, xPosition, _currentColor);
+        System.Console.WriteLine($"xPosition: {xPosition} yPosition: {yPosition}");
+        _gridCodel.SetCodelColor(xPosition, yPosition, _currentColor);
     }
 
     private void UpdateColorCommand(int satuationIndex, int hueIndex)

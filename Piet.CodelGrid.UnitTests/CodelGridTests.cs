@@ -18,8 +18,8 @@ namespace Piet.Grid.UnitTests
             var codel = grid.GetCodel(xPosition, yPosition);
             Assert.NotNull(codel);
 
-            grid.SetCodelColor(yPosition, xPosition, PietColors.Black);
-            codel = grid.GetCodel(yPosition, xPosition);
+            grid.SetCodelColor(xPosition, yPosition, PietColors.Black);
+            codel = grid.GetCodel(xPosition, yPosition);
             Assert.True((PietColor) codel.Color == PietColors.Black);
         }
 
@@ -32,7 +32,7 @@ namespace Piet.Grid.UnitTests
         {
             var grid = new CodelGrid(gridHeight, gridWidth, null);
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                grid.SetCodelColor(yPosition, xPosition, PietColors.Cyan));
+                grid.SetCodelColor(xPosition, yPosition, PietColors.Cyan));
         }
 
         [Theory]
@@ -44,7 +44,7 @@ namespace Piet.Grid.UnitTests
         {
             var grid = new CodelGrid(gridHeight, gridWidth, null);
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                grid.SetCodelColor(yPosition, xPosition, PietColors.Cyan));
+                grid.SetCodelColor(xPosition, yPosition, PietColors.Cyan));
         }
 
         [Theory]
@@ -55,7 +55,7 @@ namespace Piet.Grid.UnitTests
         {
             var grid = new CodelGrid(gridHeight, gridWidth, null);
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                grid.SetCodelColor(yPosition, xPosition, PietColors.Cyan));
+                grid.SetCodelColor(xPosition, yPosition, PietColors.Cyan));
         }
     }
 }

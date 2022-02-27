@@ -41,7 +41,7 @@ public sealed class CodelGrid
         }
     }
 
-    public void SetRandomCodelColor(int yPosition, int xPosition)
+    public void SetRandomCodelColor(int xPosition, int yPosition)
     {
         Guard.Argument(xPosition, nameof(xPosition))
             .InRange(0, Width-1);
@@ -62,7 +62,7 @@ public sealed class CodelGrid
         }
     }
 
-    public void SetCodelColor(int yPosition, int xPosition, PietColor color)
+    public void SetCodelColor(int xPosition, int yPosition, PietColor color)
     {
         Guard.Argument(xPosition, nameof(xPosition))
             .InRange(0, Width-1);
@@ -72,7 +72,7 @@ public sealed class CodelGrid
         _codelGrid[yPosition, xPosition].Color = color;
     }
 
-    public Codel GetCodel(int yPosition, int xPosition)
+    public Codel GetCodel(int xPosition, int yPosition)
     {
         Guard.Argument(xPosition, nameof(xPosition))
             .InRange(0, Width-1);
