@@ -2,7 +2,7 @@
 
 namespace Piet.Command;
 
-public record PietColorCommand(
+public record ColorCommand(
     PietColor Color,
     Command Command)
 {

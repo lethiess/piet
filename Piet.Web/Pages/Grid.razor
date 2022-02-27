@@ -34,10 +34,10 @@
 <p>
     <table>
         <tbody>
-            @for (var satuationIndex = 0; satuationIndex < PietColorCommandControl.SatuationLevels; satuationIndex++)
+            @for (var satuationIndex = 0; satuationIndex < ColorCommandControl.SatuationLevels; satuationIndex++)
             {
                 <tr>
-                    @for (var hueIndex = 0; hueIndex < PietColorCommandControl.HueLevels; hueIndex++)
+                    @for (var hueIndex = 0; hueIndex < ColorCommandControl.HueLevels; hueIndex++)
                     {
                         int i_local = satuationIndex;
                         int j_local = hueIndex;
@@ -67,15 +67,15 @@
 <table>
     <tbody>
     @*@foreach (var row in GridData)*@
-    @for (var i = 0; i < _gridData.Height; i++)
+    @for (var i = 0; i < _gridCodel.Height; i++)
     {
         <tr>
             @*@foreach (var value in row)*@
-            @for (var j = 0; j < _gridData.Width; j++)
+            @for (var j = 0; j < _gridCodel.Width; j++)
             {
                 int i_local = i;
                 int j_local = j;
-                var value = _gridData.GetCell(i, j);
+                var value = _gridCodel.GetCodel(i, j).Color;
 
                 <td style='height: 30px; max-height: 30px; width: 30px; max-width:30px; border: 1px solid black; background-color: rgb(@value.R, @value.G, @value.B)' @onclick="@(e => UpdateColor(i_local, j_local))"></td>
             }
@@ -97,27 +97,27 @@
     private static PietColor _colorBlack = PietColors.Black;
     private static PietColor _colorWhite = PietColors.White;
 
-    private static PietDataGrid _gridData = 
-        new PietDataGridBuilder()
+    private static CodelGrid _gridCodel = 
+        new CodelGridBuilder()
             .WithHeight(_gridHeight)
             .WithWidth(_gridWidth)
             .WithInitialColor(PietColors.White)
             .Build();
 
-    private static PietColorCommand[,] _colorCommands = 
-        PietColorCommandControl.GetColorCommands(_currentColor);
+    private static ColorCommand[,] _colorCommands = 
+        ColorCommandControl.GetColorCommands(_currentColor);
 
     private void UpdateColor(int yPosition, int xPosition)
     {
         System.Console.WriteLine($"yPosition: {yPosition} xPosition: {xPosition}");
-        _gridData.SetCellColor(yPosition, xPosition, _currentColor);
+        _gridCodel.SetCodelColor(yPosition, xPosition, _currentColor);
     }
 
     private void UpdateColorCommand(int satuationIndex, int hueIndex)
     {
         System.Console.WriteLine($"satuationIndex: {satuationIndex} hueIndex: {hueIndex}");
         _currentColor = _colorCommands[satuationIndex, hueIndex].Color;
-        _colorCommands = PietColorCommandControl.GetColorCommands(_currentColor);
+        _colorCommands = ColorCommandControl.GetColorCommands(_currentColor);
         
     }
 
@@ -132,18 +132,18 @@
         _gridWidth = InitialGridWidth;
         _currentColor = PietColors.LightRed;
 
-        _gridData = new PietDataGridBuilder()
+        _gridCodel = new CodelGridBuilder()
             .WithHeight(_gridHeight)
             .WithWidth(_gridWidth)
             .WithInitialColor(PietColors.White)
             .Build();
 
-        _colorCommands = PietColorCommandControl.GetColorCommands(_currentColor);
+        _colorCommands = ColorCommandControl.GetColorCommands(_currentColor);
     }
 
     private void ResizeGrid()
     {
-        _gridData = new PietDataGridBuilder()
+        _gridCodel = new CodelGridBuilder()
             .WithHeight(_gridHeight)
             .WithWidth(_gridWidth)
             .WithInitialColor(PietColors.White)
@@ -153,7 +153,7 @@
 
     private void FillGridRandom()
     {
-        _gridData.FillWithRandomValues();
+        _gridCodel.FillWithRandomValues();
     }
 
     private void Run()
@@ -162,7 +162,7 @@
 
     }
 
-    private string GetCellName(PietColorCommand colorCommand)
+    private string GetCellName(ColorCommand colorCommand)
     {
         if (_currentColor != _colorWhite && _currentColor != _colorBlack && colorCommand.Command != Command.None)
         {

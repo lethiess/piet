@@ -1,10 +1,10 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using Piet.Color;
 
 namespace Piet.Command;
 
-
-public static class PietColorCommandControl
+public static class ColorCommandControl
 {
     public const int HueLevels = 6;
     public const int SatuationLevels = 3;
@@ -59,17 +59,17 @@ public static class PietColorCommandControl
             GetHueIndexOffset(hueIndex, currentColorHueIndex)];
     }
     
-    public static PietColorCommand[,] GetColorCommands(PietColor currentColor)
+    public static ColorCommand[,] GetColorCommands(PietColor currentColor)
     {
         var (currentColorSatuationIndex, currentColorHueIndex) = GetIndicesOfCurrentColor(currentColor);
 
-        var colorCommands = new PietColorCommand[SatuationLevels, HueLevels];
+        var colorCommands = new ColorCommand[SatuationLevels, HueLevels];
 
         for (int satuationIndex = 0; satuationIndex < SatuationLevels; satuationIndex++)
         {
             for (int hueIndex = 0; hueIndex < HueLevels; hueIndex++)
             {
-                colorCommands[satuationIndex, hueIndex] = new PietColorCommand(
+                colorCommands[satuationIndex, hueIndex] = new ColorCommand(
                     _colorLookup[satuationIndex][hueIndex],
                     GetCommand(satuationIndex, hueIndex, currentColorSatuationIndex,
                         currentColorHueIndex));
