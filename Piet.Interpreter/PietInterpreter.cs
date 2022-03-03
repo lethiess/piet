@@ -8,6 +8,7 @@ public sealed class PietInterpreter
 {
     private readonly ICodelGrid _codelGrid;
     private readonly ICodelChooser _codelChooser;
+    private readonly ICodelBlockSearcher _codelBlockSearcher;
     private readonly ILogger<PietInterpreter> _logger;
     private readonly Stack<int> _programStack;
     private Codel _currentCodel;
@@ -17,11 +18,14 @@ public sealed class PietInterpreter
     public PietInterpreter(
         ICodelGrid codelGrid,
         ICodelChooser codelChooser,
+        ICodelBlockSearcher codelBlockSearcher,
         ILogger<PietInterpreter> logger
     )
     {
         _codelGrid = codelGrid;
         _codelChooser = codelChooser;
+        _codelBlockSearcher = codelBlockSearcher;
+        _codelBlockSearcher.Initialize(_codelGrid);
         _logger = logger;
         _programStack = new();
         _currentCodel = _codelGrid.GetCodel(0, 0);
@@ -48,7 +52,7 @@ public sealed class PietInterpreter
     private void NextStep()
     {
         _logger.LogDebug($"Get codel block for current codel: {_currentCodel}");
-        var codelBock = CodelBockSearcher.GetCodelBock(_currentCodel, _codelGrid).ToList();
+        var codelBock = _codelBlockSearcher.GetCodelBock(_currentCodel).ToList();
         _logger.LogDebug($"Retrived codel block of size {codelBock.Count()}");
         
         _logger.LogDebug("Determine next codel");
