@@ -13,6 +13,16 @@ namespace Piet.Interpreter.UnitTests
         {
             yield return new object[]
                          {
+                             // codel grid (X := seed codel color, O =: other codel color):
+                             // O O O
+                             // X X X
+                             // O X O
+
+                             // expected codel block:
+                             // 
+                             // X X X  
+                             //   X
+
                              new Codel[,]
                              {
                                  { new (0, 0, PietColors.White), new (1, 0, PietColors.White), new (2, 0, PietColors.White)},
@@ -33,6 +43,16 @@ namespace Piet.Interpreter.UnitTests
 
             yield return new object[]
                          {
+                             // codel grid (X := seed codel color, O =: other codel color):
+                             // X X X
+                             // O O O
+                             // X O X
+
+                             // expected codel block
+                             // X X X
+                             //   
+                             //     
+                             
                              new Codel[,]
                              {
                                  { new (0, 0, PietColors.White), new (1, 0, PietColors.White), new (2, 0, PietColors.White)},
@@ -47,6 +67,41 @@ namespace Piet.Interpreter.UnitTests
                                  new(0,0, PietColors.White),
                                  new(1,0, PietColors.White),
                                  new(2,0, PietColors.White),
+                             }
+                         };
+
+            yield return new object[]
+                         {
+                             // codel grid (X := seed codel color, O =: other codel color):
+                             // X X X
+                             // X O X
+                             // O O X
+                             // X X O
+
+                             // expected codel block:
+                             // X X X
+                             // X   X
+                             //     X
+                             //  
+
+                             new Codel[,]
+                             {
+                                 { new (0, 0, PietColors.LightMagenta), new (1, 0, PietColors.LightMagenta), new (2, 0, PietColors.LightMagenta)},
+                                 { new (0, 1, PietColors.LightMagenta), new (1, 1, PietColors.Red), new (2, 1, PietColors.LightMagenta)},
+                                 { new (0, 2, PietColors.White), new (1, 2, PietColors.Red), new (2, 2, PietColors.LightMagenta)},
+                                 { new (0, 3, PietColors.LightMagenta), new (1, 3, PietColors.LightMagenta), new (2, 3, PietColors.Blue)},
+                             },
+                             4, // height
+                             3, // width
+                             new Codel(1, 0, PietColors.LightMagenta),
+                             new List<Codel>()
+                             {
+                                 new(0,0, PietColors.LightMagenta),
+                                 new(1,0, PietColors.LightMagenta),
+                                 new(2,0, PietColors.LightMagenta),
+                                 new(0,1, PietColors.LightMagenta),
+                                 new(1,2, PietColors.LightMagenta),
+                                 new(2,2, PietColors.LightMagenta),
                              }
                          };
 
