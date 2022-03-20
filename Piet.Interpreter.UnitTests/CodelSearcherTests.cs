@@ -31,6 +31,25 @@ namespace Piet.Interpreter.UnitTests
                              }
                          };
 
+            yield return new object[]
+                         {
+                             new Codel[,]
+                             {
+                                 { new (0, 0, PietColors.White), new (1, 0, PietColors.White), new (2, 0, PietColors.White)},
+                                 { new (0, 1, PietColors.Red), new (1, 1, PietColors.Red), new (2, 1, PietColors.Red)},
+                                 { new (0, 2, PietColors.White), new (1, 2, PietColors.Red), new (2, 2, PietColors.White)},
+                             },
+                             3, // height
+                             3, // width
+                             new Codel(1, 0, PietColors.White),
+                             new List<Codel>()
+                             {
+                                 new(0,0, PietColors.White),
+                                 new(1,0, PietColors.White),
+                                 new(2,0, PietColors.White),
+                             }
+                         };
+
 
         }
 

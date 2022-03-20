@@ -53,14 +53,15 @@ internal class CodelBlockSearcher : ICodelBlockSearcher
         {
             var currentCodel = codelBlockCandidates.Pop();
             visited[currentCodel.YPosition, currentCodel.XPosition] = true;
+
             if (currentCodel.Color == seedcodel.Color)
             {
                 codelBock.Add(currentCodel);
-            }
 
-            var newNeighbors = GetValidNeighbors(currentCodel)
-                .Where(codel => visited[codel.YPosition, codel.XPosition] is false && codelBlockCandidates.Contains(codel) is false).ToList();
-            newNeighbors.ForEach(x => codelBlockCandidates.Push(x));
+                var newNeighbors = GetValidNeighbors(currentCodel)
+                    .Where(codel => visited[codel.YPosition, codel.XPosition] is false && codelBlockCandidates.Contains(codel) is false).ToList();
+                newNeighbors.ForEach(x => codelBlockCandidates.Push(x));
+            }
         }
 
         return codelBock;
