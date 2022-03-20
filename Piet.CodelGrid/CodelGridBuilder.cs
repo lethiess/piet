@@ -7,7 +7,7 @@ public sealed class CodelGridBuilder
 {
     private int _height;
     private int _width;
-    private PietColor? _initialColor;
+    private PietColor? _initialColor = PietColors.White;
     private bool _randomCellColors = false;
     public CodelGridBuilder WithHeight(int height)
     {
@@ -40,7 +40,7 @@ public sealed class CodelGridBuilder
         Guard.Argument(_height, nameof(_height))
             .Positive();
         
-        var pietDataGrid = new CodelGrid(_height, _width);
+        var pietDataGrid = new CodelGrid(_height, _width, _initialColor!);
 
         if (_randomCellColors)
         {

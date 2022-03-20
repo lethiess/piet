@@ -29,11 +29,11 @@ public sealed class CodelGrid : ICodelGrid
         _initialColor = PietColors.White;
     }
 
-    public CodelGrid(int height, int width)
+    public CodelGrid(int height, int width, PietColor initialColor)
     {
         Height    = height;
         Width     = width;
-        _initialColor = PietColors.White;
+        _initialColor = initialColor;
         _codelGrid = new Codel[height, width];
         InitializeGrid();
     }

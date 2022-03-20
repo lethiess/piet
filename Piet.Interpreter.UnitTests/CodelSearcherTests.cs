@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using Piet.Color;
 using Piet.Grid;
 using Xunit;
@@ -11,6 +10,14 @@ namespace Piet.Interpreter.UnitTests
     {
         public static IEnumerable<object[]> GetCodelArrays()
         {
+            // Required format for the test data:
+            //
+            // CodelArray: Codel[,]
+            // Height: int
+            // Width: int
+            // SeedCodel: Codel
+            // CodelBlock: List<Codel>
+
             yield return new object[]
                          {
                              // codel grid (X := seed codel color, O =: other codel color):
@@ -102,6 +109,34 @@ namespace Piet.Interpreter.UnitTests
                                  new(0,1, PietColors.LightMagenta),
                                  new(1,2, PietColors.LightMagenta),
                                  new(2,2, PietColors.LightMagenta),
+                             }
+                         };
+
+            yield return new object[]
+                         {
+                             // codel grid (X := seed codel color, O =: other codel color):
+                             // X O X
+                             // O X O
+                             // X O X
+
+
+                             // expected codel block:
+                             // 
+                             //   X
+                             //
+
+                             new Codel[,]
+                             {
+                                 { new (0, 0, PietColors.Blue), new (1, 0, PietColors.Red), new (2, 0, PietColors.Blue)},
+                                 { new (0, 1, PietColors.Red), new (1, 1, PietColors.Blue), new (2, 1, PietColors.Red)},
+                                 { new (0, 2, PietColors.Blue), new (1, 2, PietColors.Red), new (2, 2, PietColors.Blue)},
+                             },
+                             4, // height
+                             3, // width
+                             new Codel(1, 1, PietColors.Blue),
+                             new List<Codel>()
+                             {
+                                 new(1,1, PietColors.Blue),
                              }
                          };
 

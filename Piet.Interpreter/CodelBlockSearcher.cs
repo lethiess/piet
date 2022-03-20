@@ -12,9 +12,6 @@ internal class CodelBlockSearcher : ICodelBlockSearcher
         _grid = grid;
     }
 
-    public void Initialize(ICodelGrid codelGrid) => _grid = codelGrid;
-
-
     private bool NeighborHasValidCoordinates(int xPosition, int yPosition)
     {
         return Enumerable.Range(0, _grid.Width)
@@ -66,6 +63,8 @@ internal class CodelBlockSearcher : ICodelBlockSearcher
 
         return codelBock;
     }
+
+    public void Initialize(ICodelGrid codelGrid) => _grid = codelGrid;
 
     public IEnumerable<Codel> GetCodelBock(Codel currentCodel)
     {

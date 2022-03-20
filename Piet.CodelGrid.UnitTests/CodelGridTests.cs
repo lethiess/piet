@@ -14,7 +14,7 @@ namespace Piet.Grid.UnitTests
         public void SetCellColor_ValidInput_MustNotThrow(int gridWidth,
             int gridHeight, int xPosition, int yPosition)
         {
-            var grid = new CodelGrid(gridHeight, gridWidth);
+            var grid = new CodelGrid(gridHeight, gridWidth, PietColors.White);
             var codel = grid.GetCodel(xPosition, yPosition);
             Assert.NotNull(codel);
 
@@ -30,7 +30,7 @@ namespace Piet.Grid.UnitTests
         public void SetCellColor_InvalidInput_CoordinatesOutOfRangeAtLowerBound_MustThrow(int gridWidth,
             int gridHeight, int xPosition, int yPosition)
         {
-            var grid = new CodelGrid(gridHeight, gridWidth);
+            var grid = new CodelGrid(gridHeight, gridWidth, PietColors.White);
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 grid.SetCodelColor(xPosition, yPosition, PietColors.Cyan));
         }
@@ -42,7 +42,7 @@ namespace Piet.Grid.UnitTests
         public void SetCellColor_InvalidInput_CoordinatesOutOfRangeAtUpperBound_MustThrow(int gridWidth,
             int gridHeight, int xPosition, int yPosition)
         {
-            var grid = new CodelGrid(gridHeight, gridWidth);
+            var grid = new CodelGrid(gridHeight, gridWidth, PietColors.White);
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 grid.SetCodelColor(xPosition, yPosition, PietColors.Cyan));
         }
@@ -53,7 +53,7 @@ namespace Piet.Grid.UnitTests
         public void SetCellColor_InvalidInput_CoordinatesOutOfRangeAtBothLimits_MustThrow(int gridWidth,
             int gridHeight, int xPosition, int yPosition)
         {
-            var grid = new CodelGrid(gridHeight, gridWidth);
+            var grid = new CodelGrid(gridHeight, gridWidth, PietColors.White);
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 grid.SetCodelColor(xPosition, yPosition, PietColors.Cyan));
         }
