@@ -37,7 +37,7 @@ public sealed class CodelGridBuilder
     {
         Guard.Argument(_height, nameof(_height))
             .Positive();
-        Guard.Argument(_height, nameof(_height))
+        Guard.Argument(_width, nameof(_width))
             .Positive();
         
         var pietDataGrid = new CodelGrid(_height, _width, _initialColor!);
