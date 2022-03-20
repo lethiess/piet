@@ -40,7 +40,7 @@ public sealed class CodelGridBuilder
         Guard.Argument(_height, nameof(_height))
             .Positive();
         
-        var pietDataGrid = new CodelGrid(_height, _width, _initialColor);
+        var pietDataGrid = new CodelGrid(_height, _width);
 
         if (_randomCellColors)
         {

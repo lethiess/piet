@@ -15,7 +15,7 @@ internal class CodelBlockSearcher : ICodelBlockSearcher
     public void Initialize(ICodelGrid codelGrid) => _grid = codelGrid;
 
 
-    private bool NeightborHasValidCoordinates(int xPosition, int yPosition)
+    private bool NeighborHasValidCoordinates(int xPosition, int yPosition)
     {
         return Enumerable.Range(0, _grid.Width)
                    .Contains(xPosition)
@@ -32,9 +32,9 @@ internal class CodelBlockSearcher : ICodelBlockSearcher
         {
             new (codel.XPosition, codel.YPosition + 1), // top neighbor
             new (codel.XPosition, codel.YPosition - 1), // bottom neighbor
-            new (codel.XPosition + 1, codel.YPosition), // right neightbor
+            new (codel.XPosition + 1, codel.YPosition), // right neighbor
             new (codel.XPosition - 1, codel.YPosition)  // left neighbor
-        }.Where(coordinates => NeightborHasValidCoordinates(coordinates.Y, coordinates.Y)).ToList();
+        }.Where(coordinates => NeighborHasValidCoordinates(coordinates.X, coordinates.Y)).ToList();
         
         neighborCoordinates.ForEach(coordinates => neighborCodels.Add(_grid.GetCodel(coordinates.X, coordinates.Y)));
 
@@ -45,18 +45,21 @@ internal class CodelBlockSearcher : ICodelBlockSearcher
     {
         var codelBock = new List<Codel>();
         var codelBlockCandidates = new Stack<Codel>();
+        bool[,] visited = new bool[_grid.Height, _grid.Width];
+
         codelBlockCandidates.Push(seedcodel);
 
         while (codelBlockCandidates.Count > 0)
         {
             var currentCodel = codelBlockCandidates.Pop();
+            visited[currentCodel.YPosition, currentCodel.XPosition] = true;
             if (currentCodel.Color == seedcodel.Color)
             {
                 codelBock.Add(currentCodel);
             }
 
             var newNeighbors = GetValidNeighbors(currentCodel)
-                .Where(x => codelBock.Contains(x) is false).ToList();
+                .Where(codel => visited[codel.YPosition, codel.XPosition] is false && codelBlockCandidates.Contains(codel) is false).ToList();
             newNeighbors.ForEach(x => codelBlockCandidates.Push(x));
         }
 

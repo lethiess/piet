@@ -20,11 +20,20 @@ public sealed class CodelGrid : ICodelGrid
             }
         }
     }
-    public CodelGrid(int height, int width, PietColor? initialColor)
+
+    internal CodelGrid(int height, int width, Codel[,] codelGrid)
+    {
+        Height = height;
+        Width = width;
+        _codelGrid = codelGrid;
+        _initialColor = PietColors.White;
+    }
+
+    public CodelGrid(int height, int width)
     {
         Height    = height;
         Width     = width;
-        _initialColor = initialColor ?? PietColors.White;
+        _initialColor = PietColors.White;
         _codelGrid = new Codel[height, width];
         InitializeGrid();
     }

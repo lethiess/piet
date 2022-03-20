@@ -15,9 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.CodelGrid.UnitTests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.Command", "Piet.Command\Piet.Command.csproj", "{E06443E5-40C4-4B89-8D5A-6C1C1DB8D520}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piet.Command.UnitTests", "Piet.Command.UnitTets\Piet.Command.UnitTests.csproj", "{C9E79C17-9F86-4F4C-8132-3D7741429E06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.Command.UnitTests", "Piet.Command.UnitTets\Piet.Command.UnitTests.csproj", "{C9E79C17-9F86-4F4C-8132-3D7741429E06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piet.Interpreter", "Piet.Interpreter\Piet.Interpreter.csproj", "{4A7BAC72-0E6F-4D2E-AD7E-C1F1D847375B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.Interpreter", "Piet.Interpreter\Piet.Interpreter.csproj", "{4A7BAC72-0E6F-4D2E-AD7E-C1F1D847375B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piet.Interpreter.UnitTests", "Piet.Interpreter.UnitTests\Piet.Interpreter.UnitTests.csproj", "{C74DF442-D634-4727-8AA9-8799CCD16892}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{4A7BAC72-0E6F-4D2E-AD7E-C1F1D847375B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A7BAC72-0E6F-4D2E-AD7E-C1F1D847375B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A7BAC72-0E6F-4D2E-AD7E-C1F1D847375B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C74DF442-D634-4727-8AA9-8799CCD16892}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C74DF442-D634-4727-8AA9-8799CCD16892}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C74DF442-D634-4727-8AA9-8799CCD16892}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C74DF442-D634-4727-8AA9-8799CCD16892}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
