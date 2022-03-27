@@ -5,18 +5,18 @@ namespace Piet.Interpreter;
 
 internal class CodelBlockSearcher : ICodelBlockSearcher
 {
-    private ICodelGrid _grid;
-
-    public CodelBlockSearcher(ICodelGrid grid)
+    public ICodelGrid CodelGrid { get; set; }
+    
+    public CodelBlockSearcher(ICodelGrid codelGrid)
     {
-        _grid = grid;
+        CodelGrid = codelGrid;
     }
 
     private bool NeighborHasValidCoordinates(int xPosition, int yPosition)
     {
-        return Enumerable.Range(0, _grid.Width)
+        return Enumerable.Range(0, CodelGrid.Width)
                    .Contains(xPosition)
-               && Enumerable.Range(0, _grid.Height)
+               && Enumerable.Range(0, CodelGrid.Height)
                    .Contains(yPosition);
     }
 
@@ -33,7 +33,7 @@ internal class CodelBlockSearcher : ICodelBlockSearcher
             new (codel.XPosition - 1, codel.YPosition)  // left neighbor
         }.Where(coordinates => NeighborHasValidCoordinates(coordinates.X, coordinates.Y)).ToList();
         
-        neighborCoordinates.ForEach(coordinates => neighborCodels.Add(_grid.GetCodel(coordinates.X, coordinates.Y)));
+        neighborCoordinates.ForEach(coordinates => neighborCodels.Add(CodelGrid.GetCodel(coordinates.X, coordinates.Y)));
 
         return neighborCodels.ToImmutableList();
     }
@@ -42,7 +42,7 @@ internal class CodelBlockSearcher : ICodelBlockSearcher
     {
         var codelBock = new List<Codel>();
         var codelBlockCandidates = new Stack<Codel>();
-        bool[,] visited = new bool[_grid.Height, _grid.Width];
+        bool[,] visited = new bool[CodelGrid.Height, CodelGrid.Width];
 
         codelBlockCandidates.Push(seedcodel);
 
@@ -63,8 +63,6 @@ internal class CodelBlockSearcher : ICodelBlockSearcher
 
         return codelBock;
     }
-
-    public void Initialize(ICodelGrid codelGrid) => _grid = codelGrid;
 
     public IEnumerable<Codel> GetCodelBock(Codel currentCodel)
     {

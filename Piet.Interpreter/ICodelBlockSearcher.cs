@@ -4,6 +4,6 @@ namespace Piet.Interpreter;
 
 public interface ICodelBlockSearcher
 {
-    void Initialize(ICodelGrid codelGrid);
+    ICodelGrid CodelGrid { get; set; }
     IEnumerable<Codel> GetCodelBock(Codel currentCodel);
 }

@@ -25,7 +25,7 @@ public sealed class PietInterpreter
         _codelGrid = codelGrid;
         _codelChooser = codelChooser;
         _codelBlockSearcher = codelBlockSearcher;
-        _codelBlockSearcher.Initialize(_codelGrid);
+        _codelBlockSearcher.CodelGrid = _codelGrid;
         _logger = logger;
         _programStack = new();
         _currentCodel = _codelGrid.GetCodel(0, 0);
