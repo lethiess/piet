@@ -10,8 +10,8 @@ public static class ServiceExtension
     )
     {
         services.AddTransient<PietInterpreter>();
+        services.AddScoped<ICodelGrid, CodelGrid>();
         services.AddTransient<ICodelChooser, CodelChooser>();
-        services.AddTransient<ICodelGrid, CodelGrid>();
         services.AddTransient<ICodelBlockSearcher, CodelBlockSearcher>();
         return services;
     }

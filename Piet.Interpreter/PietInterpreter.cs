@@ -10,11 +10,15 @@ public sealed class PietInterpreter
     private readonly ICodelChooser _codelChooser;
     private readonly ICodelBlockSearcher _codelBlockSearcher;
     private readonly ILogger<PietInterpreter> _logger;
+    
     private readonly Stack<int> _programStack;
     private Codel _currentCodel;
     private bool _executionFinished = false;
     private bool _executionError = false;
 
+    internal static Direction DirectionPointer;
+    internal static CodelChooser CodelChooserState;
+    
     public PietInterpreter(
         ICodelGrid codelGrid,
         ICodelChooser codelChooser,
@@ -25,10 +29,11 @@ public sealed class PietInterpreter
         _codelGrid = codelGrid;
         _codelChooser = codelChooser;
         _codelBlockSearcher = codelBlockSearcher;
-        _codelBlockSearcher.CodelGrid = _codelGrid;
         _logger = logger;
         _programStack = new();
         _currentCodel = _codelGrid.GetCodel(0, 0);
+        DirectionPointer = Direction.Right;
+        CodelChooserState = CodelChooser.Left;
     }
 
     public void Run()
@@ -79,4 +84,17 @@ public sealed class PietInterpreter
         throw new NotImplementedException();
     }
     
+    public enum Direction
+    {
+        Up,
+        Right,
+        Down,
+        Left
+    }
+
+    public enum CodelChooser
+    {
+        Left,
+        Right
+    }
 }
