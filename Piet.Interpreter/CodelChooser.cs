@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Piet.Color;
 using Piet.Grid;
 
 namespace Piet.Interpreter;
@@ -14,9 +15,7 @@ internal sealed class CodelChooser : ICodelChooser
 
     public Codel GetNextCodel(IEnumerable<Codel> currentCodelBock)
     {
-        // todo: determine next codel
-
-        // loop until valid next codel was found or terminate 
+        // todo: loop until valid next codel was found or terminate 
 
         // #1 get codel block egde e which is most furthest away in direction of the DP
         //    this can include more than one codels (edge can be disjoint)
@@ -24,25 +23,67 @@ internal sealed class CodelChooser : ICodelChooser
 
         // #2 inspect edge e and find codel c in current codel block which
         //    - is furthest away to the CC's directions of the DP's direction of travel
-        var transitionCodelCandidate = GetCodelForTransitionToNextCodelBlock(codelEdge);
+        Codel transitionCodel = GetCodelForTransitionToNextCodelBlock(codelEdge);
         
         // #3 travel from codel c to next codel in direction of DP
         //    - next codel is valid -> terminate loop and return
         //    - next codel is invalid -> toggle CodelChooser state
         //          - if still invalid move DP clockwise and try again
-        
-
-        // restriction of next blocks:
-        // - black block is invalid
-        // - out of bound is invalid
-        // - white blocks can be traversed (for the next block the previous rules apply)
-        //      - change the color without triggering an command
-
+        var nextCodelCandidate = GetNextCodelCandidate(transitionCodel);
 
         throw new NotImplementedException();
     }
 
-    // Choose codel as possible candidate for  according to:
+    private bool CodelCoordinatesAreValid(Coordinates codelCoordinates) =>
+        PietInterpreter.DirectionPointer switch
+        {
+            PietInterpreter.Direction.Up => codelCoordinates.Y >= 0,
+            PietInterpreter.Direction.Right => codelCoordinates.X + 1 < CodelGrid.Width,
+            PietInterpreter.Direction.Down => codelCoordinates.Y < CodelGrid.Height,
+            PietInterpreter.Direction.Left => codelCoordinates.X >= 0,
+            _ => throw new InvalidEnumArgumentException(
+                $"The value {PietInterpreter.DirectionPointer} of type {typeof(PietInterpreter.Direction)} is invalid in this context")
+        };
+
+    private Coordinates GetCoordinatesForNextCodelInDirectionOfDirectionPointer(Codel currentCodel) =>
+        PietInterpreter.DirectionPointer switch
+        {
+            PietInterpreter.Direction.Up => new Coordinates(currentCodel.XPosition, currentCodel.YPosition - 1),
+            PietInterpreter.Direction.Right => new Coordinates(currentCodel.XPosition + 1, currentCodel.YPosition),
+            PietInterpreter.Direction.Down => new Coordinates(currentCodel.XPosition, currentCodel.YPosition + 1),
+            PietInterpreter.Direction.Left => new Coordinates(currentCodel.XPosition - 1, currentCodel.YPosition),
+            _ => throw new InvalidEnumArgumentException(
+                $"The value {PietInterpreter.DirectionPointer} of type {typeof(PietInterpreter.Direction)} is invalid in this context")
+        };
+
+    private Codel? GetNextCodelCandidate(Codel transitionCodelCandidate)
+    {
+        var nextCodelCoordinates =
+            GetCoordinatesForNextCodelInDirectionOfDirectionPointer(transitionCodelCandidate);
+
+        if (CodelCoordinatesAreValid(nextCodelCoordinates))
+        {
+            var nextCodel =
+                CodelGrid.GetCodel(nextCodelCoordinates.X, nextCodelCoordinates.Y);
+
+            if (nextCodel.Color == PietColors.Black)
+            {
+                return null;
+            }
+
+            if (nextCodel.Color == PietColors.White)
+            {
+                // travel through white codels
+                return GetNextCodelCandidate(nextCodel);
+            }
+
+            return nextCodel;
+        }
+
+        return null;
+    }
+    
+    // Choose codel as possible candidate for according to:
     // https://dangermouse.net/esoteric/piet.html section 'Program Execution'
     //  ------------------------------
     //  DP      CC      Codel choosen 

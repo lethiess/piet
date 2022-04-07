@@ -19,9 +19,7 @@ internal class CodelBlockSearcher : ICodelBlockSearcher
                && Enumerable.Range(0, CodelGrid.Height)
                    .Contains(yPosition);
     }
-
-    private sealed record Coordinates(int X, int Y) { }
-
+    
     private ImmutableList<Codel> GetValidNeighbors(Codel codel)
     {
         var neighborCodels = new List<Codel>();
