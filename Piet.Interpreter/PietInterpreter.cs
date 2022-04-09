@@ -83,7 +83,30 @@ public sealed class PietInterpreter
         // todo: execute command
         throw new NotImplementedException();
     }
-    
+
+    internal static void ToggleCodelChooser()
+    {
+        CodelChooserState = CodelChooserState switch
+        {
+            CodelChooser.Left => CodelChooser.Right,
+            CodelChooser.Right => CodelChooser.Left,
+            _ => throw new ArgumentOutOfRangeException($"The value {CodelChooserState} of type {typeof(CodelChooser)} is invalid in this context")
+        };
+    }
+
+    internal static void RotateDirectionPointerClockwise()
+    {
+        DirectionPointer = DirectionPointer switch
+        {
+            Direction.Up => Direction.Right,
+            Direction.Right => Direction.Down,
+            Direction.Down => Direction.Left,
+            Direction.Left => Direction.Up,
+            _ => throw new ArgumentOutOfRangeException(
+                $"The value {DirectionPointer} of type {typeof(Direction)} is invalid in this context")
+        };
+    }
+
     public enum Direction
     {
         Up,
