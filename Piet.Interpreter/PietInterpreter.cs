@@ -60,11 +60,18 @@ public sealed class PietInterpreter
         _logger.LogDebug($"Retrived codel block of size {codelBock.Count()}");
         
         _logger.LogDebug("Determine next codel");
-        var nextCodel = _codelChooser.GetNextCodel(codelBock);
-        _logger.LogDebug($"Next codel: {nextCodel}");
-        
-        _logger.LogDebug($"Get command for current color: {_currentCodel.Color} and next color: {nextCodel.Color}");
-        var colorCommand = ColorCommandControl.GetColorCommand(_currentCodel.Color, nextCodel.Color);
+        var nextCodelResult = _codelChooser.GetNextCodel(codelBock);
+        _logger.LogDebug($"Next codel: {nextCodelResult.Codel}");
+
+        if (nextCodelResult.Codel is null)
+        {
+            _logger.LogDebug("Program terminates because there is no next codel");
+            _executionFinished = true;
+            return;
+        }
+
+        _logger.LogDebug($"Get command for current color: {_currentCodel.Color} and next color: {nextCodelResult.Codel.Color}");
+        var colorCommand = ColorCommandControl.GetColorCommand(_currentCodel.Color, nextCodelResult.Codel.Color);
         _logger.LogDebug($"Retrived command is: {colorCommand}");
         
         _logger.LogDebug($"Execute command: {colorCommand}");
@@ -72,15 +79,17 @@ public sealed class PietInterpreter
         _logger.LogDebug($"Executed command: {colorCommand}");
         
         _logger.LogDebug("Update current codel for next step");
-        UpdateCurrentCodel(nextCodel);
+        UpdateCurrentCodel(nextCodelResult.Codel);
     }
 
     private void UpdateCurrentCodel(Codel codel) => _currentCodel = codel;
 
     private void ExecuteCommand(ColorCommand command, int codelBlockSize)
     {
-        // todo: execute command
-        throw new NotImplementedException();
+
+
+
+
     }
 
     internal static void ToggleCodelChooser()

@@ -10,17 +10,17 @@ public static class ColorCommandControl
     public const int SatuationLevels = 3;
 
     private static readonly ImmutableArray<ImmutableArray<Command>> _commandLookup =
-        ImmutableArray.Create<ImmutableArray<Command>>(
-            ImmutableArray.Create<Command>(Command.None, Command.Add,      Command.Divide, Command.Greater, Command.Duplicate,   Command.InputCharacter),
-            ImmutableArray.Create<Command>(Command.Push, Command.Subtract, Command.Modulo, Command.Pointer, Command.Roll,        Command.OutputNumber),
-            ImmutableArray.Create<Command>(Command.Pop,  Command.Multiply, Command.Not,    Command.Switch,  Command.InputNumber, Command.OutputCharacter)
+        ImmutableArray.Create(
+            ImmutableArray.Create(Command.None, Command.Add,      Command.Divide, Command.Greater, Command.Duplicate,   Command.InputCharacter),
+            ImmutableArray.Create(Command.Push, Command.Subtract, Command.Modulo, Command.Pointer, Command.Roll,        Command.OutputNumber),
+            ImmutableArray.Create(Command.Pop,  Command.Multiply, Command.Not,    Command.Switch,  Command.InputNumber, Command.OutputCharacter)
     );
 
     private static readonly ImmutableArray<ImmutableArray<PietColor>> _colorLookup =
-        ImmutableArray.Create<ImmutableArray<PietColor>>(
-            ImmutableArray.Create<PietColor>(PietColors.LightRed, PietColors.LightYellow, PietColors.LightGreen, PietColors.LightCyan, PietColors.LightBlue, PietColors.LightMagenta),
-            ImmutableArray.Create<PietColor>(PietColors.Red,      PietColors.Yellow,      PietColors.Green,      PietColors.Cyan,      PietColors.Blue,      PietColors.Magenta),
-            ImmutableArray.Create<PietColor>(PietColors.DarkRed,  PietColors.DarkYellow,  PietColors.DarkGreen,  PietColors.DarkCyan,  PietColors.DarkBlue,  PietColors.DarkMagenta )
+        ImmutableArray.Create(
+            ImmutableArray.Create(PietColors.LightRed, PietColors.LightYellow, PietColors.LightGreen, PietColors.LightCyan, PietColors.LightBlue, PietColors.LightMagenta),
+            ImmutableArray.Create(PietColors.Red,      PietColors.Yellow,      PietColors.Green,      PietColors.Cyan,      PietColors.Blue,      PietColors.Magenta),
+            ImmutableArray.Create(PietColors.DarkRed,  PietColors.DarkYellow,  PietColors.DarkGreen,  PietColors.DarkCyan,  PietColors.DarkBlue,  PietColors.DarkMagenta )
     );
 
     private static (int,int) GetIndicesOfCurrentColor(PietColor color)

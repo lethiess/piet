@@ -17,7 +17,7 @@ internal sealed class CodelChooser : ICodelChooser
         CodelGrid = codelGrid;
     }
 
-    public Codel GetNextCodel(IEnumerable<Codel> currentCodelBlock)
+    public CodelResult GetNextCodel(IEnumerable<Codel> currentCodelBlock)
     {
         bool codelChooserWasToggled = false;
         for (int i = 0; i < MAX_RETRY_COUNT; i++)
@@ -34,10 +34,10 @@ internal sealed class CodelChooser : ICodelChooser
             //    - next codel is valid -> terminate loop and return
             //    - next codel is invalid -> toggle CodelChooser state
             //          - if still GetCodelBlockCandidate move DP clockwise and try again
-            var nextCodelCandidate = GetCodelBlockCandidate(transitionCodel);
+            CodelResult nextCodelCandidate = GetCodelBlockCandidate(transitionCodel);
 
 
-            if (nextCodelCandidate is not null)
+            if (nextCodelCandidate.Codel is not null)
             {
                 return nextCodelCandidate;
             }
@@ -79,8 +79,9 @@ internal sealed class CodelChooser : ICodelChooser
                 $"The value {PietInterpreter.DirectionPointer} of type {typeof(PietInterpreter.Direction)} is invalid in this context")
         };
 
-    private Codel? GetCodelBlockCandidate(Codel transitionCodelCandidate)
+    private CodelResult GetCodelBlockCandidate(Codel transitionCodelCandidate)
     {
+        CodelResult result = new();
         var codelCandidate = GetNextCodelCandidate(transitionCodelCandidate);
 
         while (codelCandidate is not null)
@@ -89,20 +90,22 @@ internal sealed class CodelChooser : ICodelChooser
             {
                 if (codelCandidate.Color == PietColors.White)
                 {
+                    result.TraversedWhiteCodels = true;
                     codelCandidate = GetNextCodelCandidate(codelCandidate);
                 }
                 else
                 {
-                    return codelCandidate;
+                    result.Codel = codelCandidate;
+                    break;
                 }
             }
             else
             {
-                return null;
+                break;
             }
         }
 
-        return null;
+        return result;
     }
 
     private Codel? GetNextCodelCandidate(Codel transitionCodelCandidate)
