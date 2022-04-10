@@ -16,20 +16,20 @@ public sealed class PietInterpreter
     private bool _executionFinished = false;
     private bool _executionError = false;
 
-    internal static Direction DirectionPointer;
-    internal static CodelChooser CodelChooserState;
+    internal static Direction DirectionPointer = Direction.Right;
+    internal static CodelChooser CodelChooserState = CodelChooser.Left;
     
     public PietInterpreter(
+        ILogger<PietInterpreter> logger,
         ICodelGrid codelGrid,
         ICodelChooser codelChooser,
-        ICodelBlockSearcher codelBlockSearcher,
-        ILogger<PietInterpreter> logger
+        ICodelBlockSearcher codelBlockSearcher
     )
     {
+        _logger = logger;
         _codelGrid = codelGrid;
         _codelChooser = codelChooser;
         _codelBlockSearcher = codelBlockSearcher;
-        _logger = logger;
         _programStack = new();
         _currentCodel = _codelGrid.GetCodel(0, 0);
         DirectionPointer = Direction.Right;

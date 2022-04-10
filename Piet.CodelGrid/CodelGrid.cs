@@ -58,7 +58,17 @@ public sealed class CodelGrid : ICodelGrid
 
         _codelGrid[yPosition, xPosition].Color = color;
     }
-    
+
+    public void SetCodel(Codel codel)
+    {
+        Guard.Argument(codel.XPosition, nameof(codel.XPosition))
+            .InRange(0, Width - 1);
+        Guard.Argument(codel.YPosition, nameof(codel.YPosition))
+            .InRange(0, Height - 1);
+
+        _codelGrid[codel.YPosition, codel.XPosition] = codel;
+    }
+
     public Codel GetCodel(int xPosition, int yPosition)
     {
         Guard.Argument(xPosition, nameof(xPosition))

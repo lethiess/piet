@@ -9,7 +9,7 @@ internal sealed class CodelChooser : ICodelChooser
     // 4 directions with 2 codel chooser states per direction
     // the program terminates if the max retries are reached
     // 
-    private const int MAX_RETRIES = 8;
+    private const int MAX_RETRY_COUNT = 8;
     public ICodelGrid CodelGrid { get; init; }
 
     public CodelChooser(ICodelGrid codelGrid)
@@ -20,7 +20,7 @@ internal sealed class CodelChooser : ICodelChooser
     public Codel GetNextCodel(IEnumerable<Codel> currentCodelBock)
     {
         bool codelChooserWasToggled = false;
-        for (int i = 0; i < MAX_RETRIES; i++)
+        for (int i = 0; i < MAX_RETRY_COUNT; i++)
         {
             // #1 get codel block egde e which is most furthest away in direction of the DP
             //    this can include more than one codels (edge can be disjoint)
@@ -61,7 +61,7 @@ internal sealed class CodelChooser : ICodelChooser
         PietInterpreter.DirectionPointer switch
         {
             PietInterpreter.Direction.Up => codelCoordinates.Y >= 0,
-            PietInterpreter.Direction.Right => codelCoordinates.X + 1 < CodelGrid.Width,
+            PietInterpreter.Direction.Right => codelCoordinates.X < CodelGrid.Width,
             PietInterpreter.Direction.Down => codelCoordinates.Y < CodelGrid.Height,
             PietInterpreter.Direction.Left => codelCoordinates.X >= 0,
             _ => throw new ArgumentOutOfRangeException(
