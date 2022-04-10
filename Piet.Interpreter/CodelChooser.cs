@@ -17,14 +17,14 @@ internal sealed class CodelChooser : ICodelChooser
         CodelGrid = codelGrid;
     }
 
-    public Codel GetNextCodel(IEnumerable<Codel> currentCodelBock)
+    public Codel GetNextCodel(IEnumerable<Codel> currentCodelBlock)
     {
         bool codelChooserWasToggled = false;
         for (int i = 0; i < MAX_RETRY_COUNT; i++)
         {
             // #1 get codel block egde e which is most furthest away in direction of the DP
             //    this can include more than one codels (edge can be disjoint)
-            var codelEdge = GetCodelEgde(currentCodelBock.ToList());
+            var codelEdge = GetCodelEgde(currentCodelBlock.ToList());
 
             // #2 inspect edge e and find codel c in current codel block which
             //    - is furthest away to the CC's directions of the DP's direction of travel
@@ -68,7 +68,7 @@ internal sealed class CodelChooser : ICodelChooser
                 $"The value {PietInterpreter.DirectionPointer} of type {typeof(PietInterpreter.Direction)} is invalid in this context")
         };
 
-    private Coordinates GetCoordinatesForNextCodelInDirectionOfDirectionPointer(Codel currentCodel) =>
+    private static Coordinates GetCoordinatesForNextCodelInDirectionOfDirectionPointer(Codel currentCodel) =>
         PietInterpreter.DirectionPointer switch
         {
             PietInterpreter.Direction.Up => new Coordinates(currentCodel.XPosition, currentCodel.YPosition - 1),
@@ -135,7 +135,7 @@ internal sealed class CodelChooser : ICodelChooser
     //  left    left    lowermost
     //          right   uppermost
     //  ------------------------------
-    internal Codel GetCodelForTransitionToNextCodelBlock(List<Codel> codelEdge) =>
+    internal static Codel GetCodelForTransitionToNextCodelBlock(List<Codel> codelEdge) =>
         PietInterpreter.DirectionPointer switch
         {
             PietInterpreter.Direction.Up when
@@ -173,7 +173,7 @@ internal sealed class CodelChooser : ICodelChooser
             _ => throw new ArgumentOutOfRangeException($"The value {PietInterpreter.DirectionPointer} of type {typeof(PietInterpreter.Direction)} is invalid in this context")
         };
 
-    internal int
+    private static int
         GetFurthestCodelInDirectionPointersDirections(IEnumerable<Codel> currentCodelBlock) =>
         PietInterpreter.DirectionPointer switch
         {
@@ -184,7 +184,7 @@ internal sealed class CodelChooser : ICodelChooser
             _ => throw new ArgumentOutOfRangeException($"The value {PietInterpreter.DirectionPointer} of type {typeof(PietInterpreter.Direction)} is invalid in this context")
         };
 
-    internal List<Codel> GetCodelEgde(List<Codel> currentCodelBlock)
+    private static List<Codel> GetCodelEgde(List<Codel> currentCodelBlock)
     {
         var edgeValue = GetFurthestCodelInDirectionPointersDirections(currentCodelBlock);
 
