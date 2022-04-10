@@ -12,13 +12,15 @@ public partial class CodelChooserTests
         // codel grid under test
         // values: (W := white, R := red (current codel block), G := green (expected next codel)
         // 
-        // W W W W W W W
-        // W W G W W W W
-        // W W R R R W W
-        // W W R R R W W
-        // W W R R R W W
-        // W W W W W W W
-        // W W W W W W W
+        //   | 0 1 2 3 4 5 6
+        // --+--------------
+        // 0 | W W W W W W W
+        // 1 | W W G W W W W
+        // 2 | W W R R R W W
+        // 3 | W W R R R W W
+        // 4 | W W R R R W W
+        // 5 | W W W W W W W
+        // 6 | W W W W W W W
 
         var codelGrid = GetInitialCodelGrid();
         var expectedNextCodel = new Codel(2, 1, PietColors.Green);
@@ -29,10 +31,11 @@ public partial class CodelChooserTests
         PietInterpreter.DirectionPointer = PietInterpreter.Direction.Up;
         PietInterpreter.CodelChooserState = PietInterpreter.CodelChooser.Left;
 
-        var nextCodel = codelChooser.GetNextCodel(_currentCodelBlock);
+        var nextCodelResult = codelChooser.GetNextCodel(_currentCodelBlock);
 
-        Assert.NotNull(nextCodel);
-        Assert.Equal(expectedNextCodel, nextCodel);
+        Assert.NotNull(nextCodelResult);
+        Assert.Equal(expectedNextCodel, nextCodelResult.Codel);
+        Assert.False(nextCodelResult.TraversedWhiteCodels);
     }
 
     [Fact]
@@ -41,13 +44,15 @@ public partial class CodelChooserTests
         // codel grid under test
         // values: (W := white, R := red (current codel block), G := green (expected next codel)
         // 
-        // W W W W W W W
-        // W W W W G W W
-        // W W R R R W W
-        // W W R R R W W
-        // W W R R R W W
-        // W W W W W W W
-        // W W W W W W W
+        //   | 0 1 2 3 4 5 6
+        // --+--------------
+        // 0 | W W W W W W W
+        // 1 | W W W W G W W
+        // 2 | W W R R R W W
+        // 3 | W W R R R W W
+        // 4 | W W R R R W W
+        // 5 | W W W W W W W
+        // 6 | W W W W W W W
 
         var codelGrid = GetInitialCodelGrid();
         var expectedNextCodel = new Codel(4, 1, PietColors.Green);
@@ -58,10 +63,11 @@ public partial class CodelChooserTests
         PietInterpreter.DirectionPointer = PietInterpreter.Direction.Up;
         PietInterpreter.CodelChooserState = PietInterpreter.CodelChooser.Right;
 
-        var nextCodel = codelChooser.GetNextCodel(_currentCodelBlock);
+        var nextCodelResult = codelChooser.GetNextCodel(_currentCodelBlock);
 
-        Assert.NotNull(nextCodel);
-        Assert.Equal(expectedNextCodel, nextCodel);
+        Assert.NotNull(nextCodelResult);
+        Assert.Equal(expectedNextCodel, nextCodelResult.Codel);
+        Assert.False(nextCodelResult.TraversedWhiteCodels);
     }
 
     [Fact]
@@ -70,13 +76,15 @@ public partial class CodelChooserTests
         // codel grid under test
         // values: (W := white, R := red (current codel block), G := green (expected next codel)
         // 
-        // W W G W W W W
-        // W W W W W W W
-        // W W R R R W W
-        // W W R R R W W
-        // W W R R R W W
-        // W W W W W W W
-        // W W W W W W W
+        //   | 0 1 2 3 4 5 6
+        // --+--------------
+        // 0 | W W G W W W W
+        // 1 | W W W W W W W
+        // 2 | W W R R R W W
+        // 3 | W W R R R W W
+        // 4 | W W R R R W W
+        // 5 | W W W W W W W
+        // 6 | W W W W W W W
 
         var codelGrid = GetInitialCodelGrid();
         var expectedNextCodel = new Codel(2, 0, PietColors.Green);
@@ -88,10 +96,11 @@ public partial class CodelChooserTests
         PietInterpreter.DirectionPointer = PietInterpreter.Direction.Up;
         PietInterpreter.CodelChooserState = PietInterpreter.CodelChooser.Left;
 
-        var nextCodel = codelChooser.GetNextCodel(_currentCodelBlock);
+        var nextCodelResult = codelChooser.GetNextCodel(_currentCodelBlock);
 
-        Assert.NotNull(nextCodel);
-        Assert.Equal(expectedNextCodel, nextCodel);
+        Assert.NotNull(nextCodelResult);
+        Assert.Equal(expectedNextCodel, nextCodelResult.Codel);
+        Assert.True(nextCodelResult.TraversedWhiteCodels);
     }
 
     [Fact]
@@ -100,13 +109,15 @@ public partial class CodelChooserTests
         // codel grid under test
         // values: (W := white, R := red (current codel block), G := green (expected next codel)
         // 
-        // W W W W G W W
-        // W W W W W W W
-        // W W R R R W W
-        // W W R R R W W
-        // W W R R R W W
-        // W W W W W W W
-        // W W W W W W W
+        //   | 0 1 2 3 4 5 6
+        // --+--------------
+        // 0 | W W W W G W W
+        // 1 | W W W W W W W
+        // 2 | W W R R R W W
+        // 3 | W W R R R W W
+        // 4 | W W R R R W W
+        // 5 | W W W W W W W
+        // 6 | W W W W W W W
 
         var codelGrid = GetInitialCodelGrid();
         var expectedNextCodel = new Codel(4, 0, PietColors.Green);
@@ -118,9 +129,10 @@ public partial class CodelChooserTests
         PietInterpreter.DirectionPointer = PietInterpreter.Direction.Up;
         PietInterpreter.CodelChooserState = PietInterpreter.CodelChooser.Right;
 
-        var nextCodel = codelChooser.GetNextCodel(_currentCodelBlock);
+        var nextCodelResult = codelChooser.GetNextCodel(_currentCodelBlock);
 
-        Assert.NotNull(nextCodel);
-        Assert.Equal(expectedNextCodel, nextCodel);
+        Assert.NotNull(nextCodelResult);
+        Assert.Equal(expectedNextCodel, nextCodelResult.Codel);
+        Assert.True(nextCodelResult.TraversedWhiteCodels);
     }
 }
