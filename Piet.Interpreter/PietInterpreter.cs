@@ -74,9 +74,12 @@ public sealed class PietInterpreter
         var colorCommand = ColorCommandControl.GetColorCommand(_currentCodel.Color, nextCodelResult.Codel.Color);
         _logger.LogDebug($"Retrived command is: {colorCommand}");
         
-        _logger.LogDebug($"Execute command: {colorCommand}");
-        ExecuteCommand(colorCommand, codelBock.Count());
-        _logger.LogDebug($"Executed command: {colorCommand}");
+        if (nextCodelResult.TraversedWhiteCodels is false)
+        {
+            _logger.LogDebug($"Execute command: {colorCommand}");
+            ExecuteCommand(colorCommand, codelBock.Count());
+            _logger.LogDebug($"Executed command: {colorCommand}");
+        }
         
         _logger.LogDebug("Update current codel for next step");
         UpdateCurrentCodel(nextCodelResult.Codel);
@@ -86,11 +89,194 @@ public sealed class PietInterpreter
 
     private void ExecuteCommand(ColorCommand command, int codelBlockSize)
     {
+        int operand;
+        int operandA;
+        int operandB;
+
+        switch (command.Command)
+        {
+            case Command.Command.None:
+                _logger.LogDebug($"Executing command {Command.Command.None}: program state does not change");
+                break;
+            case Command.Command.Push:
+                _programStack.Push(codelBlockSize);
+                break;
+            case Command.Command.Pop:
+                _programStack.Pop();
+                break;
+            case Command.Command.Add:
+                if (_programStack.Count < 2)
+                {
+                    throw new InsufficientNumberOfElementsOnProgramStackException($"There are {_programStack.Count} elements on the stack");
+                }
+
+                operandB = _programStack.Pop();
+                operandA = _programStack.Pop();
+                _programStack.Push(operandA + operandB);
+                break;
+            case Command.Command.Subtract:
+                if (_programStack.Count < 2)
+                {
+                    throw new InsufficientNumberOfElementsOnProgramStackException($"There are {_programStack.Count} elements on the stack");
+                }
+
+                operandB = _programStack.Pop();
+                operandA = _programStack.Pop();
+                _programStack.Push(operandA - operandB);
+                break;
+            case Command.Command.Multiply:
+                if (_programStack.Count < 2)
+                {
+                    throw new InsufficientNumberOfElementsOnProgramStackException($"There are {_programStack.Count} elements on the stack");
+                }
+
+                operandB = _programStack.Pop();
+                operandA = _programStack.Pop();
+                _programStack.Push(operandA * operandB);
+                break;
+            case Command.Command.Divide:
+                if (_programStack.Count < 2)
+                {
+                    throw new InsufficientNumberOfElementsOnProgramStackException($"There are {_programStack.Count} elements on the stack");
+                }
+
+                operandB = _programStack.Pop();
+                operandA = _programStack.Pop();
+
+                if (operandB == 0)
+                {
+                    throw new PietInterpreterDividedByZeroException("Division by zero is undefined.");
+                }
+
+                _programStack.Push(operandA / operandB);
+                break;
+            case Command.Command.Modulo:
+                if (_programStack.Count < 2)
+                {
+                    throw new InsufficientNumberOfElementsOnProgramStackException($"There are {_programStack.Count} elements on the stack");
+                }
+
+                operandB = _programStack.Pop();
+                operandA = _programStack.Pop();
+
+                if (operandB == 0)
+                {
+                    throw new PietInterpreterDividedByZeroException("Modulo division for zero is undefined.");
+                }
+
+                var result = operandA % operandB;
+                if (result < 0 && operandB > 0)
+                {
+                    result = Math.Abs(result);
+                }
+                _programStack.Push(result);
+                break;
+            case Command.Command.Not:
+                if (_programStack.Count < 1)
+                {
+                    throw new InsufficientNumberOfElementsOnProgramStackException($"There are {_programStack.Count} elements on the stack");
+                }
+
+                operand = _programStack.Pop();
+                if (operand == 0)
+                {
+                    _programStack.Push(1);
+                }
+                else
+                {
+                    _programStack.Push(0);
+                }
+
+                break;
+                
+            case Command.Command.Greater:
+                if (_programStack.Count < 2)
+                {
+                    throw new InsufficientNumberOfElementsOnProgramStackException($"There are {_programStack.Count} elements on the stack");
+                }
+
+                operandB = _programStack.Pop();
+                operandA = _programStack.Pop();
+
+                _programStack.Push(operandA > operandB ? 1 : 0);
+                break;
+
+            case Command.Command.Pointer:
+                if (_programStack.Count < 1)
+                {
+                    throw new InsufficientNumberOfElementsOnProgramStackException($"There are {_programStack.Count} elements on the stack");
+                }
+
+                operand = _programStack.Pop();
+
+                if (operand > 0)
+                {
+                    for (int i = 0; i < operand; i++)
+                    {
+                        RotateDirectionPointerClockwise();
+                    }
+                }
+
+                if (operand < 0)
+                {
+                    for (int i = 0; i < Math.Abs(operand); i++)
+                    {
+                        RotateDirectionPointerCounterClockwise();
+                    }
+                }
+                break;
+
+            case Command.Command.Switch:
+                if (_programStack.Count < 1)
+                {
+                    throw new InsufficientNumberOfElementsOnProgramStackException($"There are {_programStack.Count} elements on the stack");
+                }
+
+                operand = _programStack.Pop();
+
+                for (int i = 0; i <= Math.Abs(operand); i++)
+                {
+                    ToggleCodelChooser();
+                }
+
+                break;
+
+            case Command.Command.Duplicate:
+                if (_programStack.Count < 1)
+                {
+                    throw new InsufficientNumberOfElementsOnProgramStackException($"There are {_programStack.Count} elements on the stack");
+                }
+
+                operand = _programStack.Peek();
+                _programStack.Push(operand);
+                break;
+            
+            case Command.Command.Roll:
+                if (_programStack.Count < 2)
+                {
+                    throw new InsufficientNumberOfElementsOnProgramStackException($"There are {_programStack.Count} elements on the stack");
+                }
+
+                operandB = _programStack.Pop();
+                operandA = _programStack.Pop();
 
 
 
+                break;
 
+
+
+            case Command.Command.InputNumber:
+            case Command.Command.InputCharacter:
+            case Command.Command.OutputNumber:
+            case Command.Command.OutputCharacter:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(
+                    $"The command ${command.Command} is not valid in this context");
+        }
     }
+
 
     internal static void ToggleCodelChooser()
     {
@@ -110,6 +296,19 @@ public sealed class PietInterpreter
             Direction.Right => Direction.Down,
             Direction.Down => Direction.Left,
             Direction.Left => Direction.Up,
+            _ => throw new ArgumentOutOfRangeException(
+                $"The value {DirectionPointer} of type {typeof(Direction)} is invalid in this context")
+        };
+    }
+
+    internal static void RotateDirectionPointerCounterClockwise()
+    {
+        DirectionPointer = DirectionPointer switch
+        {
+            Direction.Up => Direction.Left,
+            Direction.Left => Direction.Down,
+            Direction.Down => Direction.Right,
+            Direction.Right => Direction.Up,
             _ => throw new ArgumentOutOfRangeException(
                 $"The value {DirectionPointer} of type {typeof(Direction)} is invalid in this context")
         };
