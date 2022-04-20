@@ -257,19 +257,66 @@ public sealed class PietInterpreter
                     throw new InsufficientNumberOfElementsOnProgramStackException($"There are {_programStack.Count} elements on the stack");
                 }
 
-                operandB = _programStack.Pop();
-                operandA = _programStack.Pop();
+                var numberOfRolls = _programStack.Pop();
+                var depthOfRollOperation = _programStack.Pop();
 
+                // convert stack to array to perform roll operation
+                var stackAsArray = _programStack.ToArray();
+                Array.Reverse(stackAsArray);
 
+                if (depthOfRollOperation < stackAsArray.Length)
+                {
+                    throw new InsufficientNumberOfElementsOnProgramStackException($"Error in 'roll operation': There are {_programStack.Count} elements on the stack" +
+                        $"but a roll depth of {depthOfRollOperation} was requested.");
+                }
 
+                // roll
+                int rollInsertIndex = stackAsArray.Length - depthOfRollOperation;
+                for (int i = 0; i < numberOfRolls; i++)
+                {
+                    int programStackTopElement = stackAsArray[^1];
+                    Array.Copy(stackAsArray, rollInsertIndex, stackAsArray, rollInsertIndex + 1, stackAsArray.Length - rollInsertIndex - 1);
+                    stackAsArray.SetValue(programStackTopElement, rollInsertIndex);
+                }
+                
+                // back to stack
+                _programStack.Clear();
+                foreach (var number in stackAsArray)
+                {
+                    _programStack.Push(number);
+                }
+                
                 break;
 
-
-
             case Command.Command.InputNumber:
+                // TODO:
+                break;
             case Command.Command.InputCharacter:
+                // TODO:
+                break;
             case Command.Command.OutputNumber:
+                if (_programStack.Count < 1)
+                {
+                    throw new InsufficientNumberOfElementsOnProgramStackException($"There are {_programStack.Count} elements on the stack");
+                }
+
+                operand = _programStack.Pop();
+
+                _logger.LogInformation($"{Convert.ToChar(operand)}");
+                // TODO: emit event
+
+                break;
             case Command.Command.OutputCharacter:
+                if (_programStack.Count < 1)
+                {
+                    throw new InsufficientNumberOfElementsOnProgramStackException($"There are {_programStack.Count} elements on the stack");
+                }
+
+                operand = _programStack.Pop();
+                _logger.LogInformation($"{Convert.ToChar(operand)}");
+                // TODO: emit event
+
+
                 break;
             default:
                 throw new ArgumentOutOfRangeException(
