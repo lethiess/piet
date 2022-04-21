@@ -3,7 +3,7 @@ using Piet.Grid;
 
 namespace Piet.Interpreter;
 
-internal class CodelBlockSearcher : ICodelBlockSearcher
+public class CodelBlockSearcher : ICodelBlockSearcher
 {
     public ICodelGrid CodelGrid { get; set; }
     

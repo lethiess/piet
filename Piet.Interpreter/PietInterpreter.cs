@@ -37,6 +37,17 @@ public sealed class PietInterpreter
         _currentCodel = codelGrid.GetCodel(0, 0);
     }
 
+    public void TEST_TriggerOutputOperation(int value)
+    {
+        _outputEventService.DispatchOutputIntegerEvent(value);
+    }
+
+    public void TEST_TriggerOutputOperation(char value)
+    {
+        _outputEventService.DispatchOutputCharacterEvent(value);
+    }
+
+
     public void Run()
     {
         DirectionPointer = Direction.Right;

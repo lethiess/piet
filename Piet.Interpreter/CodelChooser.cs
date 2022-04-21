@@ -3,7 +3,7 @@ using Piet.Grid;
 
 namespace Piet.Interpreter;
 
-internal sealed class CodelChooser : ICodelChooser
+public sealed class CodelChooser : ICodelChooser
 {
     // 8 Retries 
     // 4 directions with 2 codel chooser states per direction

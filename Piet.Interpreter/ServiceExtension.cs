@@ -10,8 +10,8 @@ public static class ServiceExtension
         this IServiceCollection services
     )
     {
-        services.AddTransient<ICodelChooser, CodelChooser>();
-        services.AddTransient<ICodelBlockSearcher, CodelBlockSearcher>();
+        //services.AddTransient<ICodelChooser, CodelChooser>();
+        //services.AddTransient<ICodelBlockSearcher, CodelBlockSearcher>();
         services.AddSingleton<IOutputEventService, OutputEventService>();
         return services;
     }

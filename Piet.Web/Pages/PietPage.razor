@@ -5,8 +5,6 @@
 @using Piet.Interpreter
 @using Piet.Interpreter.Events
 
-@inject ICodelBlockSearcher CodelBlockSearcher
-@inject ICodelChooser CodelChooser
 @inject IOutputEventService OutputEventService
 @inject ILoggerFactory LoggerFactory
 
@@ -25,6 +23,20 @@
     <label>
         Width 
         <input type="number" @bind="_gridWidth"/>
+    </label>
+</p>
+
+<p>
+    <label>
+        Output (intger)
+        <input type="number" @bind="_outputInteger"/>
+    </label>
+</p>
+
+<p>
+    <label>
+        Output (character) 
+        <input type="text" @bind="_outputCharacter"/>
     </label>
 </p>
 
@@ -74,15 +86,15 @@
 <table>
     <tbody>
     @*@foreach (var row in GridData)*@
-    @for (var i = 0; i < _gridCodel.Height; i++)
+    @for (var i = 0; i < _codelGrid.Height; i++)
     {
         <tr>
             @*@foreach (var value in row)*@
-            @for (var j = 0; j < _gridCodel.Width; j++)
+            @for (var j = 0; j < _codelGrid.Width; j++)
             {
                 int i_local = i;
                 int j_local = j;
-                var value = _gridCodel.GetCodel(j, i).Color;
+                var value = _codelGrid.GetCodel(j, i).Color;
 
                 <td style='height: 30px; max-height: 30px; width: 30px; max-width:30px; border: 1px solid black; background-color: rgb(@value.R, @value.G, @value.B)' @onclick="@(e => UpdateColor(j_local, i_local))"></td>
             }
@@ -93,7 +105,7 @@
 
 
 @code {
-    @*inspiration for html content: https://gabriellesc.github.io/piet/index.html*@
+    @*inspiration for basic html content: https://gabriellesc.github.io/piet/index.html*@
 
     public const int InitialGridHeight = 15;
     public const int InitialGridWidth = 25;
@@ -104,7 +116,12 @@
     private static PietColor _colorBlack = PietColors.Black;
     private static PietColor _colorWhite = PietColors.White;
 
-    private static CodelGrid _gridCodel = 
+
+    private int? _outputInteger;
+    private char? _outputCharacter;
+
+
+    private static CodelGrid _codelGrid = 
         new CodelGridBuilder()
             .WithHeight(_gridHeight)
             .WithWidth(_gridWidth)
@@ -117,7 +134,7 @@
     private void UpdateColor(int xPosition, int yPosition)
     {
         System.Console.WriteLine($"xPosition: {xPosition} yPosition: {yPosition}");
-        _gridCodel.SetCodelColor(xPosition, yPosition, _currentColor);
+        _codelGrid.SetCodelColor(xPosition, yPosition, _currentColor);
     }
 
     private void UpdateColorCommand(int satuationIndex, int hueIndex)
@@ -139,7 +156,7 @@
         _gridWidth = InitialGridWidth;
         _currentColor = PietColors.LightRed;
 
-        _gridCodel = new CodelGridBuilder()
+        _codelGrid = new CodelGridBuilder()
             .WithHeight(_gridHeight)
             .WithWidth(_gridWidth)
             .WithInitialColor(PietColors.White)
@@ -150,7 +167,7 @@
 
     private void ResizeGrid()
     {
-        _gridCodel = new CodelGridBuilder()
+        _codelGrid = new CodelGridBuilder()
             .WithHeight(_gridHeight)
             .WithWidth(_gridWidth)
             .WithInitialColor(PietColors.White)
@@ -160,22 +177,46 @@
 
     private void FillGridRandom()
     {
-        _gridCodel.FillWithRandomValues();
+        _codelGrid.FillWithRandomValues();
     }
 
     private void Run()
     {
+        RegisterEventListener();
+
         var interpreter = new PietInterpreter(
             LoggerFactory.CreateLogger<PietInterpreter>(),
-            _gridCodel,
-            CodelChooser,
-            CodelBlockSearcher,
+            _codelGrid,
+            new CodelChooser(_codelGrid),
+            new CodelBlockSearcher(_codelGrid),
             OutputEventService
             );
+
+        interpreter.TEST_TriggerOutputOperation(42);
+        interpreter.TEST_TriggerOutputOperation('c');
         
 
         Console.WriteLine("Run");
     }
+
+    private void RegisterEventListener()
+    {
+        OutputEventService.OutputInteger += OutputEventServiceOnOutputInteger;
+        OutputEventService.OutputCharacter += OutputEventServiceOnOutputCharacter;
+    }
+
+    private void OutputEventServiceOnOutputCharacter(object? sender, OutputCharacterOperationEventArgs e)
+    {
+        Console.WriteLine(e.Value);
+        _outputCharacter = e.Value;
+    }
+
+    private void OutputEventServiceOnOutputInteger(object? sender, OutputIntegerOperationEventArgs e)
+    {
+        Console.WriteLine(e.Value);
+        _outputInteger = e.Value;
+    }
+
 
     private string GetCellName(ColorCommand colorCommand)
     {
