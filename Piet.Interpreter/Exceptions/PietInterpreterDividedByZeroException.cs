@@ -1,4 +1,4 @@
-﻿namespace Piet.Interpreter;
+﻿namespace Piet.Interpreter.Exceptions;
 
 internal class PietInterpreterDividedByZeroException : Exception
 {

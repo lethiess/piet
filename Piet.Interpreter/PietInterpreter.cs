@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Piet.Command;
 using Piet.Grid;
+using Piet.Interpreter.Events;
+using Piet.Interpreter.Exceptions;
 
 namespace Piet.Interpreter;
 
@@ -8,6 +10,7 @@ public sealed class PietInterpreter
 {
     private readonly ICodelChooser _codelChooser;
     private readonly ICodelBlockSearcher _codelBlockSearcher;
+    private readonly IOutputEventService _outputEventService;
     private readonly ILogger<PietInterpreter> _logger;
     
     private readonly Stack<int> _programStack;
@@ -22,12 +25,14 @@ public sealed class PietInterpreter
         ILogger<PietInterpreter> logger,
         ICodelGrid codelGrid,
         ICodelChooser codelChooser,
-        ICodelBlockSearcher codelBlockSearcher
+        ICodelBlockSearcher codelBlockSearcher,
+        IOutputEventService outputEventService
     )
     {
         _logger = logger;
         _codelChooser = codelChooser;
         _codelBlockSearcher = codelBlockSearcher;
+        _outputEventService = outputEventService;
         _programStack = new();
         _currentCodel = codelGrid.GetCodel(0, 0);
     }
@@ -92,6 +97,15 @@ public sealed class PietInterpreter
         int operand;
         int operandA;
         int operandB;
+
+        //var test = command.Command switch
+        //{
+        //    Command.Command.None => NoneOperation(),
+        //    Command.Command.Add => Add(),
+        //    _ => throw new Exception()
+        //};
+        // TODO: create service CommandExecutionService which handel all commands
+
 
         switch (command.Command)
         {
@@ -301,9 +315,8 @@ public sealed class PietInterpreter
                 }
 
                 operand = _programStack.Pop();
-
-                _logger.LogInformation($"{Convert.ToChar(operand)}");
-                // TODO: emit event
+                _logger.LogInformation($"Numeric output value {operand}");
+                _outputEventService.DispatchOutputIntegerEvent(operand);
 
                 break;
             case Command.Command.OutputCharacter:
@@ -313,9 +326,8 @@ public sealed class PietInterpreter
                 }
 
                 operand = _programStack.Pop();
-                _logger.LogInformation($"{Convert.ToChar(operand)}");
-                // TODO: emit event
-
+                _logger.LogInformation($"Character output value{Convert.ToChar(operand)}");
+                _outputEventService.DispatchOutputCharacterEvent((char)operand);
 
                 break;
             default:

@@ -2,6 +2,13 @@
 @using Piet.Grid
 @using Piet.Color
 @using Piet.Command
+@using Piet.Interpreter
+@using Piet.Interpreter.Events
+
+@inject ICodelBlockSearcher CodelBlockSearcher
+@inject ICodelChooser CodelChooser
+@inject IOutputEventService OutputEventService
+@inject ILoggerFactory LoggerFactory
 
 <PageTitle>Piet</PageTitle>
 
@@ -158,8 +165,16 @@
 
     private void Run()
     {
-        System.Console.WriteLine("Run");
+        var interpreter = new PietInterpreter(
+            LoggerFactory.CreateLogger<PietInterpreter>(),
+            _gridCodel,
+            CodelChooser,
+            CodelBlockSearcher,
+            OutputEventService
+            );
+        
 
+        Console.WriteLine("Run");
     }
 
     private string GetCellName(ColorCommand colorCommand)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Piet.Grid;
+using Piet.Interpreter.Events;
 
 namespace Piet.Interpreter;
 
@@ -9,10 +10,9 @@ public static class ServiceExtension
         this IServiceCollection services
     )
     {
-        services.AddTransient<PietInterpreter>();
-        services.AddScoped<ICodelGrid, CodelGrid>();
         services.AddTransient<ICodelChooser, CodelChooser>();
         services.AddTransient<ICodelBlockSearcher, CodelBlockSearcher>();
+        services.AddSingleton<IOutputEventService, OutputEventService>();
         return services;
     }
 }
