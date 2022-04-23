@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Collections.Immutable;
+using Microsoft.Extensions.Logging;
 using Piet.Command;
 using Piet.Interpreter.Events;
 using Piet.Interpreter.Exceptions;
@@ -21,13 +22,13 @@ namespace Piet.Interpreter
             _inputService = inputService;
         }
 
-        // TODO: delete 
+        internal List<int> GetProgramStack() => _programStack.ToList();
+
         public void TEST_TriggerOutputOperation(int value)
         {
             _outputEventService.DispatchOutputIntegerEvent(value);
         }
 
-        // TODO: delete 
         public void TEST_TriggerOutputOperation(char value)
         {
             _outputEventService.DispatchOutputCharacterEvent(value);
@@ -165,7 +166,7 @@ namespace Piet.Interpreter
             }
 
             var result = operandA % operandB;
-            if (result < 0 && operandB > 0)
+            if (result < 0 || operandB > 0)
             {
                 result = Math.Abs(result);
             }
@@ -218,7 +219,8 @@ namespace Piet.Interpreter
 
             if (operand > 0)
             {
-                for (int i = 0; i < operand; i++)
+
+                for (int i = 0; i < operand % 4; i++)
                 {
                     PietInterpreter.RotateDirectionPointerClockwise();
                 }
@@ -226,7 +228,7 @@ namespace Piet.Interpreter
 
             if (operand < 0)
             {
-                for (int i = 0; i < Math.Abs(operand); i++)
+                for (int i = 0; i < Math.Abs(operand) % 4; i++)
                 {
                     PietInterpreter.RotateDirectionPointerCounterClockwise();
                 }
@@ -243,7 +245,8 @@ namespace Piet.Interpreter
 
             var operand = _programStack.Pop();
 
-            for (int i = 0; i <= Math.Abs(operand); i++)
+            // Toggle the direction only if there is a chance
+            if (Math.Abs(operand) % 2 == 1)
             {
                 PietInterpreter.ToggleCodelChooser();
             }
@@ -269,21 +272,26 @@ namespace Piet.Interpreter
                     $"There are {_programStack.Count} elements on the stack");
             }
 
-            var numberOfRolls = _programStack.Pop();
+            var numberOfRolls = Math.Abs(_programStack.Pop()); // ignore negative rolls
             var depthOfRollOperation = _programStack.Pop();
+
+            if (depthOfRollOperation < 0)
+            {
+                throw new InsufficientNumberOfElementsOnProgramStackException("Negative depths for the roll operations are not allowed.");
+            }
 
             // convert stack to array to perform roll operation
             var stackAsArray = _programStack.ToArray();
             Array.Reverse(stackAsArray);
 
-            if (depthOfRollOperation < stackAsArray.Length)
+            if (depthOfRollOperation > stackAsArray.Length)
             {
                 throw new InsufficientNumberOfElementsOnProgramStackException(
                     $"Error in 'roll operation': There are {_programStack.Count} elements on the stack" +
                     $"but a roll depth of {depthOfRollOperation} was requested.");
             }
 
-            // roll
+            // perform actual roll operation
             int rollInsertIndex = stackAsArray.Length - depthOfRollOperation;
             for (int i = 0; i < numberOfRolls; i++)
             {
@@ -293,7 +301,7 @@ namespace Piet.Interpreter
                 stackAsArray.SetValue(programStackTopElement, rollInsertIndex);
             }
 
-            // back to stack
+            // convert array back to stack
             _programStack.Clear();
             foreach (var number in stackAsArray)
             {
