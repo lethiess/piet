@@ -5,8 +5,6 @@
 @using Piet.Interpreter
 @using Piet.Interpreter.Events
 
-@inject IOutputEventService OutputEventService
-@inject IInputService InputService
 @inject ILoggerFactory LoggerFactory
 @inject IProgramOperator ProgramOperator
 
@@ -30,7 +28,7 @@
 
 <p>
     <label>
-        Output (intger)
+        Output (integer)
         <input type="number" @bind="_outputInteger"/>
     </label>
 </p>
@@ -135,13 +133,13 @@
 
     private void UpdateColor(int xPosition, int yPosition)
     {
-        System.Console.WriteLine($"xPosition: {xPosition} yPosition: {yPosition}");
+        Console.WriteLine($"xPosition: {xPosition} yPosition: {yPosition}");
         _codelGrid.SetCodelColor(xPosition, yPosition, _currentColor);
     }
 
     private void UpdateColorCommand(int satuationIndex, int hueIndex)
     {
-        System.Console.WriteLine($"satuationIndex: {satuationIndex} hueIndex: {hueIndex}");
+        Console.WriteLine($"satuationIndex: {satuationIndex} hueIndex: {hueIndex}");
         _currentColor = _colorCommands[satuationIndex, hueIndex].Color;
         _colorCommands = ColorCommandControl.GetColorCommands(_currentColor);
         
@@ -182,8 +180,20 @@
         _codelGrid.FillWithRandomValues();
     }
 
+    private string GetCellName(ColorCommand colorCommand)
+    {
+        if (_currentColor != _colorWhite && _currentColor != _colorBlack && colorCommand.Command != Command.None)
+        {
+            return colorCommand.Command.ToString();
+        }
+        return "";
+    }
+
     private void Run()
     {
+        Console.WriteLine("Run");
+
+
         RegisterEventListener();
 
         var interpreter = new PietInterpreter(
@@ -194,35 +204,30 @@
             ProgramOperator
             );
 
-        Console.WriteLine("Run");
+        //Task.Run(() => interpreter.Run());
+
+        interpreter.Run();
     }
 
     private void RegisterEventListener()
     {
-        OutputEventService.OutputInteger += OutputEventServiceOnOutputInteger;
-        OutputEventService.OutputCharacter += OutputEventServiceOnOutputCharacter;
+        ProgramOperator.OutputService.OutputInteger += OutputServiceOnOutputInteger;
+        ProgramOperator.OutputService.OutputCharacter += OutputServiceOnOutputCharacter;
     }
 
-    private void OutputEventServiceOnOutputCharacter(object? sender, OutputCharacterOperationEventArgs e)
+    private void OutputServiceOnOutputCharacter(object? sender, OutputCharacterOperationEventArgs e)
     {
         Console.WriteLine(e.Value);
         _outputCharacter = e.Value;
     }
 
-    private void OutputEventServiceOnOutputInteger(object? sender, OutputIntegerOperationEventArgs e)
+    private void OutputServiceOnOutputInteger(object? sender, OutputIntegerOperationEventArgs e)
     {
         Console.WriteLine(e.Value);
         _outputInteger = e.Value;
     }
 
 
-    private string GetCellName(ColorCommand colorCommand)
-    {
-        if (_currentColor != _colorWhite && _currentColor != _colorBlack && colorCommand.Command != Command.None)
-        {
-            return colorCommand.Command.ToString();
-        }
-        return "";
-    }
+
 }
 

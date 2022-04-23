@@ -15,7 +15,7 @@ public class ProgramOperatorTests
     [Fact]
     public void None_EmptyStack_MustMatchInitialStack()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -33,7 +33,7 @@ public class ProgramOperatorTests
     [Fact]
     public void None_StackIsNotEmpty_MustMatchProgramStackBeforeOperation()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -58,7 +58,7 @@ public class ProgramOperatorTests
     [InlineData(31456233)]
     public void Push_InitialStackIsEmpty_MustMatch(int codelBlockSize)
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -74,7 +74,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Push_InitialStackIsEmpty_AddMultipleValues_MustMatchStackSize()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -94,7 +94,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Pop_StackIsEmpty_MustNotThrow_MustMatchInitialStack()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -112,7 +112,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Pop_StackHasSufficientValues_MustMatch()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -136,7 +136,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Add_StackIsEmpty_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -154,7 +154,7 @@ public class ProgramOperatorTests
     [InlineData(-12, -12, -24)]
     public void Add_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -174,7 +174,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Subtract_StackIsEmpty_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -193,7 +193,7 @@ public class ProgramOperatorTests
     [InlineData(-12, -12, 0)]
     public void Subtract_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -213,7 +213,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Multiply_StackIsEmpty_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -232,7 +232,7 @@ public class ProgramOperatorTests
     [InlineData(-9, -5, 45)]
     public void Multiply_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -252,7 +252,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Divide_StackIsEmpty_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -266,7 +266,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Divide_DivisionByZero_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -288,7 +288,7 @@ public class ProgramOperatorTests
     [InlineData(-21, -3, 7)]
     public void Divide_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -308,7 +308,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Modulo_StackIsEmpty_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -322,7 +322,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Modulo_DivisionByZero_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -344,7 +344,7 @@ public class ProgramOperatorTests
     [InlineData(-21, -2, 1)]
     public void Modulo_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -364,7 +364,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Not_StackIsEmpty_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -381,7 +381,7 @@ public class ProgramOperatorTests
     [InlineData(1, 0)]
     public void Not_StackHasSufficientValues_MustMatch(int operand, int expectedResult)
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -400,7 +400,7 @@ public class ProgramOperatorTests
     [Fact]
     public void GreaterThan_StackIsEmpty_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -419,7 +419,7 @@ public class ProgramOperatorTests
     [InlineData(-1, 1, 0)]
     public void GreaterThan_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -439,7 +439,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Pointer_StackIsEmpty_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -463,7 +463,7 @@ public class ProgramOperatorTests
     [InlineData(-12334, PietInterpreter.Direction.Left, PietInterpreter.Direction.Right)]
     public void Pointer_StackHasSufficientValues_MustMatch(int numberOfPointerRotations, PietInterpreter.Direction initialDirection, PietInterpreter.Direction expectedDirection)
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -480,7 +480,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Switch_StackIsEmpty_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -502,7 +502,7 @@ public class ProgramOperatorTests
 
     public void Switch_StackHasSufficientValues_MustMatch(int numberOfSwitches, PietInterpreter.CodelChooser initialCodelChooserState, PietInterpreter.CodelChooser expectedCodelChooserState)
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -519,7 +519,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Duplicate_StackIsEmpty_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -536,7 +536,7 @@ public class ProgramOperatorTests
     [InlineData(-11, 2, -11)]
     public void Duplicate_StackHasSufficientValues_MustMatch(int stackValue, int expectedStackSize, int expectedStackValueForAllElements)
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -555,7 +555,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Roll_StackIsEmpty_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -569,7 +569,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Roll_InsufficientNumberOfElementsForRollOperation_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -591,7 +591,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Roll_DepthOfRollsExceedsTheStackSize_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -613,7 +613,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Roll_DepthOfRollIsThree_OneRoll_MustMatch()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -644,7 +644,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Roll_DepthOfRollIsThree_TwoRolls_MustMatch()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -677,7 +677,7 @@ public class ProgramOperatorTests
     {
         const int inputNumber = 42;
 
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
         inputServiceMock.Setup(x => x.GetIntegerInput()).ReturnsAsync(inputNumber);
         
@@ -697,7 +697,7 @@ public class ProgramOperatorTests
     {
         const char inputCharacter = 'c';
 
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
         inputServiceMock.Setup(x => x.GetCharacterInput()).ReturnsAsync(inputCharacter);
 
@@ -716,7 +716,7 @@ public class ProgramOperatorTests
     [Fact]
     public void OutputNumber_StackIsEmpty_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -730,7 +730,7 @@ public class ProgramOperatorTests
     [Fact]
     public void OutputNumber_StackHasSufficientValues_MustMatch()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -747,7 +747,7 @@ public class ProgramOperatorTests
     [Fact]
     public void OutputCharacter_StackIsEmpty_MustThrow()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
@@ -761,7 +761,7 @@ public class ProgramOperatorTests
     [Fact]
     public void OutputCharacter_StackHasSufficientValues_MustMatch()
     {
-        var outputEventServiceMock = new Mock<IOutputEventService>();
+        var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),

@@ -1,6 +1,6 @@
 ﻿namespace Piet.Interpreter.Events;
 
-public interface IOutputEventService
+public interface IOutputService
 {
     event EventHandler<OutputCharacterOperationEventArgs>? OutputCharacter;
     event EventHandler<OutputIntegerOperationEventArgs>? OutputInteger;

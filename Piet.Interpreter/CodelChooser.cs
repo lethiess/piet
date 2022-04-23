@@ -34,11 +34,12 @@ public sealed class CodelChooser : ICodelChooser
             //    - next codel is valid -> terminate loop and return
             //    - next codel is invalid -> toggle CodelChooser state
             //          - if still GetCodelBlockCandidate move DP clockwise and try again
-            CodelResult nextCodelCandidate = GetCodelBlockCandidate(transitionCodel);
+            var nextCodelCandidate = GetCodelBlockCandidate(transitionCodel);
 
 
             if (nextCodelCandidate.Codel is not null)
             {
+                nextCodelCandidate.Success = true;
                 return nextCodelCandidate;
             }
             
@@ -46,6 +47,7 @@ public sealed class CodelChooser : ICodelChooser
             {
                 PietInterpreter.ToggleCodelChooser();
                 codelChooserWasToggled = true;
+
             }
             else if (codelChooserWasToggled)
             {
@@ -54,7 +56,7 @@ public sealed class CodelChooser : ICodelChooser
             }
         }
 
-        return null!;
+        return new CodelResult() {Success = false};
     }
 
     private bool CodelCoordinatesAreValid(Coordinates codelCoordinates) =>

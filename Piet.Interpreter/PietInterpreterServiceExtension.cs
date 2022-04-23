@@ -1,20 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Piet.Grid;
 using Piet.Interpreter.Events;
 
 namespace Piet.Interpreter;
 
-public static class ServiceExtension
+public static class PietInterpreterServiceExtension
 {
     public static IServiceCollection AddPietInterpreter(
         this IServiceCollection services
     )
     {
-        //services.AddTransient<ICodelChooser, CodelChooser>();
-        //services.AddTransient<ICodelBlockSearcher, CodelBlockSearcher>();
         services.AddTransient<IProgramOperator, ProgramOperator>();
         services.AddSingleton<IInputService, InputService>();
-        services.AddSingleton<IOutputEventService, OutputEventService>();
+        services.AddSingleton<IOutputService, OutputService>();
         return services;
     }
 }

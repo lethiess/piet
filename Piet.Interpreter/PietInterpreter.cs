@@ -33,7 +33,7 @@ public sealed class PietInterpreter
         _currentCodel = codelGrid.GetCodel(0, 0);
     }
 
-    public void Run()
+    public PietInterpreterResult Run()
     {
         DirectionPointer = Direction.Right;
         CodelChooserState = CodelChooser.Left;
@@ -46,11 +46,11 @@ public sealed class PietInterpreter
 
         if (_executionFinished && _executionError is false)
         {
-            _logger.LogInformation("Successfully interpreted codel grid");
+            return new PietInterpreterResult(PietInterpreterResult.InterpreterStatus.Success, "Successfully interpreted codel grid");
         }
         else
         {
-            _logger.LogCritical("An error occurred - Piet interpreter stopped");
+            return new PietInterpreterResult(PietInterpreterResult.InterpreterStatus.Error, "An error occurred. The interpreter stopped.");
         }
     }
 
@@ -58,7 +58,7 @@ public sealed class PietInterpreter
     {
         _logger.LogDebug("Get codel block for current codel: {_currentCodel}", _currentCodel);
         var codelBock = _codelBlockSearcher.GetCodelBock(_currentCodel).ToList();
-        _logger.LogDebug($"Retrieved codel block of size {codelBock.Count()}");
+        _logger.LogDebug($"Retrieved codel block of size {codelBock.Count}");
         
         _logger.LogDebug("Determine next codel");
         var nextCodelResult = _codelChooser.GetNextCodel(codelBock);
@@ -78,7 +78,7 @@ public sealed class PietInterpreter
         if (nextCodelResult.TraversedWhiteCodels is false)
         {
             _logger.LogDebug($"Execute command: {colorCommand}");
-            _programOperator.ExecuteCommand(colorCommand, codelBock.Count());
+            _programOperator.ExecuteCommand(colorCommand, codelBock.Count);
             _logger.LogDebug($"Executed command: {colorCommand}");
         }
         

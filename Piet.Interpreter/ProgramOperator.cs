@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Piet.Command;
 using Piet.Interpreter.Events;
 using Piet.Interpreter.Exceptions;
@@ -10,29 +9,21 @@ namespace Piet.Interpreter
     {
         private readonly Stack<int> _programStack;
         private readonly ILogger<ProgramOperator> _logger;
-        private readonly IOutputEventService _outputEventService;
-        private readonly IInputService _inputService;
 
         public ProgramOperator(ILogger<ProgramOperator> logger,
-            IOutputEventService outputEventService, IInputService inputService)
+            IOutputService outputService, IInputService inputService)
         {
             _programStack = new Stack<int>();
             _logger = logger;
-            _outputEventService = outputEventService;
-            _inputService = inputService;
+            OutputService = outputService;
+            InputService = inputService;
         }
 
         internal List<int> GetProgramStack() => _programStack.ToList();
 
-        public void TEST_TriggerOutputOperation(int value)
-        {
-            _outputEventService.DispatchOutputIntegerEvent(value);
-        }
-
-        public void TEST_TriggerOutputOperation(char value)
-        {
-            _outputEventService.DispatchOutputCharacterEvent(value);
-        }
+        public IInputService InputService { get; init; }
+    
+        public IOutputService OutputService { get; init; }
 
         public void ExecuteCommand(ColorCommand colorCommand, int codelBlockSize)
         {
@@ -311,13 +302,13 @@ namespace Piet.Interpreter
 
         private void InputNumber()
         {
-            int inputNumber = _inputService.GetIntegerInput().Result;
+            int inputNumber = InputService.GetIntegerInput().Result;
             _programStack.Push(inputNumber);
         }
 
         private void InputCharacter()
         {
-            int inputCharacter = _inputService.GetCharacterInput().Result;
+            int inputCharacter = InputService.GetCharacterInput().Result;
             _programStack.Push(inputCharacter);
         }
 
@@ -331,7 +322,7 @@ namespace Piet.Interpreter
 
             var operand = _programStack.Pop();
             _logger.LogDebug($"Numeric output value {operand}");
-            _outputEventService.DispatchOutputIntegerEvent(operand);
+            OutputService.DispatchOutputIntegerEvent(operand);
         }
 
         private void OutputCharacter()
@@ -344,7 +335,7 @@ namespace Piet.Interpreter
 
             var operand = _programStack.Pop();
             _logger.LogDebug($"Character output value{Convert.ToChar(operand)}");
-            _outputEventService.DispatchOutputCharacterEvent((char)operand);
+            OutputService.DispatchOutputCharacterEvent((char)operand);
         }
     }
 }
