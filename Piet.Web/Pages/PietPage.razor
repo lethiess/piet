@@ -6,6 +6,7 @@
 @using Piet.Interpreter.Events
 
 @inject IOutputEventService OutputEventService
+@inject IInputService InputService
 @inject ILoggerFactory LoggerFactory
 
 <PageTitle>Piet</PageTitle>
@@ -189,7 +190,8 @@
             _codelGrid,
             new CodelChooser(_codelGrid),
             new CodelBlockSearcher(_codelGrid),
-            OutputEventService
+            OutputEventService,
+            InputService
             );
 
         interpreter.TEST_TriggerOutputOperation(42);

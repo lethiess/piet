@@ -11,6 +11,7 @@ public sealed class PietInterpreter
     private readonly ICodelChooser _codelChooser;
     private readonly ICodelBlockSearcher _codelBlockSearcher;
     private readonly IOutputEventService _outputEventService;
+    private readonly IInputService _inputService;
     private readonly ILogger<PietInterpreter> _logger;
     
     private readonly Stack<int> _programStack;
@@ -26,13 +27,15 @@ public sealed class PietInterpreter
         ICodelGrid codelGrid,
         ICodelChooser codelChooser,
         ICodelBlockSearcher codelBlockSearcher,
-        IOutputEventService outputEventService
+        IOutputEventService outputEventService,
+        IInputService inputService
     )
     {
         _logger = logger;
         _codelChooser = codelChooser;
         _codelBlockSearcher = codelBlockSearcher;
         _outputEventService = outputEventService;
+        _inputService = inputService;
         _programStack = new();
         _currentCodel = codelGrid.GetCodel(0, 0);
     }
@@ -314,10 +317,12 @@ public sealed class PietInterpreter
                 break;
 
             case Command.Command.InputNumber:
-                // TODO:
+                int inputNumber = _inputService.GetIntegerInput().Result;
+                _programStack.Push(inputNumber);
                 break;
             case Command.Command.InputCharacter:
-                // TODO:
+                int inputCharacter = _inputService.GetCharacterInput().Result;
+                _programStack.Push(inputCharacter);
                 break;
             case Command.Command.OutputNumber:
                 if (_programStack.Count < 1)
@@ -326,7 +331,7 @@ public sealed class PietInterpreter
                 }
 
                 operand = _programStack.Pop();
-                _logger.LogInformation($"Numeric output value {operand}");
+                _logger.LogDebug($"Numeric output value {operand}");
                 _outputEventService.DispatchOutputIntegerEvent(operand);
 
                 break;
@@ -337,7 +342,7 @@ public sealed class PietInterpreter
                 }
 
                 operand = _programStack.Pop();
-                _logger.LogInformation($"Character output value{Convert.ToChar(operand)}");
+                _logger.LogDebug($"Character output value{Convert.ToChar(operand)}");
                 _outputEventService.DispatchOutputCharacterEvent((char)operand);
 
                 break;
