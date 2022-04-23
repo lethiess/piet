@@ -8,6 +8,7 @@
 @inject IOutputEventService OutputEventService
 @inject IInputService InputService
 @inject ILoggerFactory LoggerFactory
+@inject IProgramOperator ProgramOperator
 
 <PageTitle>Piet</PageTitle>
 
@@ -190,13 +191,8 @@
             _codelGrid,
             new CodelChooser(_codelGrid),
             new CodelBlockSearcher(_codelGrid),
-            OutputEventService,
-            InputService
+            ProgramOperator
             );
-
-        interpreter.TEST_TriggerOutputOperation(42);
-        interpreter.TEST_TriggerOutputOperation('c');
-        
 
         Console.WriteLine("Run");
     }

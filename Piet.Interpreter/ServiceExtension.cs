@@ -12,6 +12,7 @@ public static class ServiceExtension
     {
         //services.AddTransient<ICodelChooser, CodelChooser>();
         //services.AddTransient<ICodelBlockSearcher, CodelBlockSearcher>();
+        services.AddTransient<IProgramOperator, ProgramOperator>();
         services.AddSingleton<IInputService, InputService>();
         services.AddSingleton<IOutputEventService, OutputEventService>();
         return services;
