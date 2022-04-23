@@ -356,9 +356,12 @@ namespace Piet.Interpreter.UnitTests
             PietInterpreter.DirectionPointer = PietInterpreter.Direction.Right;
             PietInterpreter.CodelChooserState = PietInterpreter.CodelChooser.Left;
 
-            var nextCodel = codelChooser.GetNextCodel(_currentCodelBlock);
+            var codelResult = codelChooser.GetNextCodel(_currentCodelBlock);
 
-            Assert.Null(nextCodel);
+            Assert.NotNull(codelResult);
+            Assert.False(codelResult.Success);
+            Assert.Null(codelResult.Codel);
+            Assert.False(codelResult.TraversedWhiteCodels);
         }
 
     }
