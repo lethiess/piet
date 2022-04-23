@@ -11,7 +11,7 @@ public enum Command
     Divide,
     Modulo,
     Not,
-    Greater,
+    GreaterThan,
     Pointer,
     Switch,
     Duplicate,

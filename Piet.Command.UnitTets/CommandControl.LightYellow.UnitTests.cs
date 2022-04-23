@@ -23,7 +23,7 @@ public partial class CommandControlUnitTests
         Assert.Equal(Command.None, colorCommands[0, 1].Command);
         Assert.Equal(Command.Add, colorCommands[0, 2].Command);
         Assert.Equal(Command.Divide, colorCommands[0, 3].Command);
-        Assert.Equal(Command.Greater, colorCommands[0, 4].Command);
+        Assert.Equal(Command.GreaterThan, colorCommands[0, 4].Command);
         Assert.Equal(Command.Duplicate, colorCommands[0, 5].Command);
 
         Assert.Equal(Command.OutputNumber, colorCommands[1, 0].Command);

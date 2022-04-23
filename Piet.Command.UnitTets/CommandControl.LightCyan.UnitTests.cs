@@ -19,7 +19,7 @@ public partial class CommandControlUnitTests
         Assert.NotNull(colorCommands);
 
         // validate commands
-        Assert.Equal(Command.Greater, colorCommands[0, 0].Command);
+        Assert.Equal(Command.GreaterThan, colorCommands[0, 0].Command);
         Assert.Equal(Command.Duplicate, colorCommands[0, 1].Command);
         Assert.Equal(Command.InputCharacter, colorCommands[0, 2].Command);
         Assert.Equal(Command.None, colorCommands[0, 3].Command);
