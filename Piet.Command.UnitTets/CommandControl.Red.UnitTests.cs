@@ -8,14 +8,14 @@ public partial class CommandControlUnitTests
     [Fact]
     public void GetColorCommands_ValidInput_Red_MustReturn()
     {
-        var colorCommands = PietColorCommandControl.GetColorCommands(PietColors.Red);
+        var colorCommands = ColorCommandControl.GetColorCommands(PietColors.Red);
         Assert.NotNull(colorCommands);
     }
 
     [Fact]
     public void GetColorCommands_ValidInput_Red_MustReturn_MustMatch()
     {
-        var colorCommands = PietColorCommandControl.GetColorCommands(PietColors.Red);
+        var colorCommands = ColorCommandControl.GetColorCommands(PietColors.Red);
         Assert.NotNull(colorCommands);
 
         // validate commands
@@ -29,7 +29,7 @@ public partial class CommandControlUnitTests
         Assert.Equal(Command.None, colorCommands[1, 0].Command);
         Assert.Equal(Command.Add, colorCommands[1, 1].Command);
         Assert.Equal(Command.Divide, colorCommands[1, 2].Command);
-        Assert.Equal(Command.Greater, colorCommands[1, 3].Command);
+        Assert.Equal(Command.GreaterThan, colorCommands[1, 3].Command);
         Assert.Equal(Command.Duplicate, colorCommands[1, 4].Command);
         Assert.Equal(Command.InputCharacter, colorCommands[1, 5].Command);
 

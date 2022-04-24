@@ -2,8 +2,7 @@
 public sealed record PietColor : Color
 {
     public PietColorNames Name { get; }
-
-    internal PietColor(int red, int green, int blue, PietColorNames name)
+    public PietColor(int red, int green, int blue, PietColorNames name)
     {
         Name = name;
         R = red;

@@ -3,49 +3,44 @@ using Piet.Color;
 
 namespace Piet.Grid;
 
-public sealed class PietDataGridBuilder
+public sealed class CodelGridBuilder
 {
     private int _height;
     private int _width;
-    private PietColor? _initialColor;
+    private PietColor? _initialColor = PietColors.White;
     private bool _randomCellColors = false;
-
-    public PietDataGridBuilder()
-    {
-    }
-
-    public PietDataGridBuilder WithHeight(int height)
+    public CodelGridBuilder WithHeight(int height)
     {
         _height = height;
         return this;
     }
 
-    public PietDataGridBuilder WithWidth(int width)
+    public CodelGridBuilder WithWidth(int width)
     {
         _width = width;
         return this;
     }
 
-    public PietDataGridBuilder WithInitialColor(PietColor color)
+    public CodelGridBuilder WithInitialColor(PietColor color)
     {
         _initialColor = color;
         return this;
     }
 
-    public PietDataGridBuilder WithRandomCellColors()
+    public CodelGridBuilder WithRandomCellColors()
     {
         _randomCellColors = true;
         return this;
     }
 
-    public PietDataGrid Build()
+    public CodelGrid Build()
     {
         Guard.Argument(_height, nameof(_height))
             .Positive();
-        Guard.Argument(_height, nameof(_height))
+        Guard.Argument(_width, nameof(_width))
             .Positive();
         
-        var pietDataGrid = new PietDataGrid(_height, _width, _initialColor);
+        var pietDataGrid = new CodelGrid(_height, _width, _initialColor!);
 
         if (_randomCellColors)
         {

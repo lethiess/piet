@@ -1,4 +1,6 @@
-﻿namespace Piet.Color;
+﻿using System;
+
+namespace Piet.Color;
 
 public class InvalidPietColorCodeException : Exception
 {
