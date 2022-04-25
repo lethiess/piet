@@ -10,8 +10,6 @@
 
 <PageTitle>Piet</PageTitle>
 
-<h3>Piet</h3>
-
 <p>
     <label>
         Height
@@ -26,19 +24,6 @@
     </label>
 </p>
 
-<p>
-    <label>
-        Output (integer)
-        <input type="number" @bind="_outputInteger"/>
-    </label>
-</p>
-
-<p>
-    <label>
-        Output (character) 
-        <input type="text" @bind="_outputCharacter"/>
-    </label>
-</p>
 
 <p>
     <button class="btn btn-primary" @onclick="ResizeGrid">Resize Grid</button>
@@ -48,6 +33,16 @@
     <button class="btn btn-primary" @onclick="Run">Run</button>
     
     <button class="btn btn-primary" @onclick="FillGridRandom">Fill random</button>
+</p>
+
+<p>
+    <label>
+        Output:
+        @foreach (var output in _output)
+        {
+            <label>@output&nbsp;</label>
+        }
+    </label>
 </p>
 
 <p>
@@ -117,8 +112,7 @@
     private static PietColor _colorWhite = PietColors.White;
 
 
-    private int? _outputInteger;
-    private char? _outputCharacter;
+    private List<string> _output = new();
 
 
     private static CodelGrid _codelGrid = 
@@ -189,10 +183,9 @@
         return "";
     }
 
-    private void Run()
+    private async Task Run()
     {
         Console.WriteLine("Run");
-
 
         RegisterEventListener();
 
@@ -204,9 +197,11 @@
             ProgramOperator
             );
 
-        //Task.Run(() => interpreter.Run());
+        var result = await Task.Run(() => interpreter.Run());
+        
 
-        interpreter.Run();
+        Console.WriteLine(result.Status);
+        Console.WriteLine(result.Message);
     }
 
     private void RegisterEventListener()
@@ -218,13 +213,15 @@
     private void OutputServiceOnOutputCharacter(object? sender, OutputCharacterOperationEventArgs e)
     {
         Console.WriteLine(e.Value);
-        _outputCharacter = e.Value;
+        _output.Add(e.Value.ToString());
+        StateHasChanged();
     }
 
     private void OutputServiceOnOutputInteger(object? sender, OutputIntegerOperationEventArgs e)
     {
         Console.WriteLine(e.Value);
-        _outputInteger = e.Value;
+        _output.Add(e.Value.ToString());
+        StateHasChanged();
     }
 
 
