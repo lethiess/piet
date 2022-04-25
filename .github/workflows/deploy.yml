@@ -24,11 +24,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
       
-    # publishes Blazor project to the release-folder
     - name: Publish .NET Core Project
       run: dotnet publish Piet.Web/Piet.Web.csproj -c Release -o release --nologo
-      
-    # changes the base-tag in index.html from '/' to 'Piet' to match GitHub Pages repository subdirectory
+    
     - name: Change base-tag in index.html from / to piet
       run: sed -i 's/<base href="\/" \/>/<base href="\/piet\/" \/>/g' release/wwwroot/index.html
       
@@ -44,6 +42,7 @@ jobs:
       uses: JamesIves/github-pages-deploy-action@3.7.1
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: release/wwwroot
+        branch: gh-pages
+        folder: release/wwwroot
+        git-config-name: 'Github pages deploy bot'
 
