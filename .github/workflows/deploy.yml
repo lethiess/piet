@@ -44,5 +44,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         branch: gh-pages
         folder: release/wwwroot
-        git-config-name: 'Github pages deploy bot'
 
