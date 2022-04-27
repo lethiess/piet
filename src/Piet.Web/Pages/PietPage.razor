@@ -33,6 +33,9 @@
     <button class="btn btn-primary" @onclick="Run">Run</button>
     
     <button class="btn btn-primary" @onclick="FillGridRandom">Fill random</button>
+    
+    <button class="btn btn-primary" @onclick="Test">Test</button>
+
 </p>
 
 <p>
@@ -222,6 +225,25 @@
         Console.WriteLine(e.Value);
         _output.Add(e.Value.ToString());
         StateHasChanged();
+    }
+
+    [CascadingParameter] public IModalService Modal { get; set; } = default!;
+
+    string? _message;
+
+    async Task ShowModal()
+    {
+        var messageForm = Modal.Show<MessageForm>();
+        var result = await messageForm.Result;
+
+        if (!result.Cancelled)
+            _message = result.Data?.ToString() ?? string.Empty;
+    }
+
+
+    private async Task Test()
+    {
+        await ShowModal();
     }
 
 
