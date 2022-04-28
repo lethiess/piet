@@ -34,7 +34,9 @@
     
     <button class="btn btn-primary" @onclick="FillGridRandom">Fill random</button>
     
-    <button @onclick="ShowModal" class="btn btn-primary">Show Modal</button>
+    <button @onclick="ShowModalForCharacter" class="btn btn-primary">Show Modal For Character</button>
+
+    <button @onclick="ShowModalForInteger" class="btn btn-primary">Show Modal For Integer</button>
 
 </p>
 
@@ -239,16 +241,23 @@
         StateHasChanged();
     }
 
-
-    async Task ShowModal()
+    async Task ShowModalForCharacter()
     {
-        var messageForm = Modal.Show<MessageForm>();
+        var messageForm = Modal.Show<MessageFormCharacter>();
         var result = await messageForm.Result;
 
         if (!result.Cancelled)
             _message = result.Data?.ToString() ?? string.Empty;
     }
+    
 
+    async Task ShowModalForInteger()
+    {
+        var messageForm = Modal.Show<MessageFormInteger>();
+        var result = await messageForm.Result;
 
+        if (!result.Cancelled)
+            _message = result.Data?.ToString() ?? string.Empty;
+    }
 }
 
