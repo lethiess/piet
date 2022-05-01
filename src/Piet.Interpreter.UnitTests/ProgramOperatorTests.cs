@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Piet.Interpreter.Events;
 using Xunit;
 using Moq;
 using Piet.Color;
 using Piet.Command;
 using Piet.Interpreter.Exceptions;
+using Piet.Interpreter.Input;
+using Piet.Interpreter.Output;
 
 namespace Piet.Interpreter.UnitTests;
 
@@ -679,7 +680,7 @@ public class ProgramOperatorTests
 
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
-        inputServiceMock.Setup(x => x.GetIntegerInput()).ReturnsAsync(inputNumber);
+        inputServiceMock.Setup(x => x.GetIntegerInputAsync()).ReturnsAsync(inputNumber);
         
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
@@ -699,7 +700,7 @@ public class ProgramOperatorTests
 
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
-        inputServiceMock.Setup(x => x.GetCharacterInput()).ReturnsAsync(inputCharacter);
+        inputServiceMock.Setup(x => x.GetCharacterInputAsync()).ReturnsAsync(inputCharacter);
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);

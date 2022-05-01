@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Piet.Command;
-using Piet.Interpreter.Events;
 using Piet.Interpreter.Exceptions;
+using Piet.Interpreter.Input;
+using Piet.Interpreter.Output;
 
 namespace Piet.Interpreter
 {
@@ -43,8 +44,8 @@ namespace Piet.Interpreter
                 case Command.Command.Switch: Switch(); break;
                 case Command.Command.Duplicate: Duplicate(); break;
                 case Command.Command.Roll: Roll(); break;
-                case Command.Command.InputNumber: InputNumber(); break;
-                case Command.Command.InputCharacter: InputCharacter(); break;
+                case Command.Command.InputNumber: InputNumberAsync(); break;
+                case Command.Command.InputCharacter: InputCharacterAsync(); break;
                 case Command.Command.OutputNumber: OutputNumber(); break;
                 case Command.Command.OutputCharacter: OutputCharacter(); break;
                 default:
@@ -300,15 +301,15 @@ namespace Piet.Interpreter
             }
         }
 
-        private void InputNumber()
+        private void InputNumberAsync()
         {
-            int inputNumber = InputService.GetIntegerInput().Result;
+            int inputNumber = InputService.GetIntegerInputAsync().Result;
             _programStack.Push(inputNumber);
         }
 
-        private void InputCharacter()
+        private void InputCharacterAsync()
         {
-            int inputCharacter = InputService.GetCharacterInput().Result;
+            int inputCharacter = InputService.GetCharacterInputAsync().Result;
             _programStack.Push(inputCharacter);
         }
 

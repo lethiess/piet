@@ -1,5 +1,6 @@
 ﻿using Piet.Command;
-using Piet.Interpreter.Events;
+using Piet.Interpreter.Input;
+using Piet.Interpreter.Output;
 
 namespace Piet.Interpreter;
 

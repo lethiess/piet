@@ -48,10 +48,8 @@ public sealed class PietInterpreter
         {
             return new PietInterpreterResult(PietInterpreterResult.InterpreterStatus.Success, "Successfully interpreted codel grid");
         }
-        else
-        {
-            return new PietInterpreterResult(PietInterpreterResult.InterpreterStatus.Error, "An error occurred. The interpreter stopped.");
-        }
+
+        return new PietInterpreterResult(PietInterpreterResult.InterpreterStatus.Error, "An error occurred. The interpreter stopped.");
     }
 
     private void NextStep()

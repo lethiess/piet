@@ -1,7 +1,8 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Piet.Color;
 using Piet.Grid;
-using Piet.Interpreter.Events;
+using Piet.Interpreter.Input;
+using Piet.Interpreter.Output;
 using Xunit;
 
 namespace Piet.Interpreter.UnitTests;

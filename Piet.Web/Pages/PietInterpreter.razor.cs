@@ -4,7 +4,8 @@ using Piet.Color;
 using Piet.Command;
 using Piet.Grid;
 using Piet.Interpreter;
-using Piet.Interpreter.Events;
+using Piet.Interpreter.Input;
+using Piet.Interpreter.Output;
 using Piet.Web.Shared;
 
 namespace Piet.Web.Pages
@@ -19,6 +20,9 @@ namespace Piet.Web.Pages
 
         [Inject] 
         private IProgramOperator ProgramOperator { get; init; } = default!;
+
+        [Inject]
+        private ILogger<PietInterpreter> Logger { get; init; } = default!;
 
         private const int InitialGridHeight = 15;
         private const int InitialGridWidth = 25;
@@ -44,6 +48,7 @@ namespace Piet.Web.Pages
             _colorCommands =
                 ColorCommandControl.GetColorCommands(_currentColor);
 
+            //RegisterEventListener();
         }
 
         private void UpdateColor(int xPosition, int yPosition)
@@ -110,6 +115,7 @@ namespace Piet.Web.Pages
 
             RegisterEventListener();
 
+
             var interpreter = new Piet.Interpreter.PietInterpreter(
                 LoggerFactory.CreateLogger<Piet.Interpreter.PietInterpreter>(),
                 _codelGrid,
@@ -129,6 +135,21 @@ namespace Piet.Web.Pages
         {
             ProgramOperator.OutputService.OutputInteger += OutputServiceOnOutputInteger;
             ProgramOperator.OutputService.OutputCharacter += OutputServiceOnOutputCharacter;
+
+            ProgramOperator.InputService.InputInteger += InputServiceOnInputInteger;
+            ProgramOperator.InputService.InputCharacter += InputServiceOnInputCharacter;
+        }
+
+        private async void InputServiceOnInputInteger(object? sender, EventArgs e)
+        {
+            Logger.LogDebug("Input integer");
+            await ShowModalForInteger();
+        }
+
+        private async void InputServiceOnInputCharacter(object? sender, EventArgs e)
+        {
+            Logger.LogDebug("Input character");
+            await ShowModalForCharacter();
         }
 
         private void OutputServiceOnOutputCharacter(object? sender, OutputCharacterOperationEventArgs e)

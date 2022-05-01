@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Piet.Interpreter.Events;
+using Piet.Interpreter.Input;
+using Piet.Interpreter.Output;
 
 namespace Piet.Interpreter;
 
