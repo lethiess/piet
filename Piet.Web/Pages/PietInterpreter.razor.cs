@@ -4,7 +4,6 @@ using Piet.Color;
 using Piet.Command;
 using Piet.Grid;
 using Piet.Interpreter;
-using Piet.Interpreter.Input;
 using Piet.Interpreter.Output;
 using Piet.Web.Shared;
 
@@ -136,17 +135,17 @@ namespace Piet.Web.Pages
             ProgramOperator.OutputService.OutputInteger += OutputServiceOnOutputInteger;
             ProgramOperator.OutputService.OutputCharacter += OutputServiceOnOutputCharacter;
 
-            ProgramOperator.InputService.InputInteger += InputServiceOnInputInteger;
-            ProgramOperator.InputService.InputCharacter += InputServiceOnInputCharacter;
+            ProgramOperator.InputFacade.InputRequestService.IntegerRequest += InputServiceOnIntegerRequest;
+            ProgramOperator.InputFacade.InputRequestService.CharacterRequest += InputServiceOnInputCharacterRequest;
         }
 
-        private async void InputServiceOnInputInteger(object? sender, EventArgs e)
+        private void InputServiceOnIntegerRequest(object? sender, EventArgs e)
         {
             Logger.LogDebug("Input integer");
-            await ShowModalForInteger();
+            ShowModalForInteger();
         }
 
-        private async void InputServiceOnInputCharacter(object? sender, EventArgs e)
+        private async void InputServiceOnInputCharacterRequest(object? sender, EventArgs e)
         {
             Logger.LogDebug("Input character");
             await ShowModalForCharacter();
@@ -166,28 +165,34 @@ namespace Piet.Web.Pages
             StateHasChanged();
         }
 
-        async Task ShowModalForCharacter()
+        private async Task ShowModalForCharacter()
         {
             var messageForm = Modal.Show<MessageFormCharacter>();
             var result = await messageForm.Result;
 
             if (!result.Cancelled)
             {
-                // TODO: send input to interpreters stack
-                //_message = result.Data?.ToString() ?? string.Empty;
+                ProgramOperator.InputFacade.InputResponseService.SendInputCharacterResponse(result.Data.ToString()![0]);
+            }
+            else
+            {
+                // TODO: else terminate program
             }
         }
 
 
-        async Task ShowModalForInteger()
+        private async Task ShowModalForInteger()
         {
             var messageForm = Modal.Show<MessageFormInteger>();
             var result = await messageForm.Result;
 
             if (!result.Cancelled)
             {
-                // TODO: send input to interpreters stack
-                //_message = result.Data?.ToString() ?? string.Empty;
+                ProgramOperator.InputFacade.InputResponseService.SendInputIntegerResponse((int)result.Data);
+            }
+            else
+            {
+                // TODO: else terminate program
             }
         }
     }

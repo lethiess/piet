@@ -17,10 +17,10 @@ public class ProgramOperatorTests
     public void None_EmptyStack_MustMatchInitialStack()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         var initialProgramStack = programOperator.GetProgramStack();
 
@@ -35,10 +35,10 @@ public class ProgramOperatorTests
     public void None_StackIsNotEmpty_MustMatchProgramStackBeforeOperation()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 1);
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 2);
@@ -60,10 +60,10 @@ public class ProgramOperatorTests
     public void Push_InitialStackIsEmpty_MustMatch(int codelBlockSize)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), codelBlockSize);
 
@@ -76,10 +76,10 @@ public class ProgramOperatorTests
     public void Push_InitialStackIsEmpty_AddMultipleValues_MustMatchStackSize()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         const int stackSize = 100;
         for (int i = 0; i < stackSize; i++)
@@ -96,10 +96,10 @@ public class ProgramOperatorTests
     public void Pop_StackIsEmpty_MustNotThrow_MustMatchInitialStack()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         var initialProgramStack = programOperator.GetProgramStack();
 
@@ -114,10 +114,10 @@ public class ProgramOperatorTests
     public void Pop_StackHasSufficientValues_MustMatch()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 1);
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 2);
@@ -138,10 +138,10 @@ public class ProgramOperatorTests
     public void Add_StackIsEmpty_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
             programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Add),
@@ -156,10 +156,10 @@ public class ProgramOperatorTests
     public void Add_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandA);
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandB);
@@ -176,10 +176,10 @@ public class ProgramOperatorTests
     public void Subtract_StackIsEmpty_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
             programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Subtract),
@@ -195,10 +195,10 @@ public class ProgramOperatorTests
     public void Subtract_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandA);
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandB);
@@ -215,10 +215,10 @@ public class ProgramOperatorTests
     public void Multiply_StackIsEmpty_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
             programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Multiply),
@@ -234,10 +234,10 @@ public class ProgramOperatorTests
     public void Multiply_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandA);
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandB);
@@ -254,10 +254,10 @@ public class ProgramOperatorTests
     public void Divide_StackIsEmpty_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
             programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Divide),
@@ -268,10 +268,10 @@ public class ProgramOperatorTests
     public void Divide_DivisionByZero_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 12);
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 0);
@@ -290,10 +290,10 @@ public class ProgramOperatorTests
     public void Divide_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandA);
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandB);
@@ -310,10 +310,10 @@ public class ProgramOperatorTests
     public void Modulo_StackIsEmpty_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
             programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Modulo),
@@ -324,10 +324,10 @@ public class ProgramOperatorTests
     public void Modulo_DivisionByZero_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 12);
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 0);
@@ -346,10 +346,10 @@ public class ProgramOperatorTests
     public void Modulo_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandA);
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandB);
@@ -366,10 +366,10 @@ public class ProgramOperatorTests
     public void Not_StackIsEmpty_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
             programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Not),
@@ -383,10 +383,10 @@ public class ProgramOperatorTests
     public void Not_StackHasSufficientValues_MustMatch(int operand, int expectedResult)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operand);
 
@@ -402,10 +402,10 @@ public class ProgramOperatorTests
     public void GreaterThan_StackIsEmpty_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
             programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.GreaterThan),
@@ -421,10 +421,10 @@ public class ProgramOperatorTests
     public void GreaterThan_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandA);
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandB);
@@ -441,10 +441,10 @@ public class ProgramOperatorTests
     public void Pointer_StackIsEmpty_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
             programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pointer),
@@ -465,10 +465,10 @@ public class ProgramOperatorTests
     public void Pointer_StackHasSufficientValues_MustMatch(int numberOfPointerRotations, PietInterpreter.Direction initialDirection, PietInterpreter.Direction expectedDirection)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         PietInterpreter.DirectionPointer = initialDirection;
 
@@ -482,10 +482,10 @@ public class ProgramOperatorTests
     public void Switch_StackIsEmpty_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
             programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Switch),
@@ -504,10 +504,10 @@ public class ProgramOperatorTests
     public void Switch_StackHasSufficientValues_MustMatch(int numberOfSwitches, PietInterpreter.CodelChooser initialCodelChooserState, PietInterpreter.CodelChooser expectedCodelChooserState)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         PietInterpreter.CodelChooserState = initialCodelChooserState;
 
@@ -521,10 +521,10 @@ public class ProgramOperatorTests
     public void Duplicate_StackIsEmpty_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
             programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Duplicate),
@@ -538,10 +538,10 @@ public class ProgramOperatorTests
     public void Duplicate_StackHasSufficientValues_MustMatch(int stackValue, int expectedStackSize, int expectedStackValueForAllElements)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), stackValue);
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Duplicate), 0);
@@ -557,10 +557,10 @@ public class ProgramOperatorTests
     public void Roll_StackIsEmpty_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
             programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll),
@@ -571,10 +571,10 @@ public class ProgramOperatorTests
     public void Roll_InsufficientNumberOfElementsForRollOperation_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
 
         int depthOfRollOperation = 3;
@@ -593,10 +593,10 @@ public class ProgramOperatorTests
     public void Roll_DepthOfRollsExceedsTheStackSize_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
 
         int depthOfRollOperation = -1;
@@ -615,10 +615,10 @@ public class ProgramOperatorTests
     public void Roll_DepthOfRollIsThree_OneRoll_MustMatch()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         int depthOfRollOperation = 3;
         int numberOfRolls = 1;
@@ -646,10 +646,10 @@ public class ProgramOperatorTests
     public void Roll_DepthOfRollIsThree_TwoRolls_MustMatch()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         int depthOfRollOperation = 3;
         int numberOfRolls = 2;
@@ -679,11 +679,11 @@ public class ProgramOperatorTests
         const int inputNumber = 42;
 
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
-        inputServiceMock.Setup(x => x.GetIntegerInputAsync()).ReturnsAsync(inputNumber);
+        var inputFacadeMock = new Mock<IInputFacade>();
+        inputFacadeMock.Setup(x => x.GetIntegerInputAsync()).ReturnsAsync(inputNumber);
         
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
         
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.InputNumber), 0);
 
@@ -699,11 +699,11 @@ public class ProgramOperatorTests
         const char inputCharacter = 'c';
 
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
-        inputServiceMock.Setup(x => x.GetCharacterInputAsync()).ReturnsAsync(inputCharacter);
+        var inputFacadeMock = new Mock<IInputFacade>();
+        inputFacadeMock.Setup(x => x.GetCharacterInputAsync()).ReturnsAsync(inputCharacter);
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.InputCharacter), 0);
 
@@ -718,10 +718,10 @@ public class ProgramOperatorTests
     public void OutputNumber_StackIsEmpty_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
             programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.OutputNumber),
@@ -732,10 +732,10 @@ public class ProgramOperatorTests
     public void OutputNumber_StackHasSufficientValues_MustMatch()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 42);
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.OutputNumber), 0);
@@ -749,10 +749,10 @@ public class ProgramOperatorTests
     public void OutputCharacter_StackIsEmpty_MustThrow()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
             programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.OutputCharacter),
@@ -763,10 +763,10 @@ public class ProgramOperatorTests
     public void OutputCharacter_StackHasSufficientValues_MustMatch()
     {
         var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+        var inputFacadeMock = new Mock<IInputFacade>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+            outputEventServiceMock.Object, inputFacadeMock.Object);
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 'c');
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.OutputCharacter), 0);

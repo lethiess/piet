@@ -6,7 +6,7 @@ namespace Piet.Interpreter;
 
 public interface IProgramOperator
 {
-    IInputService InputService { get; }
+    IInputFacade InputFacade { get; }
     IOutputService OutputService { get; }
     void ExecuteCommand(ColorCommand colorCommand, int codelBlockSize);
 }

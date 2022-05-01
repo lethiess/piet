@@ -12,17 +12,17 @@ namespace Piet.Interpreter
         private readonly ILogger<ProgramOperator> _logger;
 
         public ProgramOperator(ILogger<ProgramOperator> logger,
-            IOutputService outputService, IInputService inputService)
+            IOutputService outputService, IInputFacade inputFacade)
         {
             _programStack = new Stack<int>();
             _logger = logger;
             OutputService = outputService;
-            InputService = inputService;
+            InputFacade = inputFacade;
         }
 
         internal List<int> GetProgramStack() => _programStack.ToList();
 
-        public IInputService InputService { get; init; }
+        public IInputFacade InputFacade { get; init; }
     
         public IOutputService OutputService { get; init; }
 
@@ -303,13 +303,13 @@ namespace Piet.Interpreter
 
         private void InputNumberAsync()
         {
-            int inputNumber = InputService.GetIntegerInputAsync().Result;
+            int inputNumber = InputFacade.GetIntegerInputAsync().Result;
             _programStack.Push(inputNumber);
         }
 
         private void InputCharacterAsync()
         {
-            int inputCharacter = InputService.GetCharacterInputAsync().Result;
+            int inputCharacter = InputFacade.GetCharacterInputAsync().Result;
             _programStack.Push(inputCharacter);
         }
 

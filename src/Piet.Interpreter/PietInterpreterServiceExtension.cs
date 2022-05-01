@@ -11,8 +11,10 @@ public static class PietInterpreterServiceExtension
     )
     {
         services.AddTransient<IProgramOperator, ProgramOperator>();
-        services.AddSingleton<IInputService, InputService>();
-        services.AddSingleton<IOutputService, OutputService>();
+        services.AddTransient<IInputResponseService, InputResponseService>();
+        services.AddTransient<IInputRequestService, InputRequestService>();
+        services.AddTransient<IInputFacade, InputFacade>();
+        services.AddTransient<IOutputService, OutputService>();
         return services;
     }
 }

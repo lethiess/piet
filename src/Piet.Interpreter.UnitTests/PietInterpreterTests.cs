@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Piet.Color;
 using Piet.Grid;
 using Piet.Interpreter.Input;
@@ -15,8 +16,9 @@ public class PietInterpreterTests
         var codelGrid = new CodelGrid(10, 10, PietColors.White);
         var codelChooser = new CodelChooser(codelGrid);
         var codelBlockSearcher = new CodelBlockSearcher(codelGrid);
+        var inputFaceMock = new Mock<IInputFacade>();
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            new OutputService(), new InputService());
+            new OutputService(), inputFaceMock.Object);
         
         var interpreter = new PietInterpreter(new NullLogger<PietInterpreter>(),
             codelGrid,
@@ -57,8 +59,9 @@ public class PietInterpreterTests
         
         var codelChooser = new CodelChooser(codelGrid);
         var codelBlockSearcher = new CodelBlockSearcher(codelGrid);
+        var inputFacadeMock = new Mock<IInputFacade>();
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            new OutputService(), new InputService());
+            new OutputService(), inputFacadeMock.Object);
 
         var interpreter = new PietInterpreter(new NullLogger<PietInterpreter>(),
             codelGrid,
