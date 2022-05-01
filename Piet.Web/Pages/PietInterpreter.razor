@@ -1,0 +1,111 @@
+﻿@page "/"
+@using Piet.Command
+
+
+<PageTitle>Piet</PageTitle>
+
+<p>
+    <label>
+        Height
+        <input type="number" @bind="_gridHeight"/>
+    </label>
+</p>
+
+<p>
+    <label>
+        Width 
+        <input type="number" @bind="_gridWidth"/>
+    </label>
+</p>
+
+
+<p>
+    <button class="btn btn-primary" @onclick="ResizeGrid">Resize Grid</button>
+
+    <button class="btn btn-primary" @onclick="Reset">Reset</button>
+
+    <button class="btn btn-primary" @onclick="Run">Run</button>
+    
+    <button class="btn btn-primary" @onclick="FillGridRandom">Fill random</button>
+    
+    <button @onclick="ShowModalForCharacter" class="btn btn-primary">Show Modal For Character</button>
+
+    <button @onclick="ShowModalForInteger" class="btn btn-primary">Show Modal For Integer</button>
+
+</p>
+
+@*@if (!string.IsNullOrWhiteSpace(_message))
+{
+    <hr />
+    <p><strong>Your message was:</strong></p>
+    <p>@_message</p>
+}*@
+
+<p>
+    <label>
+        Output:
+        @foreach (var output in _output)
+        {
+            <label>@output&nbsp;</label>
+        }
+    </label>
+</p>
+
+<p>
+    <table>
+        <tbody>
+        @*inspiration for basic html content: https://gabriellesc.github.io/piet/index.html*@
+        @for (var satuationIndex = 0; satuationIndex < ColorCommandControl.SatuationLevels; satuationIndex++)
+        {
+            <tr>
+                @for (var hueIndex = 0; hueIndex < ColorCommandControl.HueLevels; hueIndex++)
+                {
+                    int i_local = satuationIndex;
+                    int j_local = hueIndex;
+                    var colorCommand = _colorCommands[satuationIndex, hueIndex];
+                    var commandName = @colorCommand.Command;
+
+                    <td style='height: 30px; max-height: 30px; width: 130px; max-width: 130px; border: 1px solid black; background-color: rgb(@colorCommand.Color.R, @colorCommand.Color.G, @colorCommand.Color.B)' @onclick="@(e => UpdateColorCommand(i_local, j_local))">@GetCellName(colorCommand)</td>}
+            </tr>
+        }
+
+        </tbody>
+    </table>
+</p>
+
+<p>
+    <table>
+        <tbody>
+        <tr>
+            <td style='height: 30px; max-height: 30px; width: 50px; max-width: 50px; border: 1px solid black; background-color: rgb(@_colorBlack.R, @_colorBlack.G, @_colorBlack.B)' @onclick="@(e => SetCurrentColor(_colorBlack))"></td>
+        </tr>
+        <tr>
+            <td style='height: 30px; max-height: 30px; width: 50px; max-width: 50px; border: 1px solid black; background-color: rgb(@_colorWhite.R, @_colorWhite.G, @_colorWhite.B)' @onclick="@(e => SetCurrentColor(_colorWhite))"></td>
+        </tr>
+        </tbody>
+    </table>
+</p>
+
+<table>
+    <tbody>
+    @*@foreach (var row in GridData)*@
+    @for (var i = 0; i < _codelGrid.Height; i++)
+    {
+        <tr>
+            @*@foreach (var value in row)*@
+            @for (var j = 0; j < _codelGrid.Width; j++)
+            {
+                int i_local = i;
+                int j_local = j;
+                var value = _codelGrid.GetCodel(j, i).Color;
+
+                <td style='height: 30px; max-height: 30px; width: 30px; max-width:30px; border: 1px solid black; background-color: rgb(@value.R, @value.G, @value.B)' @onclick="@(e => UpdateColor(j_local, i_local))"></td>
+            }
+        </tr>
+    }
+    </tbody>
+</table>
+
+
+
+
