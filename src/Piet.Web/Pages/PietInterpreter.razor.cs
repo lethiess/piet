@@ -47,7 +47,12 @@ namespace Piet.Web.Pages
             _colorCommands =
                 ColorCommandControl.GetColorCommands(_currentColor);
 
-            //RegisterEventListener();
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            RegisterEventListener();
         }
 
         private void UpdateColor(int xPosition, int yPosition)
@@ -110,10 +115,6 @@ namespace Piet.Web.Pages
 
         private async Task Run()
         {
-            Console.WriteLine("Run");
-
-            RegisterEventListener();
-
 
             var interpreter = new Piet.Interpreter.PietInterpreter(
                 LoggerFactory.CreateLogger<Piet.Interpreter.PietInterpreter>(),
