@@ -10,6 +10,8 @@ public static class PietInterpreterServiceExtension
         this IServiceCollection services
     )
     {
+        services.AddTransient<ICodelChooser, CodelChooser>();
+        services.AddTransient<ICodelBlockSearcher, CodelBlockSearcher>();
         services.AddTransient<IProgramOperator, ProgramOperator>();
         services.AddTransient<IInputResponseService, InputResponseService>();
         services.AddTransient<IInputRequestService, InputRequestService>();

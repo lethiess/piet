@@ -21,7 +21,15 @@ namespace Piet.Web.Pages
         private IProgramOperator ProgramOperator { get; init; } = default!;
 
         [Inject]
+        private ICodelChooser CodelChooser { get; init; } = default!;
+
+        [Inject]
+        private ICodelBlockSearcher CodelBlockSearcher { get; init; } = default!;
+
+        [Inject]
         private ILogger<PietInterpreter> Logger { get; init; } = default!;
+
+        private Piet.Interpreter.PietInterpreter _interpreter;
 
         private const int InitialGridHeight = 15;
         private const int InitialGridWidth = 25;
@@ -37,22 +45,27 @@ namespace Piet.Web.Pages
         private static CodelGrid _codelGrid = null!;
         private static ColorCommand[,] _colorCommands = null!;
 
-        public PietInterpreter()
+        protected override void OnInitialized()
         {
+            base.OnInitialized();
+            RegisterEventListener();
+
             _codelGrid = new CodelGridBuilder()
                 .WithHeight(_gridHeight)
                 .WithWidth(_gridWidth)
                 .WithInitialColor(PietColors.White)
                 .Build();
+
             _colorCommands =
                 ColorCommandControl.GetColorCommands(_currentColor);
 
-        }
+            _interpreter = new Piet.Interpreter.PietInterpreter(
+                LoggerFactory.CreateLogger<Piet.Interpreter.PietInterpreter>(),
+                ProgramOperator,
+                CodelChooser,
+                CodelBlockSearcher
+            );
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-            RegisterEventListener();
         }
 
         private void UpdateColor(int xPosition, int yPosition)
@@ -115,16 +128,9 @@ namespace Piet.Web.Pages
 
         private async Task Run()
         {
+            _output.Clear();
 
-            var interpreter = new Piet.Interpreter.PietInterpreter(
-                LoggerFactory.CreateLogger<Piet.Interpreter.PietInterpreter>(),
-                _codelGrid,
-                new CodelChooser(_codelGrid),
-                new CodelBlockSearcher(_codelGrid),
-                ProgramOperator
-                );
-
-            var result = await Task.Run(() => interpreter.Run());
+            var result = await Task.Run(() => _interpreter.Run(_codelGrid));
 
 
             Console.WriteLine(result.Status);

@@ -20,21 +20,24 @@ public sealed class PietInterpreter
     
     public PietInterpreter(
         ILogger<PietInterpreter> logger,
-        ICodelGrid codelGrid,
+        IProgramOperator programOperator,
         ICodelChooser codelChooser,
-        ICodelBlockSearcher codelBlockSearcher,
-        IProgramOperator programOperator
+        ICodelBlockSearcher codelBlockSearcher
     )
     {
         _logger = logger;
+        _programOperator = programOperator;
         _codelChooser = codelChooser;
         _codelBlockSearcher = codelBlockSearcher;
-        _programOperator = programOperator;
-        _currentCodel = codelGrid.GetCodel(0, 0);
     }
 
-    public PietInterpreterResult Run()
+    public PietInterpreterResult Run(ICodelGrid codelGrid)
     {
+        _currentCodel = codelGrid.GetCodel(0, 0);
+        _codelChooser.CodelGrid = codelGrid;
+        _codelBlockSearcher.CodelGrid = codelGrid;
+
+
         DirectionPointer = Direction.Right;
         CodelChooserState = CodelChooser.Left;
 
