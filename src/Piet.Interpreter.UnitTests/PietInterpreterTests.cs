@@ -14,19 +14,18 @@ public class PietInterpreterTests
     public void Run_EmptyCodelGrid_MustReturn_Success()
     {
         var codelGrid = new CodelGrid(10, 10, PietColors.White);
-        var codelChooser = new CodelChooser(codelGrid);
-        var codelBlockSearcher = new CodelBlockSearcher(codelGrid);
+        var codelChooser = new CodelChooser{ CodelGrid = codelGrid };
+        var codelBlockSearcher = new CodelBlockSearcher { CodelGrid = codelGrid };
         var inputFaceMock = new Mock<IInputFacade>();
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             new OutputService(), inputFaceMock.Object);
         
         var interpreter = new PietInterpreter(new NullLogger<PietInterpreter>(),
-            codelGrid,
             codelChooser,
             codelBlockSearcher,
             programOperator);
 
-        var result = interpreter.Run();
+        var result = interpreter.Run(codelGrid);
 
         Assert.NotNull(result);
         Assert.Equal(PietInterpreterResult.InterpreterStatus.Success, result.Status);
@@ -57,19 +56,18 @@ public class PietInterpreterTests
         codelGrid.SetCodel(new Codel(6,1, PietColors.Black));
         codelGrid.SetCodel(new Codel(6,1, PietColors.Black));
         
-        var codelChooser = new CodelChooser(codelGrid);
-        var codelBlockSearcher = new CodelBlockSearcher(codelGrid);
+        var codelChooser = new CodelChooser{ CodelGrid = codelGrid };
+        var codelBlockSearcher = new CodelBlockSearcher { CodelGrid = codelGrid };
         var inputFacadeMock = new Mock<IInputFacade>();
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             new OutputService(), inputFacadeMock.Object);
 
         var interpreter = new PietInterpreter(new NullLogger<PietInterpreter>(),
-            codelGrid,
             codelChooser,
             codelBlockSearcher,
             programOperator);
 
-        var result = interpreter.Run();
+        var result = interpreter.Run(codelGrid);
 
         Assert.NotNull(result);
         Assert.Equal(PietInterpreterResult.InterpreterStatus.Success, result.Status);

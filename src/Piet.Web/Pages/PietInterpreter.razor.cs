@@ -61,9 +61,9 @@ namespace Piet.Web.Pages
 
             _interpreter = new Piet.Interpreter.PietInterpreter(
                 LoggerFactory.CreateLogger<Piet.Interpreter.PietInterpreter>(),
-                ProgramOperator,
                 CodelChooser,
-                CodelBlockSearcher
+                CodelBlockSearcher,
+                ProgramOperator
             );
 
         }
@@ -126,15 +126,14 @@ namespace Piet.Web.Pages
             return "";
         }
 
-        private async Task Run()
+        private void Run()
         {
             _output.Clear();
+            _interpreter.Run(_codelGrid);
 
-            var result = await Task.Run(() => _interpreter.Run(_codelGrid));
 
-
-            Console.WriteLine(result.Status);
-            Console.WriteLine(result.Message);
+            //Console.WriteLine(result.Status);
+            //Console.WriteLine(result.Message);
         }
 
         private void RegisterEventListener()
@@ -175,7 +174,7 @@ namespace Piet.Web.Pages
         private async Task ShowModalForCharacter()
         {
             var messageForm = Modal.Show<MessageFormCharacter>();
-            var result = await messageForm.Result;
+            var result = messageForm.Result.Result;
 
             if (!result.Cancelled)
             {

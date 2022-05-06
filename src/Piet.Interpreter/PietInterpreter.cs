@@ -20,9 +20,9 @@ public sealed class PietInterpreter
     
     public PietInterpreter(
         ILogger<PietInterpreter> logger,
-        IProgramOperator programOperator,
         ICodelChooser codelChooser,
-        ICodelBlockSearcher codelBlockSearcher
+        ICodelBlockSearcher codelBlockSearcher,
+        IProgramOperator programOperator
     )
     {
         _logger = logger;
