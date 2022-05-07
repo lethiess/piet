@@ -144,55 +144,164 @@ This section explains how a piet program is interpreted.
 
 ## Program Stack <a name="programStack"></a>
 
-Piet is based on a simple stack for program interpretation. During program interpretation 
+Piet is based on a simple integer stack for program interpretation. During program interpretation 
 all values of you program are stores on this stack and you program is also capable of 
 manipulating the stack. For a detailed overview of all possible commands and ways of 
 stack manipulation please take a look in the [Commands](#commands) section below.
 
 ## Commands <a name="commands"></a>
 
-The following commands are present in Piet:
+The following commands are present in Piet and can be divided into the following groups:
 
-Stack Manipulation                      | Arithmetic Operation          | Program Flow
- :------------------------------------: | :---------------------------: | :--------------------:
-[Push](#command_push)                   | [Add](#command_add)           | [Not](#command_not)
-[Pop](#command_pop)                     | [Subtract](#command_subtract) | [Greater](#command_greater)
-[Duplicate](#command_duplicate)         | [Multiply](#command_multiply) | [Pointer](#command_pointer)
-[Roll](#command_roll)                   | [Divide](#command_divide)     | [Switch](#command_switch)
-[Input (number)](#command_input)        | [Mod](#command_mod)           |
-[Input (character)](#command_input)     |                               |
-[Output (number)](#command_output)      |                               |
-[Output (character)](#command_output)   |                               |
+Stack Manipulation                              | Arithmetic Operation          | Program Flow
+ :--------------------------------------------: | :---------------------------: | :--------------------:
+[Push](#command_push)                           | [Add](#command_add)           | [Not](#command_not)
+[Pop](#command_pop)                             | [Subtract](#command_subtract) | [Greater](#command_greater)
+[Duplicate](#command_duplicate)                 | [Multiply](#command_multiply) | [Pointer](#command_pointer)
+[Roll](#command_roll)                           | [Divide](#command_divide)     | [Switch](#command_switch)
+[Input (number)](#command_input_integer)        | [Mod](#command_mod)           |
+[Input (character)](#command_input_character)   |                               |
+[Output (number)](#command_output_integer)      |                               |
+[Output (character)](#command_output_character) |                               |
 
 ### Push <a name="command_push"></a>
 
+**Description:**
+Push a number on the stack. The pushed number represents the codel block size of the command.
+
+**Exceptions:** None
+
+
 ### Pop <a name="command_push"></a>
+
+**Description:**
+Pop the top element from the program stack.
+
+**Exceptions:** Throws an exeptions if the stack is empty.
+
 
 ### Add <a name="command_add"></a>
 
+**Description:**
+Pops the top two elements from the stack, perform an addition and pushes the result back on the stack.
+
+**Operation:** ```result = (2nd top element) + (top element) ```
+
+**Exceptions:** This command can throw an exception if the number of stack elements are insuficcient.
+
+
 ### Subtract <a name="command_subtract"></a>
+
+**Description:**
+Pops the top two elements from the stack, perform an subtraction and pushes the result back on the stack.
+
+**Operation:** ```result = (2nd top element) - (top element) ```
+
+**Exceptions:** This command can throw an exception if the number of stack elements are insuficcient.
 
 ### Multiply <a name="command_multiply"></a> 
 
+**Description:**
+Pops the top two elements from the stack, perform an multiplication and pushes the result back on the stack.
+
+**Operation:** ```result = (2nd top element) * (top element) ```
+
+**Exceptions:** This command can throw an exception if the number of stack elements are insuficcient.
+
 ### Divide <a name="command_divide"></a>
+
+**Description:**
+Pops the top two elements from the stack, perform an division and pushes the result back on the stack.
+
+**Operation:** ```result = (2nd top element) / (top element) ```
+
+**Exceptions:** This command can throw an exception if the number of stack elements are insuficcientor if the divisor is 0.
 
 ### Mod <a name="command_mod"></a>
 
+**Description:**
+Pops the top two elements from the stack, perform a modulo operation and pushes the result back on the stack.
+
+**Operation:** ```result = (2nd top element) % (top element)```  - the result has the same sign as the top element. 
+
+**Exceptions:** This command can throw an exception if the number of stack elements are insuficcientor if the divisor is 0.
+
 ### Not <a name="command_not"></a>
+
+**Description:** Pops the top value of the stack and pushes back a value, 1 if the popped value was zero otherwise 0.
+
+**Exceptions:** This command can throw an exception if the stack is empty.
 
 ### Greater <a name="command_greater"></a>
 
+**Description:**
+Pops the top two elements from the stack, compares the two elements and pushes the result back on the stack.
+
+**Operation:** ```result = (2nd top element) > (top element)``` - result: 1 if true, otherwise 0
+
+**Exceptions:** This command can throw an exception if the number of stack elements are insuficcient.
+
 ### Pointer <a name="command_pointer"></a>
+
+**Description:** 
+Pops the top element from the stack and rotate the direction pointer that many times. If the value is positive the
+rotation is clockwise, otherwise counterclockwise.
+
+**Exceptions:** This command can throw an exception if the stack is empty.
 
 ### Switch <a name="command_switch"></a>
 
+**Description:**
+Pops the top element from the stack and toggles the codel choosers direction that many times. 
+
+**Exceptions:** This command can throw an exception if the stack is empty.
+
 ### Duplicate <a name="command_duplicate"></a>
+
+**Description:**
+Duplicate the top element of the stack.
+
+**Exceptions:** This command can throw an exception if the stack is empty.
 
 ### Roll <a name="command_roll"></a>
 
-## Input <a name="command_input"></a>
+**Description:** 
+Pops the top two elements from the stack and perform a roll operation. The poped values are 
+interpreteded as follows:
+* ```rolls```: top value
+* ```depth```: 2nd top value
 
-## Output <a name="command_output"></a>
+The top stack value is burried in the stack at the value of ```depth``` the remaining elemnts above the burried elements are 
+moved one step to the top. This opereration is performed ```rolls``` times.
+
+**Exceptions:** This command throws an exceptions if the number of stack elements is insuficcient or rolling depth exceeds the stack height.
+
+## Input (integer) <a name="command_input_integer"></a>
+
+**Description:**
+Requests the input of an interger value and pushes this value on the stack.
+
+## Input (character) <a name="command_input_character"></a>
+
+**Description:**
+Requests the input of a character value and pushes this value on the stack.
+
+
+## Output (integer) <a name="command_interger"></a>
+
+**Description:**
+Pops the top element from the stack and outputs this elements interpreteted as an integer.
+
+**Exceptions:** This command can throw an exception if the stack is empty.
+
+## Output (character) <a name="command_character"></a>
+
+**Description:**
+Pops the top element from the stack and outputs this elements interpreteted as an character.
+
+**Exceptions:** This command can throw an exception if the stack is empty.
+
+
 
 
 ## Color Commands <a name="colorCommands"></a>
