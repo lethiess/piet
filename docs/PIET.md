@@ -73,6 +73,17 @@ Following assumptions apply:
 
 ## Color <a name="color"></a>
 
+The following table shows all 20 colors that can be used in Piet programs:  
+
+![Piet color table](imgs/colorTable.svg)
+
+The colors black and white are different from all other colers since their interpretation is constant
+* **White:** The neutral element which does not cause any command execution.
+* **Black:** Blocking elemntes restricting the program flow ([codel chooser](#codelChooser) and [direption pointer](#directionPointer)) 
+
+The remaining 18 colors are divided into 6 different hues: red, yellow, green, cyan, blue and magenta. For each hue there are 
+3 different satuations: light, normal and dark. This color set defines the program operations and as already mentioned: the meaning of these colors changes during
+the program interpretation.
 
 
 ## Commands <a name="commands"></a>
