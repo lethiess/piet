@@ -276,6 +276,9 @@ moved one step to the top. This opereration is performed ```rolls``` times.
 
 **Exceptions:** This command throws an exceptions if the number of stack elements is insuficcient or rolling depth exceeds the stack height.
 
+**Example:**
+![Roll operation example](imgs/rollOperationExample.svg)
+
 ## Input (integer) <a name="command_input_integer"></a>
 
 **Description:**
