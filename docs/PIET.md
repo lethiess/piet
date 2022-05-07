@@ -96,7 +96,7 @@ The remaining 18 colors are divided into 6 different hues: red, yellow, green, c
 3 different satuations: light, normal and dark. This color set defines the program operations and as already mentioned: the meaning of these colors changes during
 the program interpretation.
 
-### Color Cycles
+### Color Cycles<a name="colorCycles"></a>
 
 For the program interpretation or more precisely for the command interpretation of the individual code blocks 
 the structure of the color table in the section [Colors](#colors) is essentially important.
@@ -305,11 +305,44 @@ Pops the top element from the stack and outputs this elements interpreteted as a
 **Exceptions:** This command can throw an exception if the stack is empty.
 
 
-
-
 ## Color Commands <a name="colorCommands"></a>
 
+The commands in Piet are depending on the current codel block color and the color
+of the codel block which will be entered next. For more infomration how the next codel 
+block are determined please refer section [Codel Chooser](#codelChooser).
+
+The following table provides the information needed to determine the command:
+
+
+&nbsp;                  | Current Hue   | Hue +1    | Hue +2    | Hue + 3   | Hue +4            | Hue +5
+:---------------------- | :------------ | :-------- | :-------- | :-------- | :---------------- | :-------------------
+**Current satuation**   | &nbsp;        | Add       | Divide    | Greater   | Duplicate         | Input (character)
+**Satuation + 1**       | Push          | Subtract  | Modulo    | Pointer   | Roll              | Output (integer)
+**Satuation + 2**       | Pop           | Multiply  | Not       | Switch    | Input (integer)   | Output (character)
+
+
+
+**Usage:**
+
+Based on the [Color Cycles](#colorCycles) and the colors of the current and next codel block the 
+command can be determined with the table above.
+
+The command is determined by the the distance between the current colors hue and satuation and the next colors hue and situation. 
+
+**Example #1:**
+* Current color: Red
+* Next color: Dark Red
+* Result: The satuation increases by 1 and the hue does not change, so the result is a ```Push``` operation.
+
+**Example #2:**
+* Current color: Dark Blue
+* Next color: Light yellow
+* Result: Hue + 3, Satuation  + 1, so the resulting command is ```Pointer```
+
+
 ## Codel Chooser <a name="codelChooser"></a>
+
+
 
 ## Direction Pointer <a name="directionPointer"></a>
 
