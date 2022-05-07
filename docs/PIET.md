@@ -85,7 +85,6 @@ The remaining 18 colors are divided into 6 different hues: red, yellow, green, c
 3 different satuations: light, normal and dark. This color set defines the program operations and as already mentioned: the meaning of these colors changes during
 the program interpretation.
 
-
 ## Commands <a name="commands"></a>
 
 
