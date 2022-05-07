@@ -74,6 +74,8 @@ Following assumptions apply:
 ## Color <a name="color"></a>
 
 
+![Piet color table](imgs/colorTable.svg)
+
 
 ## Commands <a name="commands"></a>
 
