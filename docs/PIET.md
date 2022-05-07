@@ -4,16 +4,18 @@
 ### Table of Contents
 
 1. [Overview](#overview)
-2. [Program code](#programCode)
-3. [Codel](#codel)
-4. [Codel block](#codelBlock)
-5. [Color](#color)
-6. [Commands](#commands)
-7. [Program flow](#programFlow)
-8. [Codel chooser](#codelChooser)
-9. [Direction Pointer](#directionPointer)
-10. [Program execution](#programExecution)
-11. [Program termination](#programTermination)
+2. [Program Code](#programCode)
+    * [Codel](#codel)
+    * [Codel Block](#codelBlock)
+    * [Colors](#colors)
+3. [Program Flow](#programFlow)
+    * [Program Stack](#programStack)
+    * [Commands](#commands)
+    * [Color Commands](#colorCommands)
+    * [Codel Chooser](#codelChooser)
+    * [Direction Pointer](#directionPointer)
+    * [Program Execution](#programExecution)
+    * [Program Termination](#programTermination)
 
 
 
@@ -31,7 +33,7 @@ creative thinking because normal programming structures do not apply and new sol
 Happy pieting!
 
 
-## Program code <a name="programCode"></a>
+# Program Code <a name="programCode"></a>
 
 In Piet you do not write conventional program code in text files like in any other programming language. Instead you draw images which represent
 your program code.
@@ -63,15 +65,24 @@ E.g. if you define a edge length of 1 at the moment when you draw you program so
 which results in a completely different result.
 
 
-## Codel block <a name="codelBlock"></a>
+## Codel Block <a name="codelBlock"></a>
 
 A codel block consists of 1 to N codels, where N is the total number of codels in the image. 
 Following assumptions apply:
 
 * **Color:** All codels in the codel block must have the same color.
 * **Codel neighborhood:** The codels in the codel block must necessarily be adjacent through a [4-connected](https://en.wikipedia.org/wiki/Pixel_connectivity) connecivity. So only the top, bottom, left and right codels are valid candidates for a codel block. 
+ This neighborhood is illustrated in the table below:
 
-## Color <a name="color"></a>
+
+no neighbor (x-1, y+1)      | top neighbor (x, y+1)         | no neighbor (x+1, y+1)
+:-------------------------: | :---------------------------: | :-----------------------:
+**left neighbor (x-1, y)**  | **current position (x,y)**    | **right neighbor (x+1, y)**
+**no neighbor (x-1, y-1)**  | **bottom neighbor (x, y-1)**  | **no neighbor (x+1, y-1)**
+
+
+
+## Colors <a name="colors"></a>
 
 The following table shows all 20 colors that can be used in Piet programs:  
 
@@ -85,15 +96,57 @@ The remaining 18 colors are divided into 6 different hues: red, yellow, green, c
 3 different satuations: light, normal and dark. This color set defines the program operations and as already mentioned: the meaning of these colors changes during
 the program interpretation.
 
+### Color Cycles
+
+For the program interpretation or more precisely for the command interpretation of the individual code blocks 
+the structure of the color table in the section [Colors](#colors) is essentially important.
+
+There are two relevant aspects how the colors are connected:
+* Hue cycle
+
+```mermaid
+graph LR
+    subgraph Hue Cycle
+    R(Red):::red --> Y(Yellow)
+    Y(Yellow):::yellow --> G(Green)
+    G(Green):::green --> C(Cyan)
+    C(Cyan):::cyan --> B(Blue)
+    B(Blue):::blue --> M(Magenta)
+    M(Magenta):::magenta --> R(Red)
+    end
+
+    classDef red fill:#ff0000;
+    classDef yellow fill:#ffff00;
+    classDef green fill:#00ff00;
+    classDef cyan fill:#00ffff;
+    classDef blue fill:#0000ff;
+    classDef magenta fill:#ff00ff;
+```
+
+* Satuation cycle
+```mermaid
+graph LR
+    subgraph Satuation Cycle
+    D(Dark) --> L(Light)
+    L --> N(Normal)
+    N --> D
+    end
+
+```
+
+
+# Program Flow <a name="programFlow"></a>
+
+## Prgoram stack <a name="programStack"></a>
+
 ## Commands <a name="commands"></a>
 
-
-## Program flow <a name="programFlow"></a>
+## Color Commands <a name="colorCommands"></a>
 
 ## Codel Chooser <a name="codelChooser"></a>
 
 ## Direction Pointer <a name="directionPointer"></a>
 
-## Program execution <a name="programExecution"></a>
+## Program Execution <a name="programExecution"></a>
 
-## Program termination <a name="programTermination"></a>
+## Program Termination <a name="programTermination"></a>
