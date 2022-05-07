@@ -134,12 +134,25 @@ graph LR
 
 ```
 
+In section [Color Commands](#colorComands) these two cycles are essential.
+
 
 # Program Flow <a name="programFlow"></a>
 
-## Prgoram stack <a name="programStack"></a>
+This section explains how a piet program is interpreted.
+
+
+## Program Stack <a name="programStack"></a>
+
+Piet is based on a simple stack for program interpretation. During program interpretation 
+all values of you program are stores on this stack and you program is also capable of 
+manipulating the stack. For a detailed overview of all possible commands and ways of 
+stack manipulation please take a look in the [Commands](#commands) section below.
 
 ## Commands <a name="commands"></a>
+
+
+
 
 ## Color Commands <a name="colorCommands"></a>
 
