@@ -151,7 +151,48 @@ stack manipulation please take a look in the [Commands](#commands) section below
 
 ## Commands <a name="commands"></a>
 
+The following commands are present in Piet:
 
+Stack Manipulation                      | Arithmetic Operation          | Program Flow
+ :------------------------------------: | :---------------------------: | :--------------------:
+[Push](#command_push)                   | [Add](#command_add)           | [Not](#command_not)
+[Pop](#command_pop)                     | [Subtract](#command_subtract) | [Greater](#command_greater)
+[Duplicate](#command_duplicate)         | [Multiply](#command_multiply) | [Pointer](#command_pointer)
+[Roll](#command_roll)                   | [Divide](#command_divide)     | [Switch](#command_switch)
+[Input (number)](#command_input)        | [Mod](#command_mod)           |
+[Input (character)](#command_input)     |                               |
+[Output (number)](#command_output)      |                               |
+[Output (character)](#command_output)   |                               |
+
+### Push <a name="command_push"></a>
+
+### Pop <a name="command_push"></a>
+
+### Add <a name="command_add"></a>
+
+### Subtract <a name="command_subtract"></a>
+
+### Multiply <a name="command_multiply"></a> 
+
+### Divide <a name="command_divide"></a>
+
+### Mod <a name="command_mod"></a>
+
+### Not <a name="command_not"></a>
+
+### Greater <a name="command_greater"></a>
+
+### Pointer <a name="command_pointer"></a>
+
+### Switch <a name="command_switch"></a>
+
+### Duplicate <a name="command_duplicate"></a>
+
+### Roll <a name="command_roll"></a>
+
+## Input <a name="command_input"></a>
+
+## Output <a name="command_output"></a>
 
 
 ## Color Commands <a name="colorCommands"></a>
