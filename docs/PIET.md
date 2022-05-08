@@ -13,6 +13,7 @@
     * [Commands](#commands)
     * [Color Commands](#colorCommands)
     * [Codel Chooser](#codelChooser)
+    * [Determin Next Codel Blocks](#nextCodelBlocks)
     * [Direction Pointer](#directionPointer)
     * [Program Execution](#programExecution)
     * [Program Termination](#programTermination)
@@ -309,7 +310,7 @@ Pops the top element from the stack and outputs this elements interpreteted as a
 
 The commands in Piet are depending on the current codel block color and the color
 of the codel block which will be entered next. For more infomration how the next codel 
-block are determined please refer section [Codel Chooser](#codelChooser).
+block are determined please refer section [Determin Next Codel Blocks](#nextCodelBlocks).
 
 The following table provides the information needed to determine the command:
 
@@ -342,10 +343,68 @@ The command is determined by the the distance between the current colors hue and
 
 ## Codel Chooser <a name="codelChooser"></a>
 
+The Code Chooser (CC) is an internal program state controlling the program flow and is used to dermine 
+the next codel block - the Direction Pointer is also needed. 
 
+* **Values:** left, right
+* **Initial value:** left 
 
 ## Direction Pointer <a name="directionPointer"></a>
 
+The direpction pointer (DP) is an internal program state controlling the program flow and is used to determine the next codel block - the 
+Codel Chooser is also needed.
+
+* **Values:** top, right, bottom, left
+* **Initial value:** right 
+
+## Determine Next Codel Blocks <a name="nextCodelBlocks"></a>
+
+Determine the next codel block is an essential operation during the interpretation of a Piet program.
+Moving from one codel block to the next one are based on the state of the Direction Pointer and the 
+Codel Chooser.
+
+Apply the follwing steps:
+1. **Step: Determine the codel edge using the Direction Pointer.**
+    - This codel edge consists of all codels which have the maximum value in direction. 
+    of the Direction Pointer. The edge can be disjoint.
+2. **Step: Determine transition position in the edge based on the Codel Choser state.** This is the position
+           in the current codel block from which you "walk" to the next codel in direction of the Direction Pointer in the next step.
+3. **Step: Find and validate candidate**. Use the transition position of the previous step and enter the codel block candidate 
+           in direction of the Direction Pointer. If this position exceeds the image boundary, proceed which step 4. 
+           If not pick the codel at this position and proceed as follows depending on the codels color.
+    - Color is not Black or white: Candiate is valid.
+    - Black: Codel in invalid, proceed to step 4.
+    - White: This color is neutral so traverse along the direction of the direction pointer until you reach the border or
+            a black codel (then proceed with step 4) or until you found a color different from black or white.
+4. **Step (optional):** If the candidate from the previous step was invalid toggle the Codel Chooser and proceed
+                        with step 1. If this fails again, rotate the Direction Pointer clockwise and go back
+                        to step 1. This procedure is repeated 8 times until all possible options have been tried - this 
+                        triggers the termination of the interpreter.
+
+
+Direction Pointer | Codel Chooser | Transition Codel
+:---------------- | :------------ | :-----------------
+up                | left          | leftmost
+up                | right         | rightmost
+right             | left          | uppermost
+right             | right         | lowermost
+down              | left          | rightmost
+down              | right         | leftmost
+left              | left          | lowermost
+left              | right         | uppermost
+
 ## Program Execution <a name="programExecution"></a>
 
+The program execution starts with the codel block in the top left corner of the Piet program with the 
+Direction Pointer facing to the right and the Codel Chooser is set to left.
+
+1. Find next codel block
+2. Enter next codel block at determined position
+3. Executio operation/command
+
+TODO: make diagram
+
+
 ## Program Termination <a name="programTermination"></a>
+
+The program terminates if there is no next codel available. Examples of this situation TBD
