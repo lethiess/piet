@@ -354,7 +354,7 @@ the next codel block - the Direction Pointer is also needed.
 The direpction pointer (DP) is an internal program state controlling the program flow and is used to determine the next codel block - the 
 Codel Chooser is also needed.
 
-* **Values:** top, right, bottom, left
+* **Values:** up, right, bottom, down
 * **Initial value:** right 
 
 ## Determine Next Codel Blocks <a name="nextCodelBlocks"></a>
@@ -369,14 +369,17 @@ Apply the follwing steps:
     of the Direction Pointer. The edge can be disjoint.
 2. **Step: Determine transition position in the edge based on the Codel Choser state.** This is the position
            in the current codel block from which you "walk" to the next codel in direction of the Direction Pointer in the next step.
-3. **Step: Find and validate candidate**. Use the transition position of the previous step and enter the codel block candidate 
-           in direction of the Direction Pointer. If this position exceeds the image boundary, proceed which step 4. 
-           If not pick the codel at this position and proceed as follows depending on the codels color.
+3. **Step: Find and validate candidate**. Determine the position of the codel in which you would enter the next
+           codel block based on the transition position (step 2) and the Direction Pointer. If this position exceeds
+           the image boundaries proceed with step 5. 
+           If not, pick the codel at this position and proceed as follows depending on the codels color.
     - Color is not Black or white: Candiate is valid.
-    - Black: Codel in invalid, proceed to step 4.
+    - Black: Codel in invalid, proceed to step 5.
     - White: This color is neutral so traverse along the direction of the direction pointer until you reach the border or
-            a black codel (then proceed with step 4) or until you found a color different from black or white.
-4. **Step (optional):** If the candidate from the previous step was invalid toggle the Codel Chooser and proceed
+            a black codel (then proceed with step 5) or until you found a color different from black or white.
+4. **Step: Get next codel block**. Staring on the first codel of the new codel block (step 3) use region growing
+           to determine the next codel block.
+5. **Step (optional):** If the candidate from the previous step was invalid toggle the Codel Chooser and proceed
                         with step 1. If this fails again, rotate the Direction Pointer clockwise and go back
                         to step 1. This procedure is repeated 8 times until all possible options have been tried - this 
                         triggers the termination of the interpreter.
@@ -398,13 +401,36 @@ left              | right         | uppermost
 The program execution starts with the codel block in the top left corner of the Piet program with the 
 Direction Pointer facing to the right and the Codel Chooser is set to left.
 
-1. Find next codel block
-2. Enter next codel block at determined position
-3. Executio operation/command
+From this codel the first codel block is determined and the following program flow starts:
 
-TODO: make diagram
+```mermaid
+flowchart LR
+    Start(Program Start) --> nextCodel
+    subgraph InterpreterLoop["Interpreter Loop"]
+    direction LR
+    execution[Execute command] --> nextCodel[Find next codel]
+    nextCodel --> valuateCodelBlock{Valid?}
+    valuateCodelBlock -- Yes --> execution
+    end
+    valuateCodelBlock -- No --> Terminate(Terminate Program)
+    execution -- Error --> Terminate 
+```
 
 
 ## Program Termination <a name="programTermination"></a>
 
-The program terminates if there is no next codel available. Examples of this situation TBD
+### Sucessfull program termination
+The program terminates if there is no next codel available. This can only in the progress of 
+finding the next codel block (see section [Determine Next Codel Blocks](#nextCodelBlocks)).
+
+If this happens all possible ways from the current codel block to all possible 8 candiate are tested.
+
+
+
+### Termination in case of errors
+
+During the program interpretation errors can occur while executing the commands, e.g. there are 
+insuficcient elements on the stack or a division by zero was performed. 
+
+
+
