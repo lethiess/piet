@@ -431,8 +431,11 @@ proceed as follows depending on the codels color.
 ![Example: Next Codels](imgs/nextCodel.svg)
 
 ### Step 4: 
-Staring on the first codel of the new codel block (step 3) use region growing
-           to determine the next codel block.
+Staring on the first codel of the new codel block (step 3) use region growing to determine the next codel block.
+The new codel block can consist of 1 or many codels with the same color and a 4-neighborhood connection (see section [Codel Blocks](#codelBlock)).
+
+**Examples:**
+![Example: New codel Block](imgs/newCodelBlock.svg)
 
 ### Step 5 (optional):
 
@@ -443,9 +446,6 @@ This step is only entered if the candidate from the previous step 3 was invalid.
  
 This procedure is repeated 8 times until all possible options have been tried - this 
 triggers the termination of the interpreter.
-
-
-
 
 
 
