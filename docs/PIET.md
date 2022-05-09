@@ -405,11 +405,20 @@ left              | left          | lowermost
 left              | right         | uppermost
 
 **Examples:**
-![Example: Codel Edge](imgs/transitionCodel.svg)
+![Example: Transition Codel](imgs/transitionCodel.svg)
 
-### Step 3: Step: Find and validate candidate**. 
-Determine the position of the codel in which you would enter the next codel block based on
-the transition position (step 2) and the Direction Pointer. If this position exceeds
+### Step 3: Step: Find and validate candidate 
+Determine the position where you would enter the next codel block based on
+the transition codel (step 2) and the Direction Pointer.
+
+There are the following scenarios:
+* Next codel has a valid hue (red, yellow, green, cyan, blue, magenta): Codel is valid (see Example 1). Proceed with step 4. 
+* Next codel is white: Traverse white codels in direction of direction pointer until the next non white codel or the image border
+  is reached (see Example 2, 3 and 4).
+* Next codel is black: Black codels are blocking the program flow (see Example 3). Proceed with step 5.
+* Coordinates out of Bounds (see Example 5). Proceed with step 5.
+
+If this position exceeds
 the image boundaries proceed with step 5. If not, pick the codel at this position and
 proceed as follows depending on the codels color.
 
@@ -418,15 +427,21 @@ proceed as follows depending on the codels color.
 * White: This color is neutral so traverse along the direction of the direction pointer until you reach the border or
             a black codel (then proceed with step 5) or until you found a color different from black or white.
 
+**Examples:**
+![Example: Next Codels](imgs/nextCodel.svg)
+
 ### Step 4: 
 Staring on the first codel of the new codel block (step 3) use region growing
            to determine the next codel block.
 
 ### Step 5 (optional):
 
-If the candidate from the previous step was invalid toggle the Codel Chooser and proceed
-with step 1. If this fails again, rotate the Direction Pointer clockwise and go back
-to step 1. This procedure is repeated 8 times until all possible options have been tried - this 
+This step is only entered if the candidate from the previous step 3 was invalid. In this case 
+:
+* Toggle the Codel Chooser and proceed with step 1. 
+* If this fails again, rotate the Direction Pointer clockwise and go back to step 1. 
+ 
+This procedure is repeated 8 times until all possible options have been tried - this 
 triggers the termination of the interpreter.
 
 
