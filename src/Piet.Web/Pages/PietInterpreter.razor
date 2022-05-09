@@ -5,57 +5,6 @@
 <PageTitle>Piet</PageTitle>
 
 <p>
-    <label>
-        Height
-        <input type="number" @bind="_gridHeight"/>
-    </label>
-</p>
-
-<p>
-    <label>
-        Width 
-        <input type="number" @bind="_gridWidth"/>
-    </label>
-</p>
-
-
-<p>
-    <button class="btn btn-primary" @onclick="ResizeGrid">Resize Grid</button>
-
-    <button class="btn btn-primary" @onclick="Reset">Reset</button>
-
-    <button class="btn btn-primary" @onclick="Run">Run</button>
-    
-    <button class="btn btn-primary" @onclick="FillGridRandom">Fill random</button>
-    
-    <button @onclick="ShowModalForCharacter" class="btn btn-primary">Show Modal For Character</button>
-
-    <button @onclick="ShowModalForInteger" class="btn btn-primary">Show Modal For Integer</button>
-
-</p>
-
-<p>
-    <label>
-        Output:
-        @foreach (var output in _output)
-        {
-            <label>@output&nbsp;</label>
-        }
-    </label>
-</p>
-
-@*<p>
-    <label>
-        Input (numeric) 
-        <input type="number" @bind="_inputNumeric"/>
-    </label>
-    <label>
-        Input (character)
-        <input type="text" @bind="_inputCharacter" />
-    </label>
-</p>*@
-
-<p>
     <table>
         <tbody>
         @*inspiration for basic html content: https://gabriellesc.github.io/piet/index.html*@
@@ -110,6 +59,51 @@
     </tbody>
 </table>
 
+<br/>
+<p>
+    <label>
+        Height
+        <input type="number" @bind="_gridHeight"/>
+    </label>
+    <label>
+        Width 
+        <input type="number" @bind="_gridWidth"/>
+    </label>
+</p>
 
 
+<p>
+    <button class="btn btn-primary" @onclick="ResizeGrid">Resize Grid</button>
+
+    <button class="btn btn-primary" @onclick="Reset">Reset</button>
+
+    <button class="btn btn-primary" @onclick="Run">Run</button>
+    
+    <button class="btn btn-primary" @onclick="FillGridRandom">Fill random</button>
+    
+    <button @onclick="ShowModalForCharacter" class="btn btn-primary">Show Modal For Character</button>
+
+    <button @onclick="ShowModalForInteger" class="btn btn-primary">Show Modal For Integer</button>
+</p>
+
+<p>
+    <label>
+        Output:
+        @foreach (var output in _output)
+        {
+            <label>@output&nbsp;</label>
+        }
+    </label>
+</p>
+
+@*<p>
+    <label>
+        Input (numeric) 
+        <input type="number" @bind="_inputNumeric"/>
+    </label>
+    <label>
+        Input (character)
+        <input type="text" @bind="_inputCharacter" />
+    </label>
+</p>*@
 
