@@ -363,26 +363,56 @@ Determine the next codel block is an essential operation during the interpretati
 Moving from one codel block to the next one are based on the state of the Direction Pointer and the 
 Codel Chooser.
 
-Apply the follwing steps:
-1. **Step: Determine the codel edge using the Direction Pointer.**
-    - This codel edge consists of all codels which have the maximum value in direction. 
-    of the Direction Pointer. The edge can be disjoint.
-2. **Step: Determine transition position in the edge based on the Codel Choser state.** This is the position
-           in the current codel block from which you "walk" to the next codel in direction of the Direction Pointer in the next step.
-3. **Step: Find and validate candidate**. Determine the position of the codel in which you would enter the next
-           codel block based on the transition position (step 2) and the Direction Pointer. If this position exceeds
-           the image boundaries proceed with step 5. 
-           If not, pick the codel at this position and proceed as follows depending on the codels color.
-    - Color is not Black or white: Candiate is valid.
-    - Black: Codel in invalid, proceed to step 5.
-    - White: This color is neutral so traverse along the direction of the direction pointer until you reach the border or
+The following diagram shows this process
+```mermaid
+flowchart TB
+    start(Start):::grey --> edge(Step 1: Determine Codel Edge)
+    edge --> transitionPosition("Step 2: Find transition position")
+    transitionPosition --> nextStartCodel("Step 3: Find next starting Codel")
+    nextStartCodel -- "Codel is valid" --> newCodelBlock("Step 4:Get new codel block (region growing)")
+    nextStartCodel -- "Codel is invalid" --> updateState("Step 5 (optional): Update internal program state")
+    updateState -- "Toggle CC or Rotate DP \n max 7 tries" --> edge
+    newCodelBlock --> End(End):::grey
+
+    classDef grey fill:#2d2330
+```
+
+
+### Step 1: Determine the codel edge using the Direction Pointer.
+This codel edge consists of all codels which have the maximum value in direction
+of the Direction Pointer. The edge can be disjoint.
+
+
+
+### Step 2: Determine transition position in the edge based on the Codel Choser state.** 
+This is the position in the current codel block from which you "walk" to the next codel
+in direction of the Direction Pointer in the next step.
+
+
+
+
+
+### Step 3: Step: Find and validate candidate**. 
+Determine the position of the codel in which you would enter the next codel block based on
+the transition position (step 2) and the Direction Pointer. If this position exceeds
+the image boundaries proceed with step 5. If not, pick the codel at this position and
+proceed as follows depending on the codels color.
+
+* Color is valid: Color is not Black or white: Candiate is valid.
+* Black: Codel in invalid, proceed to step 5.
+* White: This color is neutral so traverse along the direction of the direction pointer until you reach the border or
             a black codel (then proceed with step 5) or until you found a color different from black or white.
-4. **Step: Get next codel block**. Staring on the first codel of the new codel block (step 3) use region growing
+
+### Step 4: 
+Staring on the first codel of the new codel block (step 3) use region growing
            to determine the next codel block.
-5. **Step (optional):** If the candidate from the previous step was invalid toggle the Codel Chooser and proceed
-                        with step 1. If this fails again, rotate the Direction Pointer clockwise and go back
-                        to step 1. This procedure is repeated 8 times until all possible options have been tried - this 
-                        triggers the termination of the interpreter.
+
+### Step 5 (optional):
+
+If the candidate from the previous step was invalid toggle the Codel Chooser and proceed
+with step 1. If this fails again, rotate the Direction Pointer clockwise and go back
+to step 1. This procedure is repeated 8 times until all possible options have been tried - this 
+triggers the termination of the interpreter.
 
 
 Direction Pointer | Codel Chooser | Transition Codel
@@ -397,18 +427,7 @@ left              | left          | lowermost
 left              | right         | uppermost
 
 
-```mermaid
-flowchart TB
-    start(Start):::grey --> edge(Step 1: Determine Codel Edge)
-    edge --> transitionPosition("Step 2: Find transition position")
-    transitionPosition --> nextStartCodel("Step 3: Find next starting Codel")
-    nextStartCodel -- "Codel is valid" --> newCodelBlock("Step 4:Get new codel block (region growing)")
-    nextStartCodel -- "Codel is invalid" --> updateState("Step 5 (optional): Update internal program state")
-    updateState -- "Toggle CC or Rotate DP \n max 7 tries" --> edge
-    newCodelBlock --> End(End):::grey
 
-    classDef grey fill:#2d2330
-```
 
 ## Program Execution <a name="programExecution"></a>
 
