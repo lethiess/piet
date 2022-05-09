@@ -6,7 +6,7 @@
 
 > Piet is an esoteric progrmming language invented by David Morgen-Mar where the code looks like abstract art. 
 For more language specific information please refer to the original [language specification](https://www.dangermouse.net/esoteric/piet.html) or 
-take a look at my personal description and interpretation in the ```docs``` folder.
+take a look at [my documentaion](https://github.com/lethiess/piet/blob/main/docs/PIET.md) in the ```docs``` folder.
 
 #### Overview 
 
