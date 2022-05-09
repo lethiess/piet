@@ -382,15 +382,30 @@ flowchart TB
 This codel edge consists of all codels which have the maximum value in direction
 of the Direction Pointer. The edge can be disjoint.
 
+**Examples:**
+![Example: Codel Edge](imgs/codelEdge.svg)
 
 
-### Step 2: Determine transition position in the edge based on the Codel Choser state.** 
+### Step 2: Determine transition position in the edge based on the Codel Choser state. 
 This is the position in the current codel block from which you "walk" to the next codel
-in direction of the Direction Pointer in the next step.
+in direction of the Direction Pointer in the next step. The transition position depends 
+also on the state of Direction Pointer and Codel Chooser. The table below defines which
+codel is the transition codel:
 
 
+Direction Pointer | Codel Chooser | Transition Codel
+:---------------- | :------------ | :-----------------
+up                | left          | leftmost
+up                | right         | rightmost
+right             | left          | uppermost
+right             | right         | lowermost
+down              | left          | rightmost
+down              | right         | leftmost
+left              | left          | lowermost
+left              | right         | uppermost
 
-
+**Examples:**
+![Example: Codel Edge](imgs/transitionCodel.svg)
 
 ### Step 3: Step: Find and validate candidate**. 
 Determine the position of the codel in which you would enter the next codel block based on
@@ -415,16 +430,6 @@ to step 1. This procedure is repeated 8 times until all possible options have be
 triggers the termination of the interpreter.
 
 
-Direction Pointer | Codel Chooser | Transition Codel
-:---------------- | :------------ | :-----------------
-up                | left          | leftmost
-up                | right         | rightmost
-right             | left          | uppermost
-right             | right         | lowermost
-down              | left          | rightmost
-down              | right         | leftmost
-left              | left          | lowermost
-left              | right         | uppermost
 
 
 
