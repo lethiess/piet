@@ -396,6 +396,20 @@ down              | right         | leftmost
 left              | left          | lowermost
 left              | right         | uppermost
 
+
+```mermaid
+flowchart TB
+    start(Start):::grey --> edge(Step 1: Determine Codel Edge)
+    edge --> transitionPosition("Step 2: Find transition position")
+    transitionPosition --> nextStartCodel("Step 3: Find next starting Codel")
+    nextStartCodel -- "Codel is valid" --> newCodelBlock("Step 4:Get new codel block (region growing)")
+    nextStartCodel -- "Codel is invalid" --> updateState("Step 5 (optional): Update internal program state")
+    updateState -- "Toggle CC or Rotate DP \n max 7 tries" --> edge
+    newCodelBlock --> End(End):::grey
+
+    classDef grey fill:#2d2330
+```
+
 ## Program Execution <a name="programExecution"></a>
 
 The program execution starts with the codel block in the top left corner of the Piet program with the 
