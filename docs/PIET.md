@@ -13,7 +13,7 @@
     * [Commands](#commands)
     * [Color Commands](#colorCommands)
     * [Codel Chooser](#codelChooser)
-    * [Determin Next Codel Blocks](#nextCodelBlocks)
+    * [Determine Next Codel Blocks](#nextCodelBlocks)
     * [Direction Pointer](#directionPointer)
     * [Program Execution](#programExecution)
     * [Program Termination](#programTermination)
@@ -22,11 +22,11 @@
 
 ## Overview <a name="overview"></a>
 
-Piet is an esoteric progrmming language invented by David Morgen-Mar where the code looks like abstract art. 
+Piet is an esoteric programming language invented by David Morgen-Mar where the code looks like abstract art. 
 If you are interested you can also take a look at the original [language specification](https://www.dangermouse.net/esoteric/piet.html).
 
 This is a brief overview of the language and is intended to give the reader the opportunity to understand and apply all the basic language concepts.
-So after reading this document you are enabeld to draw pictures and program at the same time.
+So after reading this document you are enabled to draw pictures and program at the same time.
 
 Since Piet is an esoteric programming language it obviously cannot be used in production. However, writing programs in Piet requires 
 creative thinking because normal programming structures do not apply and new solutions must be found.
@@ -40,17 +40,17 @@ In Piet you do not write conventional program code in text files like in any oth
 your program code.
 
 The program code (images) consists basically of colored squared blocks which are called Codel (see section [Codel](#codel) for more information) where
-each colored block represents a command, e.g. for numberic operations, stack operations or program flow operations - see section [Commands](#commands) for more information.
+each colored block represents a command, e.g. for numeric operations, stack operations or program flow operations - see section [Commands](#commands) for more information.
 
-Piets offers you a set of 20 different [colors](#colors) and a corresponding set of 17 [commands](#commands). The tricky part is that a single color
+Piet offers you a set of 20 different [colors](#colors) and a corresponding set of 17 [commands](#commands). The tricky part is that a single color
 does not represent the same command in each case. The command interpretation is dependent on the surrounding color blocks and an internal program state.
 A red block may represents an add operations, a stack manipulation or a no-op operations in another case - you never know what you will get.
 
 
-An interesting side fact is that a totally crazy person (positive meaning) managed it to draw an interpreter for the esotheric pramming language Brainfuck.
-I did't verified the validity of this program but if you want to do this on your own see this [website](https://lutter.cc/piet/) for more information. 
-The more interesting fact is that Brainfuck is Turing-complete, wich implies that Piet is also Turing-complete. Meaning you can theoretically 
-programm everythin with Piet assuming you have an infinity sized image and a lot of time. 
+An interesting side fact is that a totally crazy person (positive meaning) managed it to draw an interpreter for the esoteric programming language Brainfuck.
+I didn't verified the validity of this program but if you want to do this on your own see this [website](https://lutter.cc/piet/) for more information. 
+The more interesting fact is that Brainfuck is Turing-complete, which implies that Piet is also Turing-complete. Meaning you can theoretically 
+program everything with Piet assuming you have an infinity sized image and a lot of time. 
 
 
 ## Codel <a name="codel"></a>
@@ -72,7 +72,7 @@ A codel block consists of 1 to N codels, where N is the total number of codels i
 Following assumptions apply:
 
 * **Color:** All codels in the codel block must have the same color.
-* **Codel neighborhood:** The codels in the codel block must necessarily be adjacent through a [4-connected](https://en.wikipedia.org/wiki/Pixel_connectivity) connecivity. So only the top, bottom, left and right codels are valid candidates for a codel block. 
+* **Codel neighborhood:** The codels in the codel block must necessarily be adjacent through a [4-connected](https://en.wikipedia.org/wiki/Pixel_connectivity) connectivity. So only the top, bottom, left and right codels are valid candidates for a codel block. 
  This neighborhood is illustrated in the table below:
 
 
@@ -89,9 +89,9 @@ The following table shows all 20 colors that can be used in Piet programs:
 
 ![Piet color table](imgs/colorTable.svg)
 
-The colors black and white are different from all other colers since their interpretation is constant
+The colors black and white are different from all other colors since their interpretation is constant
 * **White:** The neutral element which does not cause any command execution.
-* **Black:** Blocking elemntes restricting the program flow ([codel chooser](#codelChooser) and [direption pointer](#directionPointer)) 
+* **Black:** Blocking elements restricting the program flow ([Codel Chooser](#codelChooser) and [Direction Pointer](#directionPointer)) 
 
 The remaining 18 colors are divided into 6 different hues: red, yellow, green, cyan, blue and magenta. For each hue there are 
 3 different satuations: light, normal and dark. This color set defines the program operations and as already mentioned: the meaning of these colors changes during
@@ -178,7 +178,7 @@ Push a number on the stack. The pushed number represents the codel block size of
 **Description:**
 Pop the top element from the program stack.
 
-**Exceptions:** Throws an exeptions if the stack is empty.
+**Exceptions:** Throws an exceptions if the stack is empty.
 
 
 ### Add <a name="command_add"></a>
@@ -188,7 +188,7 @@ Pops the top two elements from the stack, perform an addition and pushes the res
 
 **Operation:** ```result = (2nd top element) + (top element) ```
 
-**Exceptions:** This command can throw an exception if the number of stack elements are insuficcient.
+**Exceptions:** This command can throw an exception if the number of stack elements are insufficient.
 
 
 ### Subtract <a name="command_subtract"></a>
@@ -198,7 +198,7 @@ Pops the top two elements from the stack, perform an subtraction and pushes the 
 
 **Operation:** ```result = (2nd top element) - (top element) ```
 
-**Exceptions:** This command can throw an exception if the number of stack elements are insuficcient.
+**Exceptions:** This command can throw an exception if the number of stack elements are insufficient.
 
 ### Multiply <a name="command_multiply"></a> 
 
@@ -207,7 +207,7 @@ Pops the top two elements from the stack, perform an multiplication and pushes t
 
 **Operation:** ```result = (2nd top element) * (top element) ```
 
-**Exceptions:** This command can throw an exception if the number of stack elements are insuficcient.
+**Exceptions:** This command can throw an exception if the number of stack elements are insufficient.
 
 ### Divide <a name="command_divide"></a>
 
@@ -216,7 +216,7 @@ Pops the top two elements from the stack, perform an division and pushes the res
 
 **Operation:** ```result = (2nd top element) / (top element) ```
 
-**Exceptions:** This command can throw an exception if the number of stack elements are insuficcientor if the divisor is 0.
+**Exceptions:** This command can throw an exception if the number of stack elements are insufficient if the divisor is 0.
 
 ### Mod <a name="command_mod"></a>
 
@@ -225,7 +225,7 @@ Pops the top two elements from the stack, perform a modulo operation and pushes 
 
 **Operation:** ```result = (2nd top element) % (top element)```  - the result has the same sign as the top element. 
 
-**Exceptions:** This command can throw an exception if the number of stack elements are insuficcientor if the divisor is 0.
+**Exceptions:** This command can throw an exception if the number of stack elements are insufficient if the divisor is 0.
 
 ### Not <a name="command_not"></a>
 
@@ -240,7 +240,7 @@ Pops the top two elements from the stack, compares the two elements and pushes t
 
 **Operation:** ```result = (2nd top element) > (top element)``` - result: 1 if true, otherwise 0
 
-**Exceptions:** This command can throw an exception if the number of stack elements are insuficcient.
+**Exceptions:** This command can throw an exception if the number of stack elements are insufficient.
 
 ### Pointer <a name="command_pointer"></a>
 
@@ -267,15 +267,15 @@ Duplicate the top element of the stack.
 ### Roll <a name="command_roll"></a>
 
 **Description:** 
-Pops the top two elements from the stack and perform a roll operation. The poped values are 
-interpreteded as follows:
+Pops the top two elements from the stack and perform a roll operation. The popped values are 
+interpreted as follows:
 * ```rolls```: top value
 * ```depth```: 2nd top value
 
-The top stack value is burried in the stack at the value of ```depth``` the remaining elemnts above the burried elements are 
-moved one step to the top. This opereration is performed ```rolls``` times.
+The top stack value is buried in the stack at the value of ```depth``` the remaining elements above the buried elements are 
+moved one step to the top. This operation is performed ```rolls``` times.
 
-**Exceptions:** This command throws an exceptions if the number of stack elements is insuficcient or rolling depth exceeds the stack height.
+**Exceptions:** This command throws an exceptions if the number of stack elements is insufficient or rolling depth exceeds the stack height.
 
 **Example:**
 ![Roll operation example](imgs/rollOperationExample.svg)
@@ -283,7 +283,7 @@ moved one step to the top. This opereration is performed ```rolls``` times.
 ## Input (integer) <a name="command_input_integer"></a>
 
 **Description:**
-Requests the input of an interger value and pushes this value on the stack.
+Requests the input of an integer value and pushes this value on the stack.
 
 ## Input (character) <a name="command_input_character"></a>
 
@@ -294,14 +294,14 @@ Requests the input of a character value and pushes this value on the stack.
 ## Output (integer) <a name="command_interger"></a>
 
 **Description:**
-Pops the top element from the stack and outputs this elements interpreteted as an integer.
+Pops the top element from the stack and outputs this elements interpreted as an integer.
 
 **Exceptions:** This command can throw an exception if the stack is empty.
 
 ## Output (character) <a name="command_character"></a>
 
 **Description:**
-Pops the top element from the stack and outputs this elements interpreteted as an character.
+Pops the top element from the stack and outputs this elements interpreted as an character.
 
 **Exceptions:** This command can throw an exception if the stack is empty.
 
@@ -309,8 +309,8 @@ Pops the top element from the stack and outputs this elements interpreteted as a
 ## Color Commands <a name="colorCommands"></a>
 
 The commands in Piet are depending on the current codel block color and the color
-of the codel block which will be entered next. For more infomration how the next codel 
-block are determined please refer section [Determin Next Codel Blocks](#nextCodelBlocks).
+of the codel block which will be entered next. For more information how the next codel 
+block are determined please refer section [Determine Next Codel Blocks](#nextCodelBlocks).
 
 The following table provides the information needed to determine the command:
 
@@ -343,7 +343,7 @@ The command is determined by the the distance between the current colors hue and
 
 ## Codel Chooser <a name="codelChooser"></a>
 
-The Code Chooser (CC) is an internal program state controlling the program flow and is used to dermine 
+The Code Chooser (CC) is an internal program state controlling the program flow and is used to determine 
 the next codel block - the Direction Pointer is also needed. 
 
 * **Values:** left, right
@@ -351,7 +351,7 @@ the next codel block - the Direction Pointer is also needed.
 
 ## Direction Pointer <a name="directionPointer"></a>
 
-The direpction pointer (DP) is an internal program state controlling the program flow and is used to determine the next codel block - the 
+The direction pointer (DP) is an internal program state controlling the program flow and is used to determine the next codel block - the 
 Codel Chooser is also needed.
 
 * **Values:** up, right, bottom, down
@@ -386,7 +386,7 @@ of the Direction Pointer. The edge can be disjoint.
 ![Example: Codel Edge](imgs/codelEdge.svg)
 
 
-### Step 2: Determine transition position in the edge based on the Codel Choser state. 
+### Step 2: Determine transition position in the edge based on the Codel Chooser state. 
 This is the position in the current codel block from which you "walk" to the next codel
 in direction of the Direction Pointer in the next step. The transition position depends 
 also on the state of Direction Pointer and Codel Chooser. The table below defines which
@@ -422,7 +422,7 @@ If this position exceeds
 the image boundaries proceed with step 5. If not, pick the codel at this position and
 proceed as follows depending on the codels color.
 
-* Color is valid: Color is not Black or white: Candiate is valid.
+* Color is valid: Color is not Black or white: Candidate is valid.
 * Black: Codel in invalid, proceed to step 5.
 * White: This color is neutral so traverse along the direction of the direction pointer until you reach the border or
             a black codel (then proceed with step 5) or until you found a color different from black or white.
@@ -472,18 +472,18 @@ flowchart LR
 
 ## Program Termination <a name="programTermination"></a>
 
-### Sucessfull program termination
+### Successful program termination
 The program terminates if there is no next codel available. This can only in the progress of 
 finding the next codel block (see section [Determine Next Codel Blocks](#nextCodelBlocks)).
 
-If this happens all possible ways from the current codel block to all possible 8 candiate are tested.
+If this happens all possible ways from the current codel block to all possible 8 candidate are tested.
 
 
 
 ### Termination in case of errors
 
 During the program interpretation errors can occur while executing the commands, e.g. there are 
-insuficcient elements on the stack or a division by zero was performed. 
+insufficient elements on the stack or a division by zero was performed. 
 
 
 
