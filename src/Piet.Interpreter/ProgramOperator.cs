@@ -284,7 +284,7 @@ namespace Piet.Interpreter
             }
 
             // perform actual roll operation
-            int rollInsertIndex = stackAsArray.Length - depthOfRollOperation;
+            int rollInsertIndex = stackAsArray.Length - depthOfRollOperation - 1;
             for (int i = 0; i < numberOfRolls; i++)
             {
                 int programStackTopElement = stackAsArray[^1];
