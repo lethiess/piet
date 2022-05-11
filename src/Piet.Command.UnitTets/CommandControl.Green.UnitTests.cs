@@ -31,7 +31,7 @@ public partial class CommandControlUnitTests
         Assert.Equal(Command.None, colorCommands[1, 2].Command);
         Assert.Equal(Command.Add, colorCommands[1, 3].Command);
         Assert.Equal(Command.Divide, colorCommands[1, 4].Command);
-        Assert.Equal(Command.GreaterThan, colorCommands[1, 5].Command);
+        Assert.Equal(Command.Greater, colorCommands[1, 5].Command);
 
         Assert.Equal(Command.Roll, colorCommands[2, 0].Command);
         Assert.Equal(Command.OutputNumber, colorCommands[2, 1].Command);

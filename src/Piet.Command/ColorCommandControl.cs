@@ -11,7 +11,7 @@ public static class ColorCommandControl
 
     private static readonly ImmutableArray<ImmutableArray<Command>> _commandLookup =
         ImmutableArray.Create(
-            ImmutableArray.Create(Command.None, Command.Add,      Command.Divide, Command.GreaterThan, Command.Duplicate,   Command.InputCharacter),
+            ImmutableArray.Create(Command.None, Command.Add,      Command.Divide, Command.Greater, Command.Duplicate,   Command.InputCharacter),
             ImmutableArray.Create(Command.Push, Command.Subtract, Command.Modulo, Command.Pointer, Command.Roll,        Command.OutputNumber),
             ImmutableArray.Create(Command.Pop,  Command.Multiply, Command.Not,    Command.Switch,  Command.InputNumber, Command.OutputCharacter)
     );

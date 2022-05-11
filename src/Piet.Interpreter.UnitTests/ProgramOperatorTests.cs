@@ -408,7 +408,7 @@ public class ProgramOperatorTests
             outputEventServiceMock.Object, inputServiceMock.Object);
 
         Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.GreaterThan),
+            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Greater),
                 0, null));
     }
 
@@ -429,7 +429,7 @@ public class ProgramOperatorTests
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandA, null);
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandB, null);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.GreaterThan), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Greater), 0, null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
