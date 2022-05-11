@@ -58,9 +58,9 @@ public class PietInterpreterTests
         
         var codelChooser = new CodelChooser{ CodelGrid = codelGrid };
         var codelBlockSearcher = new CodelBlockSearcher { CodelGrid = codelGrid };
-        var inputFacadeMock = new Mock<IInputService>();
+        var inputServiceMock = new Mock<IInputService>();
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            new OutputService(), inputFacadeMock.Object);
+            new OutputService(), inputServiceMock.Object);
 
         var interpreter = new PietInterpreter(new NullLogger<PietInterpreter>(),
             codelChooser,

@@ -1,4 +1,5 @@
-﻿using Blazored.Modal.Services;
+﻿using Blazored.Modal;
+using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Piet.Color;
 using Piet.Command;
@@ -177,9 +178,7 @@ namespace Piet.Web.Pages
 
             if (result.Cancelled is false)
             {
-                Console.WriteLine((char)result.Data.ToString()[0]);
-
-                _interpreter.Continue(_codelGrid, (char)result.Data.ToString()[0]);
+                _interpreter.Continue(_codelGrid, result.Data.ToString()![0]);
             }
             else
             {
