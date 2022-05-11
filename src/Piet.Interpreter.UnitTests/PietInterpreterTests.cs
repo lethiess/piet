@@ -16,7 +16,7 @@ public class PietInterpreterTests
         var codelGrid = new CodelGrid(10, 10, PietColors.White);
         var codelChooser = new CodelChooser{ CodelGrid = codelGrid };
         var codelBlockSearcher = new CodelBlockSearcher { CodelGrid = codelGrid };
-        var inputFaceMock = new Mock<IInputFacade>();
+        var inputFaceMock = new Mock<IInputService>();
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             new OutputService(), inputFaceMock.Object);
         
@@ -28,7 +28,7 @@ public class PietInterpreterTests
         var result = interpreter.Run(codelGrid);
 
         Assert.NotNull(result);
-        Assert.Equal(PietInterpreterResult.InterpreterStatus.Success, result.Status);
+        Assert.Equal(State.Completed, result.State);
         Assert.Equal("Successfully interpreted codel grid", result.Message);
     }
 
@@ -58,7 +58,7 @@ public class PietInterpreterTests
         
         var codelChooser = new CodelChooser{ CodelGrid = codelGrid };
         var codelBlockSearcher = new CodelBlockSearcher { CodelGrid = codelGrid };
-        var inputFacadeMock = new Mock<IInputFacade>();
+        var inputFacadeMock = new Mock<IInputService>();
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             new OutputService(), inputFacadeMock.Object);
 
@@ -70,7 +70,7 @@ public class PietInterpreterTests
         var result = interpreter.Run(codelGrid);
 
         Assert.NotNull(result);
-        Assert.Equal(PietInterpreterResult.InterpreterStatus.Success, result.Status);
+        Assert.Equal(State.Completed, result.State);
         Assert.Equal("Successfully interpreted codel grid", result.Message);
     }
 }

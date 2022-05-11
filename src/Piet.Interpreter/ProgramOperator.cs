@@ -12,21 +12,26 @@ namespace Piet.Interpreter
         private readonly ILogger<ProgramOperator> _logger;
 
         public ProgramOperator(ILogger<ProgramOperator> logger,
-            IOutputService outputService, IInputFacade inputFacade)
+            IOutputService outputService, IInputService inputService)
         {
             _programStack = new Stack<int>();
             _logger = logger;
             OutputService = outputService;
-            InputFacade = inputFacade;
+            InputService = inputService;
         }
 
         internal List<int> GetProgramStack() => _programStack.ToList();
 
-        public IInputFacade InputFacade { get; init; }
+        public IInputService InputService { get; init; }
     
         public IOutputService OutputService { get; init; }
 
-        public void ExecuteCommand(ColorCommand colorCommand, int codelBlockSize)
+        public void SetInputValue(int input)
+        {
+            _programStack.Push(input);
+        }
+
+        public void ExecuteCommand(ColorCommand colorCommand, int codelBlockSize, Context context)
         {
             switch (colorCommand.Command)
             {
@@ -44,8 +49,8 @@ namespace Piet.Interpreter
                 case Command.Command.Switch: Switch(); break;
                 case Command.Command.Duplicate: Duplicate(); break;
                 case Command.Command.Roll: Roll(); break;
-                case Command.Command.InputNumber: InputNumberAsync(); break;
-                case Command.Command.InputCharacter: InputCharacterAsync(); break;
+                case Command.Command.InputNumber: InputNumberAsync(context); break;
+                case Command.Command.InputCharacter: InputCharacterAsync(context); break;
                 case Command.Command.OutputNumber: OutputNumber(); break;
                 case Command.Command.OutputCharacter: OutputCharacter(); break;
                 default:
@@ -301,16 +306,16 @@ namespace Piet.Interpreter
             }
         }
 
-        private void InputNumberAsync()
+        private void InputNumberAsync(Context context)
         {
-            int inputNumber = InputFacade.GetIntegerInputAsync().Result;
-            _programStack.Push(inputNumber);
+            InputService.RequestIntegerInputAsync();
+            context.Pause?.Invoke();
         }
 
-        private void InputCharacterAsync()
+        private void InputCharacterAsync(Context context)
         {
-            int inputCharacter = InputFacade.GetCharacterInputAsync().Result;
-            _programStack.Push(inputCharacter);
+            InputService.RequestCharacterInputAsync();
+            context.Pause?.Invoke();
         }
 
         private void OutputNumber()

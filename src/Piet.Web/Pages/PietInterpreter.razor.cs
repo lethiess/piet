@@ -29,7 +29,7 @@ namespace Piet.Web.Pages
         [Inject]
         private ILogger<PietInterpreter> Logger { get; init; } = default!;
 
-        private Piet.Interpreter.PietInterpreter _interpreter;
+        private Piet.Interpreter.PietInterpreter _interpreter = null!;
 
         private const int InitialGridHeight = 15;
         private const int InitialGridWidth = 25;
@@ -129,11 +129,10 @@ namespace Piet.Web.Pages
         private void Run()
         {
             _output.Clear();
-            _interpreter.Run(_codelGrid);
+            var result = _interpreter.Run(_codelGrid);
 
-
-            //Console.WriteLine(result.Status);
-            //Console.WriteLine(result.Message);
+            Logger.LogDebug(result.State.ToString());
+            Logger.LogDebug(result.Message);
         }
 
         private void RegisterEventListener()
@@ -141,14 +140,14 @@ namespace Piet.Web.Pages
             ProgramOperator.OutputService.OutputInteger += OutputServiceOnOutputInteger;
             ProgramOperator.OutputService.OutputCharacter += OutputServiceOnOutputCharacter;
 
-            ProgramOperator.InputFacade.InputRequestService.IntegerRequest += InputServiceOnIntegerRequest;
-            ProgramOperator.InputFacade.InputRequestService.CharacterRequest += InputServiceOnInputCharacterRequest;
+            ProgramOperator.InputService.IntegerRequest += InputServiceOnIntegerRequest;
+            ProgramOperator.InputService.CharacterRequest += InputServiceOnInputCharacterRequest;
         }
 
-        private void InputServiceOnIntegerRequest(object? sender, EventArgs e)
+        private async void InputServiceOnIntegerRequest(object? sender, EventArgs e)
         {
             Logger.LogDebug("Input integer");
-            ShowModalForInteger();
+            await ShowModalForInteger();
         }
 
         private async void InputServiceOnInputCharacterRequest(object? sender, EventArgs e)
@@ -174,31 +173,32 @@ namespace Piet.Web.Pages
         private async Task ShowModalForCharacter()
         {
             var messageForm = Modal.Show<MessageFormCharacter>();
-            var result = messageForm.Result.Result;
+            var result = await messageForm.Result;
 
-            if (!result.Cancelled)
+            if (result.Cancelled is false)
             {
-                ProgramOperator.InputFacade.InputResponseService.SendInputCharacterResponse(result.Data.ToString()![0]);
+                Console.WriteLine((char)result.Data.ToString()[0]);
+
+                _interpreter.Continue(_codelGrid, (char)result.Data.ToString()[0]);
             }
             else
             {
-                // TODO: else terminate program
+                _interpreter.Terminate();
             }
         }
-
 
         private async Task ShowModalForInteger()
         {
             var messageForm = Modal.Show<MessageFormInteger>();
             var result = await messageForm.Result;
 
-            if (!result.Cancelled)
+            if (result.Cancelled is false)
             {
-                ProgramOperator.InputFacade.InputResponseService.SendInputIntegerResponse((int)result.Data);
+                _interpreter.Continue(_codelGrid, (int)result.Data);
             }
             else
             {
-                // TODO: else terminate program
+                _interpreter.Terminate();
             }
         }
     }

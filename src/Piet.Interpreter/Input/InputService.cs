@@ -1,16 +1,16 @@
 ﻿namespace Piet.Interpreter.Input;
 
-class InputRequestService : IInputRequestService
+class InputService : IInputService
 {
+
     public event EventHandler<EventArgs>? CharacterRequest;
     public event EventHandler<EventArgs>? IntegerRequest;
-
-    public void SendIntegerInputRequest()
+    public void RequestIntegerInputAsync()
     {
         OnInputIntegerOperation();
     }
 
-    public void SendCharacterInputRequest()
+    public void RequestCharacterInputAsync()
     {
         OnInputCharacterOperation();
     }

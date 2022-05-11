@@ -13,9 +13,7 @@ public static class PietInterpreterServiceExtension
         services.AddTransient<ICodelChooser, CodelChooser>();
         services.AddTransient<ICodelBlockSearcher, CodelBlockSearcher>();
         services.AddTransient<IProgramOperator, ProgramOperator>();
-        services.AddTransient<IInputResponseService, InputResponseService>();
-        services.AddTransient<IInputRequestService, InputRequestService>();
-        services.AddTransient<IInputFacade, InputFacade>();
+        services.AddTransient<IInputService, InputService>();
         services.AddTransient<IOutputService, OutputService>();
         return services;
     }
