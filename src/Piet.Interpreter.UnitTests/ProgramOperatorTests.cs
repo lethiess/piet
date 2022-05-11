@@ -636,8 +636,8 @@ public class ProgramOperatorTests
         Assert.Equal(5, currentProgramStackAsArray.Count);
         Assert.Equal(4, currentProgramStackAsArray[0]);
         Assert.Equal(3, currentProgramStackAsArray[1]);
-        Assert.Equal(5, currentProgramStackAsArray[2]);
-        Assert.Equal(2, currentProgramStackAsArray[3]);
+        Assert.Equal(2, currentProgramStackAsArray[2]);
+        Assert.Equal(5, currentProgramStackAsArray[3]);
         Assert.Equal(1, currentProgramStackAsArray[4]);
     }
 
@@ -666,9 +666,9 @@ public class ProgramOperatorTests
 
         Assert.Equal(5, currentProgramStackAsArray.Count);
         Assert.Equal(3, currentProgramStackAsArray[0]);
-        Assert.Equal(5, currentProgramStackAsArray[1]);
-        Assert.Equal(4, currentProgramStackAsArray[2]);
-        Assert.Equal(2, currentProgramStackAsArray[3]);
+        Assert.Equal(2, currentProgramStackAsArray[1]);
+        Assert.Equal(5, currentProgramStackAsArray[2]);
+        Assert.Equal(4, currentProgramStackAsArray[3]);
         Assert.Equal(1, currentProgramStackAsArray[4]);
     }
 
