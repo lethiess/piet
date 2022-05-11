@@ -147,9 +147,10 @@ namespace Piet.Interpreter.UnitTests
         [MemberData(nameof(GetCodelArrays))]
         public void GetCodelBlock_MustMatch(Codel[,] codelArray, int height, int width, Codel seedCodel, List<Codel> expectedCodelBlock)
         {
-            var codelGrids = new CodelGrid(height, width, codelArray);
+            var codelGrid = new CodelGrid(height, width, codelArray);
 
-            var codelBlockSearcher = new CodelBlockSearcher(codelGrids);
+            var codelBlockSearcher = new CodelBlockSearcher { CodelGrid = codelGrid };
+
 
             var codelBlock = codelBlockSearcher.GetCodelBock(seedCodel).ToImmutableList();
 

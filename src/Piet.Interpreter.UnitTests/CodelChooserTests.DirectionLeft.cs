@@ -26,7 +26,7 @@ public partial class CodelChooserTests
         var expectedNextCodel = new Codel(1, 4, PietColors.Green);
         codelGrid.SetCodel(expectedNextCodel);
 
-        var codelChooser = new CodelChooser(codelGrid);
+        var codelChooser = new CodelChooser{ CodelGrid = codelGrid };
 
         PietInterpreter.DirectionPointer = PietInterpreter.Direction.Left;
         PietInterpreter.CodelChooserState = PietInterpreter.CodelChooser.Left;
@@ -58,7 +58,7 @@ public partial class CodelChooserTests
         var expectedNextCodel = new Codel(1, 2, PietColors.Green);
         codelGrid.SetCodel(expectedNextCodel);
 
-        var codelChooser = new CodelChooser(codelGrid);
+        var codelChooser = new CodelChooser{ CodelGrid = codelGrid };
 
         PietInterpreter.DirectionPointer = PietInterpreter.Direction.Left;
         PietInterpreter.CodelChooserState = PietInterpreter.CodelChooser.Right;
@@ -90,7 +90,7 @@ public partial class CodelChooserTests
         var expectedNextCodel = new Codel(0, 4, PietColors.Green);
         codelGrid.SetCodel(expectedNextCodel);
 
-        var codelChooser = new CodelChooser(codelGrid);
+        var codelChooser = new CodelChooser{ CodelGrid = codelGrid };
 
         PietInterpreter.DirectionPointer = PietInterpreter.Direction.Left;
         PietInterpreter.CodelChooserState = PietInterpreter.CodelChooser.Left;
@@ -122,7 +122,7 @@ public partial class CodelChooserTests
         var expectedNextCodel = new Codel(0, 2, PietColors.Green);
         codelGrid.SetCodel(expectedNextCodel);
 
-        var codelChooser = new CodelChooser(codelGrid);
+        var codelChooser = new CodelChooser{ CodelGrid = codelGrid };
 
         PietInterpreter.DirectionPointer = PietInterpreter.Direction.Left;
         PietInterpreter.CodelChooserState = PietInterpreter.CodelChooser.Right;

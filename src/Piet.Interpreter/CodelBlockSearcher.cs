@@ -3,15 +3,10 @@ using Piet.Grid;
 
 namespace Piet.Interpreter;
 
-public class CodelBlockSearcher : ICodelBlockSearcher
+internal sealed class CodelBlockSearcher : ICodelBlockSearcher
 {
     public ICodelGrid CodelGrid { get; set; }
     
-    public CodelBlockSearcher(ICodelGrid codelGrid)
-    {
-        CodelGrid = codelGrid;
-    }
-
     private bool NeighborHasValidCoordinates(int xPosition, int yPosition)
     {
         return Enumerable.Range(0, CodelGrid.Width)

@@ -1,4 +1,4 @@
-﻿namespace Piet.Interpreter.Events;
+﻿namespace Piet.Interpreter.Output;
 
 public interface IOutputService
 {

@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Piet.Command;
-using Piet.Interpreter.Events;
 using Piet.Interpreter.Exceptions;
+using Piet.Interpreter.Input;
+using Piet.Interpreter.Output;
 
 namespace Piet.Interpreter
 {
@@ -25,7 +26,12 @@ namespace Piet.Interpreter
     
         public IOutputService OutputService { get; init; }
 
-        public void ExecuteCommand(ColorCommand colorCommand, int codelBlockSize)
+        public void SetInputValue(int input)
+        {
+            _programStack.Push(input);
+        }
+
+        public void ExecuteCommand(ColorCommand colorCommand, int codelBlockSize, Context context)
         {
             switch (colorCommand.Command)
             {
@@ -43,8 +49,8 @@ namespace Piet.Interpreter
                 case Command.Command.Switch: Switch(); break;
                 case Command.Command.Duplicate: Duplicate(); break;
                 case Command.Command.Roll: Roll(); break;
-                case Command.Command.InputNumber: InputNumber(); break;
-                case Command.Command.InputCharacter: InputCharacter(); break;
+                case Command.Command.InputNumber: InputNumberAsync(context); break;
+                case Command.Command.InputCharacter: InputCharacterAsync(context); break;
                 case Command.Command.OutputNumber: OutputNumber(); break;
                 case Command.Command.OutputCharacter: OutputCharacter(); break;
                 default:
@@ -300,16 +306,16 @@ namespace Piet.Interpreter
             }
         }
 
-        private void InputNumber()
+        private void InputNumberAsync(Context context)
         {
-            int inputNumber = InputService.GetIntegerInput().Result;
-            _programStack.Push(inputNumber);
+            InputService.RequestIntegerInputAsync();
+            context.Pause?.Invoke();
         }
 
-        private void InputCharacter()
+        private void InputCharacterAsync(Context context)
         {
-            int inputCharacter = InputService.GetCharacterInput().Result;
-            _programStack.Push(inputCharacter);
+            InputService.RequestCharacterInputAsync();
+            context.Pause?.Invoke();
         }
 
         private void OutputNumber()

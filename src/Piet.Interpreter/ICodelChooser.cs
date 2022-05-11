@@ -4,6 +4,6 @@ namespace Piet.Interpreter;
 
 public interface ICodelChooser
 {
-    ICodelGrid CodelGrid { get; init; }
+    ICodelGrid CodelGrid { get; set; }
     CodelResult GetNextCodel(IEnumerable<Codel> currentCodelBlock);
 }

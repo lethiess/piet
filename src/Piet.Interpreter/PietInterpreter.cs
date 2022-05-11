@@ -12,47 +12,25 @@ public sealed class PietInterpreter
     private readonly ILogger<PietInterpreter> _logger;
     
     private Codel _currentCodel;
-    private bool _executionFinished = false;
-    private bool _executionError = false;
 
     internal static Direction DirectionPointer = Direction.Right;
     internal static CodelChooser CodelChooserState = CodelChooser.Left;
-    
+    private bool _initialized;
+    private State _state;
+
     public PietInterpreter(
         ILogger<PietInterpreter> logger,
-        ICodelGrid codelGrid,
         ICodelChooser codelChooser,
         ICodelBlockSearcher codelBlockSearcher,
         IProgramOperator programOperator
     )
     {
         _logger = logger;
+        _programOperator = programOperator;
         _codelChooser = codelChooser;
         _codelBlockSearcher = codelBlockSearcher;
-        _programOperator = programOperator;
-        _currentCodel = codelGrid.GetCodel(0, 0);
     }
 
-    public PietInterpreterResult Run()
-    {
-        DirectionPointer = Direction.Right;
-        CodelChooserState = CodelChooser.Left;
-
-        _logger.LogInformation("Begin interpreting codel grid.");
-        while (_executionFinished is false && _executionError is false)
-        {
-            NextStep();
-        }
-
-        if (_executionFinished && _executionError is false)
-        {
-            return new PietInterpreterResult(PietInterpreterResult.InterpreterStatus.Success, "Successfully interpreted codel grid");
-        }
-        else
-        {
-            return new PietInterpreterResult(PietInterpreterResult.InterpreterStatus.Error, "An error occurred. The interpreter stopped.");
-        }
-    }
 
     private void NextStep()
     {
@@ -67,7 +45,7 @@ public sealed class PietInterpreter
         if (nextCodelResult.Codel is null)
         {
             _logger.LogDebug("Program terminates because there is no next codel");
-            _executionFinished = true;
+            _state = State.Completed;
             return;
         }
 
@@ -78,13 +56,79 @@ public sealed class PietInterpreter
         if (nextCodelResult.TraversedWhiteCodels is false)
         {
             _logger.LogDebug($"Execute command: {colorCommand}");
-            _programOperator.ExecuteCommand(colorCommand, codelBock.Count);
+            _programOperator.ExecuteCommand(colorCommand, codelBock.Count, new Context() { Pause = PauseRequested });
             _logger.LogDebug($"Executed command: {colorCommand}");
         }
         
         _logger.LogDebug("Update current codel for next step");
         UpdateCurrentCodel(nextCodelResult.Codel);
     }
+
+    private void PauseRequested()
+    {
+        Pause();
+    }
+
+    public PietInterpreterResult Run(ICodelGrid codelGrid)
+    {
+        Start(codelGrid);
+        Continue(codelGrid);
+        return Complete();
+    }
+
+    public PietInterpreterResult Continue(ICodelGrid codelGrid, int input)
+    {
+        _state = State.Running;
+        _programOperator.SetInputValue(input);
+        Continue(codelGrid);
+        return Complete();
+    }
+
+    public PietInterpreterResult Terminate()
+    {
+        _state = State.Failed;
+        return Complete();
+    }
+
+    private void Start(ICodelGrid codelGrid)
+    {
+        if (_initialized) return;
+
+        _currentCodel = codelGrid.GetCodel(0, 0);
+        _codelChooser.CodelGrid = codelGrid;
+        _codelBlockSearcher.CodelGrid = codelGrid;
+
+
+        DirectionPointer = Direction.Right;
+        CodelChooserState = CodelChooser.Left;
+        _initialized = true;
+    }
+    private void Pause()
+    {
+        _state = State.Paused;
+    }
+
+    private void Continue(ICodelGrid codelGrid)
+    {
+        _codelChooser.CodelGrid = codelGrid;
+        _codelBlockSearcher.CodelGrid = codelGrid;
+        
+        _logger.LogInformation("Begin interpreting codel grid.");
+        while (_state == State.Running)
+        {
+            NextStep();
+        }
+    }
+
+    private PietInterpreterResult Complete() => new (_state, GetResultMessage(_state));
+
+    private static string GetResultMessage(State state) =>
+        state switch
+        {
+            State.Completed => "Successfully interpreted codel grid",
+            State.Failed => "An error occurred. The interpreter stopped.",
+            State.Paused => "Interpreter paused"
+        };
 
     private void UpdateCurrentCodel(Codel codel) => _currentCodel = codel;
     

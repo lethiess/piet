@@ -1,7 +1,9 @@
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Piet.Color;
 using Piet.Grid;
-using Piet.Interpreter.Events;
+using Piet.Interpreter.Input;
+using Piet.Interpreter.Output;
 using Xunit;
 
 namespace Piet.Interpreter.UnitTests;
@@ -12,21 +14,21 @@ public class PietInterpreterTests
     public void Run_EmptyCodelGrid_MustReturn_Success()
     {
         var codelGrid = new CodelGrid(10, 10, PietColors.White);
-        var codelChooser = new CodelChooser(codelGrid);
-        var codelBlockSearcher = new CodelBlockSearcher(codelGrid);
+        var codelChooser = new CodelChooser{ CodelGrid = codelGrid };
+        var codelBlockSearcher = new CodelBlockSearcher { CodelGrid = codelGrid };
+        var inputFaceMock = new Mock<IInputService>();
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            new OutputService(), new InputService());
+            new OutputService(), inputFaceMock.Object);
         
         var interpreter = new PietInterpreter(new NullLogger<PietInterpreter>(),
-            codelGrid,
             codelChooser,
             codelBlockSearcher,
             programOperator);
 
-        var result = interpreter.Run();
+        var result = interpreter.Run(codelGrid);
 
         Assert.NotNull(result);
-        Assert.Equal(PietInterpreterResult.InterpreterStatus.Success, result.Status);
+        Assert.Equal(State.Completed, result.State);
         Assert.Equal("Successfully interpreted codel grid", result.Message);
     }
 
@@ -54,21 +56,21 @@ public class PietInterpreterTests
         codelGrid.SetCodel(new Codel(6,1, PietColors.Black));
         codelGrid.SetCodel(new Codel(6,1, PietColors.Black));
         
-        var codelChooser = new CodelChooser(codelGrid);
-        var codelBlockSearcher = new CodelBlockSearcher(codelGrid);
+        var codelChooser = new CodelChooser{ CodelGrid = codelGrid };
+        var codelBlockSearcher = new CodelBlockSearcher { CodelGrid = codelGrid };
+        var inputServiceMock = new Mock<IInputService>();
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            new OutputService(), new InputService());
+            new OutputService(), inputServiceMock.Object);
 
         var interpreter = new PietInterpreter(new NullLogger<PietInterpreter>(),
-            codelGrid,
             codelChooser,
             codelBlockSearcher,
             programOperator);
 
-        var result = interpreter.Run();
+        var result = interpreter.Run(codelGrid);
 
         Assert.NotNull(result);
-        Assert.Equal(PietInterpreterResult.InterpreterStatus.Success, result.Status);
+        Assert.Equal(State.Completed, result.State);
         Assert.Equal("Successfully interpreted codel grid", result.Message);
     }
 }

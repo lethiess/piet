@@ -3,19 +3,14 @@ using Piet.Grid;
 
 namespace Piet.Interpreter;
 
-public sealed class CodelChooser : ICodelChooser
+internal sealed class CodelChooser : ICodelChooser
 {
     // 8 Retries 
     // 4 directions with 2 codel chooser states per direction
     // the program terminates if the max retries are reached
     // 
     private const int MAX_RETRY_COUNT = 8;
-    public ICodelGrid CodelGrid { get; init; }
-
-    public CodelChooser(ICodelGrid codelGrid)
-    {
-        CodelGrid = codelGrid;
-    }
+    public ICodelGrid CodelGrid { get; set; }
 
     public CodelResult GetNextCodel(IEnumerable<Codel> currentCodelBlock)
     {

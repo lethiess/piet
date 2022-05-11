@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Piet.Interpreter.Events;
+using Piet.Interpreter.Input;
+using Piet.Interpreter.Output;
 
 namespace Piet.Interpreter;
 
@@ -9,9 +10,11 @@ public static class PietInterpreterServiceExtension
         this IServiceCollection services
     )
     {
+        services.AddTransient<ICodelChooser, CodelChooser>();
+        services.AddTransient<ICodelBlockSearcher, CodelBlockSearcher>();
         services.AddTransient<IProgramOperator, ProgramOperator>();
-        services.AddSingleton<IInputService, InputService>();
-        services.AddSingleton<IOutputService, OutputService>();
+        services.AddTransient<IInputService, InputService>();
+        services.AddTransient<IOutputService, OutputService>();
         return services;
     }
 }
