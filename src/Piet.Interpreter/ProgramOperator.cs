@@ -44,7 +44,7 @@ namespace Piet.Interpreter
                 case Command.Command.Divide: Divide(); break;
                 case Command.Command.Modulo: Modulo(); break;
                 case Command.Command.Not: Not(); break;
-                case Command.Command.GreaterThan: GreaterThan(); break;
+                case Command.Command.Greater: GreaterThan(); break;
                 case Command.Command.Pointer: Pointer(); break;
                 case Command.Command.Switch: Switch(); break;
                 case Command.Command.Duplicate: Duplicate(); break;

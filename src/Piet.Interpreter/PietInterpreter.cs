@@ -29,6 +29,7 @@ public sealed class PietInterpreter
         _programOperator = programOperator;
         _codelChooser = codelChooser;
         _codelBlockSearcher = codelBlockSearcher;
+        _state = State.Ready;
     }
 
 
@@ -110,6 +111,7 @@ public sealed class PietInterpreter
 
     private void Continue(ICodelGrid codelGrid)
     {
+        _state = State.Running;
         _codelChooser.CodelGrid = codelGrid;
         _codelBlockSearcher.CodelGrid = codelGrid;
         
@@ -120,14 +122,24 @@ public sealed class PietInterpreter
         }
     }
 
-    private PietInterpreterResult Complete() => new (_state, GetResultMessage(_state));
+    private PietInterpreterResult Complete()
+    {
+        if (_state == State.Completed || _state == State.Failed)
+        {
+            _state = State.Ready; 
+            _initialized = false;
+        }
+        return new(_state, GetResultMessage(_state));
+    }
 
     private static string GetResultMessage(State state) =>
         state switch
         {
             State.Completed => "Successfully interpreted codel grid",
             State.Failed => "An error occurred. The interpreter stopped.",
-            State.Paused => "Interpreter paused"
+            State.Paused => "Interpreter paused",
+            State.Ready => "Interpreter is ready",
+            State.Running => "Interpreter is running"
         };
 
     private void UpdateCurrentCodel(Codel codel) => _currentCodel = codel;
