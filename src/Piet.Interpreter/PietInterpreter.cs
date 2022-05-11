@@ -29,7 +29,6 @@ public sealed class PietInterpreter
         _programOperator = programOperator;
         _codelChooser = codelChooser;
         _codelBlockSearcher = codelBlockSearcher;
-        _state = State.Ready;
     }
 
 
@@ -102,6 +101,7 @@ public sealed class PietInterpreter
 
         DirectionPointer = Direction.Right;
         CodelChooserState = CodelChooser.Left;
+        _state = State.Running;
         _initialized = true;
     }
     private void Pause()
@@ -126,7 +126,6 @@ public sealed class PietInterpreter
     {
         if (_state == State.Completed || _state == State.Failed)
         {
-            _state = State.Ready; 
             _initialized = false;
         }
         return new(_state, GetResultMessage(_state));
@@ -138,7 +137,6 @@ public sealed class PietInterpreter
             State.Completed => "Successfully interpreted codel grid",
             State.Failed => "An error occurred. The interpreter stopped.",
             State.Paused => "Interpreter paused",
-            State.Ready => "Interpreter is ready",
             State.Running => "Interpreter is running"
         };
 

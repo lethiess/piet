@@ -2,7 +2,6 @@
 
 public enum State
 {
-    Ready,
     Running,
     Paused,
     Completed,
