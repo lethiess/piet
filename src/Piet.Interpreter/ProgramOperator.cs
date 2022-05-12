@@ -31,6 +31,11 @@ namespace Piet.Interpreter
             _programStack.Push(input);
         }
 
+        public void ResetProgramStack()
+        {
+            _programStack.Clear();
+        }
+
         public void ExecuteCommand(ColorCommand colorCommand, int codelBlockSize, Context context)
         {
             switch (colorCommand.Command)
@@ -288,8 +293,18 @@ namespace Piet.Interpreter
                     $"but a roll depth of {depthOfRollOperation} was requested.");
             }
 
+
+
+
+
             // perform actual roll operation
             int rollInsertIndex = stackAsArray.Length - depthOfRollOperation - 1;
+            
+            Console.WriteLine($"Depth {depthOfRollOperation} Rolls: {numberOfRolls}");
+            Console.WriteLine($"StackAsArray: {stackAsArray}");
+            
+            
+            
             for (int i = 0; i < numberOfRolls; i++)
             {
                 int programStackTopElement = stackAsArray[^1];
@@ -304,6 +319,8 @@ namespace Piet.Interpreter
             {
                 _programStack.Push(number);
             }
+
+            int stop = 42;
         }
 
         private void InputNumberAsync(Context context)

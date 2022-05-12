@@ -97,7 +97,7 @@ public sealed class PietInterpreter
         _currentCodel = codelGrid.GetCodel(0, 0);
         _codelChooser.CodelGrid = codelGrid;
         _codelBlockSearcher.CodelGrid = codelGrid;
-
+        _programOperator.ResetProgramStack();
 
         DirectionPointer = Direction.Right;
         CodelChooserState = CodelChooser.Left;
