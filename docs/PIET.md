@@ -154,17 +154,14 @@ stack manipulation please take a look in the [Commands](#commands) section below
 
 The following commands are present in Piet and can be divided into the following groups:
 
-Stack Manipulation                              | Arithmetic Operation          | Program Flow
- :--------------------------------------------: | :---------------------------: | :--------------------:
-[Push](#command_push)                           | [Add](#command_add)           | [Not](#command_not)
-[Pop](#command_pop)                             | [Subtract](#command_subtract) | [Greater](#command_greater)
-[Duplicate](#command_duplicate)                 | [Multiply](#command_multiply) | [Pointer](#command_pointer)
-[Roll](#command_roll)                           | [Divide](#command_divide)     | [Switch](#command_switch)
-[Input (number)](#command_input_integer)        | [Mod](#command_mod)           |
-[Input (character)](#command_input_character)   |                               |
-[Output (number)](#command_output_integer)      |                               |
-[Output (character)](#command_output_character) |                               |
-
+Stack Manipulation                              | Arithmetic Operation          | Program Flow                | Input / Output
+ :--------------------------------------------: | :---------------------------: | :-------------------------: | :-------------------:
+[Push](#command_push)                           | [Add](#command_add)           | [Not](#command_not)         | [Input (number)](#command_input_integer)        
+[Pop](#command_pop)                             | [Subtract](#command_subtract) | [Greater](#command_greater) | [Input (character)](#command_input_character)   
+[Duplicate](#command_duplicate)                 | [Multiply](#command_multiply) | [Pointer](#command_pointer) | [Output (number)](#command_output_integer)      
+[Roll](#command_roll)                           | [Divide](#command_divide)     | [Switch](#command_switch)   | [Output (character)](#command_output_character) 
+[Mod](#command_mod)                             |                               |                             |
+                                                                                                              
 ### Push <a name="command_push"></a>
 
 **Description:**
