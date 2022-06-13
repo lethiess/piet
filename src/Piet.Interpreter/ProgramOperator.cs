@@ -10,6 +10,7 @@ namespace Piet.Interpreter
     {
         private readonly Stack<int> _programStack;
         private readonly ILogger<ProgramOperator> _logger;
+        private CommandInfo _currentCommandInfo;
 
         public ProgramOperator(ILogger<ProgramOperator> logger,
             IOutputService outputService, IInputService inputService)
@@ -26,18 +27,22 @@ namespace Piet.Interpreter
     
         public IOutputService OutputService { get; init; }
 
-        public void SetInputValue(int input)
+        public void SetInputValue(int input, ColorCommand colorCommand)
         {
             _programStack.Push(input);
+            _currentCommandInfo.Value = input;
+            LogCommand(new CommandInfo(colorCommand, input));
         }
 
-        public void ResetProgramStack()
+        public void Reset()
         {
             _programStack.Clear();
         }
 
         public void ExecuteCommand(ColorCommand colorCommand, int codelBlockSize, Context context)
         {
+            _currentCommandInfo = new CommandInfo(colorCommand, null);
+
             switch (colorCommand.Command)
             {
                 case Command.Command.None: None(); break;
@@ -62,8 +67,14 @@ namespace Piet.Interpreter
                     throw new ArgumentOutOfRangeException(
                         $"The command ${colorCommand.Command} is not valid in this context");
             }
+
+            LogCommand(_currentCommandInfo);
         }
 
+        private void LogCommand(CommandInfo info)
+        {
+            OutputService.DispatchOutputCommandLogEvent(info);
+        }
 
         private void None()
         {
@@ -76,6 +87,7 @@ namespace Piet.Interpreter
             _logger.LogDebug(
                 $"Executing command {Command.Command.Push}: Push {codelBlockSize} on the stack.");
             _programStack.Push(codelBlockSize);
+            _currentCommandInfo.Value = codelBlockSize;
         }
 
         private void Pop()
@@ -89,7 +101,7 @@ namespace Piet.Interpreter
 
             _logger.LogDebug(
                 $"Executing command {Command.Command.Pop}: Pop {_programStack.Peek()} from the stack.");
-            _programStack.Pop();
+            _currentCommandInfo.Value = _programStack.Pop();
         }
 
         private void Add()
@@ -102,7 +114,12 @@ namespace Piet.Interpreter
 
             var operandB = _programStack.Pop();
             var operandA = _programStack.Pop();
-            _programStack.Push(operandA + operandB);
+            var result = operandA + operandB;
+            _programStack.Push(result);
+
+            _currentCommandInfo.Value = result;
+            _currentCommandInfo.OperandA = operandA;
+            _currentCommandInfo.OperandB = operandB;
         }
 
         private void Subtract()
@@ -115,7 +132,12 @@ namespace Piet.Interpreter
 
             var operandB = _programStack.Pop();
             var operandA = _programStack.Pop();
-            _programStack.Push(operandA - operandB);
+            var result = operandA - operandB;
+            _programStack.Push(result);
+
+            _currentCommandInfo.Value = result;
+            _currentCommandInfo.OperandA = operandA;
+            _currentCommandInfo.OperandB = operandB;
         }
 
         private void Multiply()
@@ -128,7 +150,12 @@ namespace Piet.Interpreter
 
             var operandB = _programStack.Pop();
             var operandA = _programStack.Pop();
-            _programStack.Push(operandA * operandB);
+            var result = operandA * operandB;
+            _programStack.Push(result);
+
+            _currentCommandInfo.Value = result;
+            _currentCommandInfo.OperandA = operandA;
+            _currentCommandInfo.OperandB = operandB;
         }
 
         private void Divide()
@@ -147,7 +174,12 @@ namespace Piet.Interpreter
                 throw new PietInterpreterDividedByZeroException("Division by zero is undefined.");
             }
 
-            _programStack.Push(operandA / operandB);
+            var result = operandA / operandB;
+            _programStack.Push(result);
+
+            _currentCommandInfo.Value = result;
+            _currentCommandInfo.OperandA = operandA;
+            _currentCommandInfo.OperandB = operandB;
         }
 
         private void Modulo()
@@ -174,6 +206,10 @@ namespace Piet.Interpreter
             }
 
             _programStack.Push(result);
+
+            _currentCommandInfo.Value = result;
+            _currentCommandInfo.OperandA = operandA;
+            _currentCommandInfo.OperandB = operandB;
         }
 
         private void Not()
@@ -188,10 +224,12 @@ namespace Piet.Interpreter
             if (operand == 0)
             {
                 _programStack.Push(1);
+                _currentCommandInfo.Value = 1;
             }
             else
             {
                 _programStack.Push(0);
+                _currentCommandInfo.Value = 0;
             }
         }
 
@@ -205,8 +243,12 @@ namespace Piet.Interpreter
 
             var operandB = _programStack.Pop();
             var operandA = _programStack.Pop();
+            var result = operandA > operandB ? 1 : 0;
+            _programStack.Push(result);
 
-            _programStack.Push(operandA > operandB ? 1 : 0);
+            _currentCommandInfo.Value = result;
+            _currentCommandInfo.OperandA = operandA;
+            _currentCommandInfo.OperandB = operandB;
         }
 
         private void Pointer()
@@ -218,6 +260,7 @@ namespace Piet.Interpreter
             }
 
             var operand = _programStack.Pop();
+            _currentCommandInfo.Value = operand;
 
             if (operand > 0)
             {
@@ -246,6 +289,7 @@ namespace Piet.Interpreter
             }
 
             var operand = _programStack.Pop();
+            _currentCommandInfo.Value = operand;
 
             // Toggle the direction only if there is a chance
             if (Math.Abs(operand) % 2 == 1)
@@ -264,6 +308,7 @@ namespace Piet.Interpreter
 
             var operand = _programStack.Peek();
             _programStack.Push(operand);
+            _currentCommandInfo.Value = operand;
         }
 
         private void Roll()
@@ -276,6 +321,9 @@ namespace Piet.Interpreter
 
             var numberOfRolls = Math.Abs(_programStack.Pop()); // ignore negative rolls
             var depthOfRollOperation = _programStack.Pop();
+
+            _currentCommandInfo.OperandA = numberOfRolls;
+            _currentCommandInfo.OperandB = depthOfRollOperation;
 
             if (depthOfRollOperation < 0)
             {
@@ -319,8 +367,6 @@ namespace Piet.Interpreter
             {
                 _programStack.Push(number);
             }
-
-            int stop = 42;
         }
 
         private void InputNumberAsync(Context context)
@@ -344,6 +390,7 @@ namespace Piet.Interpreter
             }
 
             var operand = _programStack.Pop();
+            _currentCommandInfo.Value = operand;
             _logger.LogDebug($"Numeric output value {operand}");
             OutputService.DispatchOutputIntegerEvent(operand);
         }
@@ -357,6 +404,7 @@ namespace Piet.Interpreter
             }
 
             var operand = _programStack.Pop();
+            _currentCommandInfo.Value = operand;
             _logger.LogDebug($"Character output value{Convert.ToChar(operand)}");
             OutputService.DispatchOutputCharacterEvent((char)operand);
         }

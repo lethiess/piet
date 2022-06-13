@@ -8,7 +8,7 @@ public interface IProgramOperator
 {
     IInputService InputService { get; }
     IOutputService OutputService { get; }
-    void SetInputValue(int input);
-    void ResetProgramStack();
+    void SetInputValue(int input, ColorCommand colorCommand);
+    void Reset();
     void ExecuteCommand(ColorCommand colorCommand, int codelBlockSize, Context context);
 }

@@ -1,6 +1,6 @@
 ﻿namespace Piet.Interpreter.Output;
 
-public class OutputIntegerOperationEventArgs : EventArgs
+public sealed class OutputIntegerOperationEventArgs : EventArgs
 {
     public int Value { get; set; }
 

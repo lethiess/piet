@@ -10,13 +10,13 @@ public sealed class PietInterpreter
     private readonly ICodelBlockSearcher _codelBlockSearcher;
     private readonly IProgramOperator _programOperator;
     private readonly ILogger<PietInterpreter> _logger;
-    
-    private Codel _currentCodel;
+
+    private Codel _currentCodel = null!;
+    private bool _initialized;
+    private State _state;
 
     internal static Direction DirectionPointer = Direction.Right;
     internal static CodelChooser CodelChooserState = CodelChooser.Left;
-    private bool _initialized;
-    private State _state;
 
     public PietInterpreter(
         ILogger<PietInterpreter> logger,
@@ -51,7 +51,7 @@ public sealed class PietInterpreter
 
         _logger.LogDebug($"Get command for current color: {_currentCodel.Color} and next color: {nextCodelResult.Codel.Color}");
         var colorCommand = ColorCommandControl.GetColorCommand(_currentCodel.Color, nextCodelResult.Codel.Color);
-        _logger.LogDebug($"Retrived command is: {colorCommand}");
+        _logger.LogDebug($"Retrieved command is: {colorCommand}");
         
         if (nextCodelResult.TraversedWhiteCodels is false)
         {
@@ -76,10 +76,10 @@ public sealed class PietInterpreter
         return Complete();
     }
 
-    public PietInterpreterResult Continue(ICodelGrid codelGrid, int input)
+    public PietInterpreterResult Continue(ICodelGrid codelGrid, int input, Command.Command command)
     {
         _state = State.Running;
-        _programOperator.SetInputValue(input);
+        _programOperator.SetInputValue(input, new ColorCommand(_currentCodel.Color, command));
         Continue(codelGrid);
         return Complete();
     }
@@ -97,7 +97,7 @@ public sealed class PietInterpreter
         _currentCodel = codelGrid.GetCodel(0, 0);
         _codelChooser.CodelGrid = codelGrid;
         _codelBlockSearcher.CodelGrid = codelGrid;
-        _programOperator.ResetProgramStack();
+        _programOperator.Reset();
 
         DirectionPointer = Direction.Right;
         CodelChooserState = CodelChooser.Left;
