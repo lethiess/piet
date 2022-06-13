@@ -10,7 +10,7 @@ using Piet.Web.Shared;
 
 namespace Piet.Web.Pages
 {
-    public partial class PietInterpreter
+    public partial class PietProgram
     {
         [CascadingParameter] 
         public IModalService Modal { get; set; } = default!;
@@ -28,9 +28,9 @@ namespace Piet.Web.Pages
         private ICodelBlockSearcher CodelBlockSearcher { get; init; } = default!;
 
         [Inject]
-        private ILogger<PietInterpreter> Logger { get; init; } = default!;
+        private ILogger<PietProgram> Logger { get; init; } = default!;
 
-        private Piet.Interpreter.PietInterpreter _interpreter = null!;
+        private PietInterpreter _interpreter = null!;
 
         private const int InitialGridHeight = 15;
         private const int InitialGridWidth = 25;
@@ -42,6 +42,7 @@ namespace Piet.Web.Pages
         private static PietColor _colorWhite = PietColors.White;
 
         private List<string> _output = new();
+        private List<CommandInfo> _commandHistory = new();
 
         private static CodelGrid _codelGrid = null!;
         private static ColorCommand[,] _colorCommands = null!;
@@ -101,6 +102,9 @@ namespace Piet.Web.Pages
                 .Build();
 
             _colorCommands = ColorCommandControl.GetColorCommands(_currentColor);
+
+            _output.Clear();
+            _commandHistory.Clear();
         }
 
         private void ResizeGrid()
@@ -143,6 +147,14 @@ namespace Piet.Web.Pages
 
             ProgramOperator.InputService.IntegerRequest += InputServiceOnIntegerRequest;
             ProgramOperator.InputService.CharacterRequest += InputServiceOnInputCharacterRequest;
+
+            ProgramOperator.OutputService.OutputCommandLog += OutputCommandLog;
+        }
+
+        private void OutputCommandLog(object? sender, OutputCommandLogEventArg e)
+        {
+            _commandHistory.Add(e.CommandInfo);
+            StateHasChanged();
         }
 
         private async void InputServiceOnIntegerRequest(object? sender, EventArgs e)
@@ -178,7 +190,7 @@ namespace Piet.Web.Pages
 
             if (result.Cancelled is false)
             {
-                _interpreter.Continue(_codelGrid, result.Data.ToString()![0]);
+                _interpreter.Continue(_codelGrid, result.Data.ToString()![0], Command.Command.InputCharacter);
             }
             else
             {
@@ -193,12 +205,35 @@ namespace Piet.Web.Pages
 
             if (result.Cancelled is false)
             {
-                _interpreter.Continue(_codelGrid, (int)result.Data);
+                _interpreter.Continue(_codelGrid, (int)result.Data, Command.Command.InputNumber);
             }
             else
             {
                 _interpreter.Terminate();
             }
         }
+
+        private string GetSerializedCommand(CommandInfo command) =>
+            command.ColorCommand.Command switch
+            {
+                Command.Command.None => $"{command.ColorCommand.Command})",
+                Command.Command.Push => $"{command.ColorCommand.Command} ({command.Value})",
+                Command.Command.Pop => $"{command.ColorCommand.Command} ({command.Value})",
+                Command.Command.Switch => $"{command.ColorCommand.Command} ({command.Value})",
+                Command.Command.Pointer => $"{command.ColorCommand.Command} ({command.Value})",
+                Command.Command.InputCharacter => $"{command.ColorCommand.Command} ({command.Value})",
+                Command.Command.InputNumber=> $"{command.ColorCommand.Command} ({command.Value})",
+                Command.Command.OutputCharacter => $"{command.ColorCommand.Command} ({command.Value})",
+                Command.Command.OutputNumber => $"{command.ColorCommand.Command} ({command.Value})",
+                Command.Command.Duplicate => $"{command.ColorCommand.Command} ({command.Value})",
+                Command.Command.Not => $"{command.ColorCommand.Command} ({command.Value})",
+                Command.Command.Greater => $"{command.ColorCommand.Command} ({command.Value})",
+                Command.Command.Roll => $"{command.ColorCommand.Command} (depth: {command.OperandA}, rolls: {command.OperandB})",
+                Command.Command.Add => $"{command.ColorCommand.Command} ({command.OperandA} + {command.OperandB} = {command.Value})",
+                Command.Command.Subtract => $"{command.ColorCommand.Command} ({command.OperandA} - {command.OperandB} = {command.Value})",
+                Command.Command.Multiply => $"{command.ColorCommand.Command} ({command.OperandA} * {command.OperandB} = {command.Value})",
+                Command.Command.Divide => $"{command.ColorCommand.Command} ({command.OperandA} / {command.OperandB} = {command.Value})",
+                Command.Command.Modulo => $"{command.ColorCommand.Command} ({command.OperandA} % {command.OperandB} = {command.Value})",
+            };
     }
 }
