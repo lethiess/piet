@@ -1,10 +1,13 @@
-﻿namespace Piet.Interpreter.Output;
+﻿using Piet.Interpreter.Exceptions;
+
+namespace Piet.Interpreter.Output;
 
 public class OutputService : IOutputService
 {
     public event EventHandler<OutputCharacterOperationEventArgs>? OutputCharacter;
     public event EventHandler<OutputIntegerOperationEventArgs>? OutputInteger;
     public event EventHandler<OutputCommandLogEventArg>? OutputCommandLog;
+    public event EventHandler<InterpreterExceptionEventArgs>? OutputException;
 
     public void DispatchOutputCharacterEvent(char value)
     {
@@ -19,6 +22,11 @@ public class OutputService : IOutputService
     public void DispatchOutputCommandLogEvent(CommandInfo commandInfo)
     {
         OnOutputCommandLogOperation(new OutputCommandLogEventArg(commandInfo));
+    }
+
+    public void DispatchOutputExceptionEvent(InterpreterExceptionBase exception)
+    {
+        OnOutputExceptionOperation(new InterpreterExceptionEventArgs(exception.Message));
     }
 
     protected virtual void OnOutputCharacterOperation(OutputCharacterOperationEventArgs e)
@@ -36,6 +44,12 @@ public class OutputService : IOutputService
     protected virtual void OnOutputCommandLogOperation(OutputCommandLogEventArg e)
     {
         var handler = OutputCommandLog;
+        handler?.Invoke(this, e);
+    }
+
+    protected virtual void OnOutputExceptionOperation(InterpreterExceptionEventArgs e)
+    {
+        var handler = OutputException;
         handler?.Invoke(this, e);
     }
 }
