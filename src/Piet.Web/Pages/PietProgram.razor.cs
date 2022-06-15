@@ -149,12 +149,18 @@ namespace Piet.Web.Pages
             ProgramOperator.InputService.CharacterRequest += InputServiceOnInputCharacterRequest;
 
             ProgramOperator.OutputService.OutputCommandLog += OutputCommandLog;
+            ProgramOperator.OutputService.OutputException += OutputException;
         }
 
         private void OutputCommandLog(object? sender, OutputCommandLogEventArg e)
         {
             _commandHistory.Add(e.CommandInfo);
             StateHasChanged();
+        }
+
+        private async void OutputException(object? sender, InterpreterExceptionEventArgs e)
+        {
+            await ShowErrorModal(e.Message);
         }
 
         private async void InputServiceOnIntegerRequest(object? sender, EventArgs e)
@@ -212,6 +218,19 @@ namespace Piet.Web.Pages
                 _interpreter.Terminate();
             }
         }
+
+        private async Task ShowErrorModal(string message)
+        {
+
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(DisplayMessage.Message), message);
+            
+            var messageForm = Modal.Show<DisplayMessage>("Error", parameters);
+            await messageForm.Result;
+
+            _interpreter.Terminate();
+        }
+        
 
         private string GetSerializedCommand(CommandInfo command) =>
             command.ColorCommand.Command switch

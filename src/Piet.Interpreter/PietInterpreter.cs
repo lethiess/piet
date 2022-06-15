@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
 using Piet.Command;
 using Piet.Grid;
+using Piet.Interpreter.Output;
 
 namespace Piet.Interpreter;
 
 public sealed class PietInterpreter
 {
+    private EventHandler<InterpreterExceptionEventArgs>? PublishException;
     private readonly ICodelChooser _codelChooser;
     private readonly ICodelBlockSearcher _codelBlockSearcher;
     private readonly IProgramOperator _programOperator;
@@ -56,7 +58,11 @@ public sealed class PietInterpreter
         if (nextCodelResult.TraversedWhiteCodels is false)
         {
             _logger.LogDebug($"Execute command: {colorCommand}");
-            _programOperator.ExecuteCommand(colorCommand, codelBock.Count, new Context() { Pause = PauseRequested });
+            _programOperator.ExecuteCommand(colorCommand, codelBock.Count, new Context()
+                {
+                    Pause = PauseRequested,
+                    OnError = OnError,
+                });
             _logger.LogDebug($"Executed command: {colorCommand}");
         }
         
@@ -67,6 +73,11 @@ public sealed class PietInterpreter
     private void PauseRequested()
     {
         Pause();
+    }
+
+    private void OnError()
+    {
+        Terminate();
     }
 
     public PietInterpreterResult Run(ICodelGrid codelGrid)

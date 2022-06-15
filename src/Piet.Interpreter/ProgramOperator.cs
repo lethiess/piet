@@ -42,33 +42,81 @@ namespace Piet.Interpreter
         public void ExecuteCommand(ColorCommand colorCommand, int codelBlockSize, Context context)
         {
             _currentCommandInfo = new CommandInfo(colorCommand, null);
-
-            switch (colorCommand.Command)
-            {
-                case Command.Command.None: None(); break;
-                case Command.Command.Push: Push(codelBlockSize); break;
-                case Command.Command.Pop: Pop(); break;
-                case Command.Command.Add: Add(); break;
-                case Command.Command.Subtract: Subtract(); break;
-                case Command.Command.Multiply: Multiply(); break;
-                case Command.Command.Divide: Divide(); break;
-                case Command.Command.Modulo: Modulo(); break;
-                case Command.Command.Not: Not(); break;
-                case Command.Command.Greater: GreaterThan(); break;
-                case Command.Command.Pointer: Pointer(); break;
-                case Command.Command.Switch: Switch(); break;
-                case Command.Command.Duplicate: Duplicate(); break;
-                case Command.Command.Roll: Roll(); break;
-                case Command.Command.InputNumber: InputNumberAsync(context); break;
-                case Command.Command.InputCharacter: InputCharacterAsync(context); break;
-                case Command.Command.OutputNumber: OutputNumber(); break;
-                case Command.Command.OutputCharacter: OutputCharacter(); break;
-                default:
-                    throw new ArgumentOutOfRangeException(
-                        $"The command ${colorCommand.Command} is not valid in this context");
-            }
-
+            Execute(colorCommand, codelBlockSize, context);
             LogCommand(_currentCommandInfo);
+        }
+
+        private void Execute(ColorCommand colorCommand, int codelBlockSize, Context context)
+        {
+            try
+            {
+                switch (colorCommand.Command)
+                {
+                    case Command.Command.None:
+                        None();
+                        break;
+                    case Command.Command.Push:
+                        Push(codelBlockSize);
+                        break;
+                    case Command.Command.Pop:
+                        Pop();
+                        break;
+                    case Command.Command.Add:
+                        Add();
+                        break;
+                    case Command.Command.Subtract:
+                        Subtract();
+                        break;
+                    case Command.Command.Multiply:
+                        Multiply();
+                        break;
+                    case Command.Command.Divide:
+                        Divide();
+                        break;
+                    case Command.Command.Modulo:
+                        Modulo();
+                        break;
+                    case Command.Command.Not:
+                        Not();
+                        break;
+                    case Command.Command.Greater:
+                        GreaterThan();
+                        break;
+                    case Command.Command.Pointer:
+                        Pointer();
+                        break;
+                    case Command.Command.Switch:
+                        Switch();
+                        break;
+                    case Command.Command.Duplicate:
+                        Duplicate();
+                        break;
+                    case Command.Command.Roll:
+                        Roll();
+                        break;
+                    case Command.Command.InputNumber:
+                        InputNumberAsync(context);
+                        break;
+                    case Command.Command.InputCharacter:
+                        InputCharacterAsync(context);
+                        break;
+                    case Command.Command.OutputNumber:
+                        OutputNumber();
+                        break;
+                    case Command.Command.OutputCharacter:
+                        OutputCharacter();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(
+                            $"The command ${colorCommand.Command} is not valid in this context");
+                }
+            }
+            catch (InterpreterExceptionBase e)
+            {
+                Console.WriteLine(e);
+                OutputService.DispatchOutputExceptionEvent(e);
+                context.OnError?.Invoke();
+            }
         }
 
         private void LogCommand(CommandInfo info)
@@ -340,18 +388,9 @@ namespace Piet.Interpreter
                     $"Error in 'roll operation': There are {_programStack.Count} elements on the stack" +
                     $"but a roll depth of {depthOfRollOperation} was requested.");
             }
-
-
-
-
-
+            
             // perform actual roll operation
             int rollInsertIndex = stackAsArray.Length - depthOfRollOperation - 1;
-            
-            Console.WriteLine($"Depth {depthOfRollOperation} Rolls: {numberOfRolls}");
-            Console.WriteLine($"StackAsArray: {stackAsArray}");
-            
-            
             
             for (int i = 0; i < numberOfRolls; i++)
             {
