@@ -133,6 +133,7 @@ namespace Piet.Web.Pages
 
         private void Run()
         {
+            _commandHistory.Clear();
             _output.Clear();
             var result = _interpreter.Run(_codelGrid);
 
@@ -237,27 +238,41 @@ namespace Piet.Web.Pages
         }
         
 
-        private string GetSerializedCommand(CommandInfo command) =>
-            command.ColorCommand.Command switch
+        private string GetSerializedCommand(CommandInfo command)
+        {
+            string value = command.Value.HasValue ? command.Value.ToString() : "NaN";
+            string operandA = command.OperandA.HasValue ? command.OperandA.ToString() : "NaN";
+            string operandB = command.OperandB.HasValue ? command.OperandB.ToString() : "NaN";
+            
+            return command.ColorCommand.Command switch
             {
-                Command.Command.None => $"{command.ColorCommand.Command})",
-                Command.Command.Push => $"{command.ColorCommand.Command} ({command.Value})",
-                Command.Command.Pop => $"{command.ColorCommand.Command} ({command.Value})",
-                Command.Command.Switch => $"{command.ColorCommand.Command} ({command.Value})",
-                Command.Command.Pointer => $"{command.ColorCommand.Command} ({command.Value})",
-                Command.Command.InputCharacter => $"{command.ColorCommand.Command} ({command.Value})",
-                Command.Command.InputNumber=> $"{command.ColorCommand.Command} ({command.Value})",
-                Command.Command.OutputCharacter => $"{command.ColorCommand.Command} ({command.Value})",
-                Command.Command.OutputNumber => $"{command.ColorCommand.Command} ({command.Value})",
-                Command.Command.Duplicate => $"{command.ColorCommand.Command} ({command.Value})",
-                Command.Command.Not => $"{command.ColorCommand.Command} ({command.Value})",
-                Command.Command.Greater => $"{command.ColorCommand.Command} ({command.Value})",
-                Command.Command.Roll => $"{command.ColorCommand.Command} (depth: {command.OperandA}, rolls: {command.OperandB})",
-                Command.Command.Add => $"{command.ColorCommand.Command} ({command.OperandA} + {command.OperandB} = {command.Value})",
-                Command.Command.Subtract => $"{command.ColorCommand.Command} ({command.OperandA} - {command.OperandB} = {command.Value})",
-                Command.Command.Multiply => $"{command.ColorCommand.Command} ({command.OperandA} * {command.OperandB} = {command.Value})",
-                Command.Command.Divide => $"{command.ColorCommand.Command} ({command.OperandA} / {command.OperandB} = {command.Value})",
-                Command.Command.Modulo => $"{command.ColorCommand.Command} ({command.OperandA} % {command.OperandB} = {command.Value})",
+                Command.Command.None => $"{command.ColorCommand.Command}",
+                Command.Command.Push => $"{command.ColorCommand.Command} ({value})",
+                Command.Command.Pop => $"{command.ColorCommand.Command} ({value})",
+                Command.Command.Switch => $"{command.ColorCommand.Command} ({value})",
+                Command.Command.Pointer => $"{command.ColorCommand.Command} ({value})",
+                Command.Command.InputCharacter =>
+                    $"{command.ColorCommand.Command} ({value})",
+                Command.Command.InputNumber => $"{command.ColorCommand.Command} ({value})",
+                Command.Command.OutputCharacter =>
+                    $"{command.ColorCommand.Command} ({value})",
+                Command.Command.OutputNumber => $"{command.ColorCommand.Command} ({value})",
+                Command.Command.Duplicate => $"{command.ColorCommand.Command} ({value})",
+                Command.Command.Not => $"{command.ColorCommand.Command} ({value})",
+                Command.Command.Greater => $"{command.ColorCommand.Command} ({value})",
+                Command.Command.Roll =>
+                    $"{command.ColorCommand.Command} (depth: {operandA}, rolls: {operandB})",
+                Command.Command.Add =>
+                    $"{command.ColorCommand.Command} ({operandA} + {operandB} = {value})",
+                Command.Command.Subtract =>
+                    $"{command.ColorCommand.Command} ({operandA} - {operandB} = {value})",
+                Command.Command.Multiply =>
+                    $"{command.ColorCommand.Command} ({operandA} * {operandB} = {value})",
+                Command.Command.Divide =>
+                    $"{command.ColorCommand.Command} ({operandA} / {operandB} = {value})",
+                Command.Command.Modulo =>
+                    $"{command.ColorCommand.Command} ({operandA} % {operandB} = {value})",
             };
+        }
     }
 }
