@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Collections.Immutable;
+using Microsoft.Extensions.Logging;
 using Piet.Command;
 using Piet.Grid;
 using Piet.Interpreter.Output;
@@ -38,14 +39,14 @@ public sealed class PietInterpreter
     private void NextStep()
     {
         _logger.LogDebug("Get codel block for current codel: {_currentCodel}", _currentCodel);
-        var codelBock = _codelBlockSearcher.GetCodelBock(_currentCodel).ToList();
+        var codelBock = _codelBlockSearcher.GetCodelBock(_currentCodel).ToImmutableList();
         _logger.LogDebug($"Retrieved codel block of size {codelBock.Count}");
 
         if (_firstStep)
         {
             _programOperator.ExecuteCommand(
                 new ColorCommand(_currentCodel.Color, Command.Command.None), 
-                codelBock.Count, 
+                codelBock, 
                 new Context());
             _firstStep = false;
         }
@@ -68,7 +69,7 @@ public sealed class PietInterpreter
         if (nextCodelResult.TraversedWhiteCodels is false)
         {
             _logger.LogDebug($"Execute command: {colorCommand}");
-            _programOperator.ExecuteCommand(colorCommand, codelBock.Count, new Context()
+            _programOperator.ExecuteCommand(colorCommand, codelBock, new Context()
                 {
                     Pause = PauseRequested,
                     OnError = OnError,

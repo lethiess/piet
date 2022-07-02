@@ -1,10 +1,14 @@
 ﻿using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using FizzWare.NBuilder;
+using FizzWare.NBuilder.Dates;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 using Moq;
 using Piet.Color;
 using Piet.Command;
+using Piet.Grid;
 using Piet.Interpreter.Exceptions;
 using Piet.Interpreter.Input;
 using Piet.Interpreter.Output;
@@ -13,6 +17,27 @@ namespace Piet.Interpreter.UnitTests;
 
 public class ProgramOperatorTests
 {
+    private bool OnErrorActionWasTriggered = false;
+    private void TestOnError()
+    {
+        OnErrorActionWasTriggered = true;
+    }
+
+    private static ImmutableList<Codel> GetFakeCodelBlockOfSize(int size)
+    {
+        if (size == 0)
+        {
+            return new List<Codel>().ToImmutableList();
+        }
+
+        return Builder<Codel>.CreateListOfSize(size)
+            .All()
+            .WithFactory(() => new Codel(0, 0, PietColors.Black))
+            .Build()
+            .ToImmutableList();
+    }
+
+
     [Fact]
     public void None_EmptyStack_MustMatchInitialStack()
     {
@@ -24,7 +49,7 @@ public class ProgramOperatorTests
 
         var initialProgramStack = programOperator.GetProgramStack();
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.None), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.None), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStack = programOperator.GetProgramStack();
 
@@ -40,13 +65,13 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 1, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 2, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 3, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 4, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(2), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(3), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(4), null);
 
         var expectedProgramStackAsArray = programOperator.GetProgramStack();
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.None), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.None), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
         Assert.Equal(expectedProgramStackAsArray, currentProgramStackAsArray);
@@ -65,7 +90,7 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), codelBlockSize, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(codelBlockSize), null);
 
         var expectedProgramStackAsArray = programOperator.GetProgramStack();
         Assert.Single(expectedProgramStackAsArray);
@@ -84,7 +109,7 @@ public class ProgramOperatorTests
         const int stackSize = 100;
         for (int i = 0; i < stackSize; i++)
         {
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), i, null);
+            programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(i), null);
         }
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
@@ -103,7 +128,7 @@ public class ProgramOperatorTests
 
         var initialProgramStack = programOperator.GetProgramStack();
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pop), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pop), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStack = programOperator.GetProgramStack();
 
@@ -119,12 +144,12 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 1, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 2, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 3, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 4, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(2), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(3), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(4), null);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pop), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pop), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -135,24 +160,24 @@ public class ProgramOperatorTests
     }
 
     [Fact]
-    public void Add_StackIsEmpty_MustThrow()
+    public void Add_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Add),
-                0, null));
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Add),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Theory]
     [InlineData(1, 1, 2)]
-    [InlineData(31, -21, 10)]
     [InlineData(0, 0, 0)]
-    [InlineData(-12, -12, -24)]
     public void Add_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
@@ -161,10 +186,10 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandA, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandB, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), null);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Add), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Add), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -173,25 +198,25 @@ public class ProgramOperatorTests
     }
 
     [Fact]
-    public void Subtract_StackIsEmpty_MustThrow()
+    public void Subtract_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Subtract),
-                0, null));
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Subtract),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Theory]
     [InlineData(5, 2, 3)]
     [InlineData(1, 1, 0)]
-    [InlineData(31, -21, 52)]
     [InlineData(0, 0, 0)]
-    [InlineData(-12, -12, 0)]
     public void Subtract_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
@@ -200,10 +225,10 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandA, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandB, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), null);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Subtract), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Subtract), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -212,25 +237,25 @@ public class ProgramOperatorTests
     }
 
     [Fact]
-    public void Multiply_StackIsEmpty_MustThrow()
+    public void Multiply_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Multiply),
-                0, null));
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Multiply),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Theory]
     [InlineData(1, 2, 2)]
     [InlineData(4, 4, 16)]
     [InlineData(0, 0, 0)]
-    [InlineData(3, -7, -21)]
-    [InlineData(-9, -5, 45)]
     public void Multiply_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
@@ -239,10 +264,10 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandA, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandB, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), null);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Multiply), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Multiply), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -251,42 +276,45 @@ public class ProgramOperatorTests
     }
 
     [Fact]
-    public void Divide_StackIsEmpty_MustThrow()
+    public void Divide_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Divide),
-                0, null));
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Divide),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Fact]
-    public void Divide_DivisionByZero_MustThrow()
+    public void Divide_DivisionByZero_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
+
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 12, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(12), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), null);
 
-        Assert.Throws<PietInterpreterDividedByZeroException>(() =>
-            programOperator.ExecuteCommand(
-                new ColorCommand(PietColors.Blue, Command.Command.Divide), 0, null));
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Divide),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Theory]
     [InlineData(21, 3, 7)]
     [InlineData(4, 4, 1)]
     [InlineData(0, 1, 0)]
-    [InlineData(-21, 3, -7)]
-    [InlineData(-21, -3, 7)]
     public void Divide_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
@@ -295,10 +323,10 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandA, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandB, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), null);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Divide), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Divide), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -307,42 +335,44 @@ public class ProgramOperatorTests
     }
 
     [Fact]
-    public void Modulo_StackIsEmpty_MustThrow()
+    public void Modulo_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Modulo),
-                0, null));
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Modulo),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Fact]
-    public void Modulo_DivisionByZero_MustThrow()
+    public void Modulo_DivisionByZero_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
+
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 12, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(12), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), null);
 
-        Assert.Throws<PietInterpreterDividedByZeroException>(() =>
-            programOperator.ExecuteCommand(
-                new ColorCommand(PietColors.Blue, Command.Command.Modulo), 0, null));
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Modulo),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Theory]
     [InlineData(21, 3, 0)]
     [InlineData(7, 4, 3)]
     [InlineData(0, 1, 0)]
-    [InlineData(-21, 2, 1)]
-    [InlineData(-21, -2, 1)]
     public void Modulo_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
@@ -351,10 +381,10 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandA, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandB, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), null);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Modulo), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Modulo), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -363,22 +393,23 @@ public class ProgramOperatorTests
     }
 
     [Fact]
-    public void Not_StackIsEmpty_MustThrow()
+    public void Not_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Not),
-                0, null));
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Not),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Theory]
     [InlineData(0, 1)]
-    [InlineData(-1, 0)]
     [InlineData(1, 0)]
     public void Not_StackHasSufficientValues_MustMatch(int operand, int expectedResult)
     {
@@ -388,9 +419,9 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operand, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operand), null);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Not), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Not), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -399,17 +430,19 @@ public class ProgramOperatorTests
     }
 
     [Fact]
-    public void GreaterThan_StackIsEmpty_MustThrow()
+    public void GreaterThan_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
+
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Greater),
-                0, null));
+       programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Greater),
+                new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError});
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Theory]
@@ -417,7 +450,6 @@ public class ProgramOperatorTests
     [InlineData(1337, 42, 1)]
     [InlineData(1, 1, 0)]
     [InlineData(0, 1, 0)]
-    [InlineData(-1, 1, 0)]
     public void GreaterThan_StackHasSufficientValues_MustMatch(int operandA, int operandB, int expectedResult)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
@@ -426,10 +458,10 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandA, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), operandB, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), null);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Greater), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Greater), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -438,17 +470,19 @@ public class ProgramOperatorTests
     }
 
     [Fact]
-    public void Pointer_StackIsEmpty_MustThrow()
+    public void Pointer_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pointer),
-                0, null));
+
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pointer),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Theory]
@@ -457,11 +491,6 @@ public class ProgramOperatorTests
     [InlineData(3, PietInterpreter.Direction.Left, PietInterpreter.Direction.Down)]
     [InlineData(4, PietInterpreter.Direction.Left, PietInterpreter.Direction.Left)]
     [InlineData(12334, PietInterpreter.Direction.Left, PietInterpreter.Direction.Right)]
-    [InlineData(-1, PietInterpreter.Direction.Left, PietInterpreter.Direction.Down)]
-    [InlineData(-2, PietInterpreter.Direction.Left, PietInterpreter.Direction.Right)]
-    [InlineData(-3, PietInterpreter.Direction.Left, PietInterpreter.Direction.Up)]
-    [InlineData(-4, PietInterpreter.Direction.Left, PietInterpreter.Direction.Left)]
-    [InlineData(-12334, PietInterpreter.Direction.Left, PietInterpreter.Direction.Right)]
     public void Pointer_StackHasSufficientValues_MustMatch(int numberOfPointerRotations, PietInterpreter.Direction initialDirection, PietInterpreter.Direction expectedDirection)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
@@ -472,24 +501,26 @@ public class ProgramOperatorTests
 
         PietInterpreter.DirectionPointer = initialDirection;
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), numberOfPointerRotations, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pointer), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfPointerRotations), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pointer), new List<Codel>().ToImmutableList(), null);
 
         Assert.Equal(expectedDirection, PietInterpreter.DirectionPointer);
     }
 
     [Fact]
-    public void Switch_StackIsEmpty_MustThrow()
+    public void Switch_StackIsEmpty_MThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Switch),
-                0, null));
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Switch),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Theory]
@@ -497,9 +528,6 @@ public class ProgramOperatorTests
     [InlineData(2, PietInterpreter.CodelChooser.Left, PietInterpreter.CodelChooser.Left)]
     [InlineData(3, PietInterpreter.CodelChooser.Left, PietInterpreter.CodelChooser.Right)]
     [InlineData(0, PietInterpreter.CodelChooser.Left, PietInterpreter.CodelChooser.Left)]
-    [InlineData(-1, PietInterpreter.CodelChooser.Left, PietInterpreter.CodelChooser.Right)]
-    [InlineData(-2, PietInterpreter.CodelChooser.Left, PietInterpreter.CodelChooser.Left)]
-    [InlineData(-3, PietInterpreter.CodelChooser.Left, PietInterpreter.CodelChooser.Right)]
 
     public void Switch_StackHasSufficientValues_MustMatch(int numberOfSwitches, PietInterpreter.CodelChooser initialCodelChooserState, PietInterpreter.CodelChooser expectedCodelChooserState)
     {
@@ -511,30 +539,32 @@ public class ProgramOperatorTests
 
         PietInterpreter.CodelChooserState = initialCodelChooserState;
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), numberOfSwitches, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Switch), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfSwitches), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Switch), new List<Codel>().ToImmutableList(), null);
 
         Assert.Equal(expectedCodelChooserState, PietInterpreter.CodelChooserState);
     }
 
     [Fact]
-    public void Duplicate_StackIsEmpty_MustThrow()
+    public void Duplicate_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
+
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Duplicate),
-                0, null));
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Duplicate),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Theory]
     [InlineData(1, 2, 1)]
     [InlineData(0, 2, 0)]
-    [InlineData(-11, 2, -11)]
     public void Duplicate_StackHasSufficientValues_MustMatch(int stackValue, int expectedStackSize, int expectedStackValueForAllElements)
     {
         var outputEventServiceMock = new Mock<IOutputService>();
@@ -543,8 +573,8 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), stackValue, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Duplicate), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(stackValue), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Duplicate), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -554,22 +584,29 @@ public class ProgramOperatorTests
     }
 
     [Fact]
-    public void Roll_StackIsEmpty_MustThrow()
+    public void Roll_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll),
-                0, null));
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+
+        
+
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Fact]
-    public void Roll_InsufficientNumberOfElementsForRollOperation_MustThrow()
+    public void Roll_InsufficientNumberOfElementsForRollOperation_ThrowsInternalException_MustInvoke_OnErrorAction
+        ()
     {
+        OnErrorActionWasTriggered = false;
+
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
@@ -579,37 +616,40 @@ public class ProgramOperatorTests
 
         int depthOfRollOperation = 3;
         int numberOfRolls = 1;
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 0, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 0, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), depthOfRollOperation, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), numberOfRolls, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(depthOfRollOperation), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfRolls), null);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll),
-                0, null));
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+        Assert.True(OnErrorActionWasTriggered);
     }
 
-    [Fact]
-    public void Roll_DepthOfRollsExceedsTheStackSize_MustThrow()
-    {
-        var outputEventServiceMock = new Mock<IOutputService>();
-        var inputServiceMock = new Mock<IInputService>();
+    //[Fact]
+    //public void Roll_DepthOfRollsExceedsTheStackSize_ThrowsInternalException_MustInvoke_OnErrorAction()
+    //{
+    //    OnErrorActionWasTriggered = false;
 
-        var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-            outputEventServiceMock.Object, inputServiceMock.Object);
+    //    var outputEventServiceMock = new Mock<IOutputService>();
+    //    var inputServiceMock = new Mock<IInputService>();
+
+    //    var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
+    //        outputEventServiceMock.Object, inputServiceMock.Object);
 
 
-        int depthOfRollOperation = -1;
-        int numberOfRolls = 1;
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 0, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 0, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), depthOfRollOperation, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), numberOfRolls, null);
+    //    int depthOfRollOperation = -1;
+    //    int numberOfRolls = 1;
+    //    programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), null);
+    //    programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), null);
+    //    programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(depthOfRollOperation), null);
+    //    programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfRolls), null);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll),
-                0, null));
-    }
+    //    programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll),
+    //        new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+        
+    //    Assert.True(OnErrorActionWasTriggered);
+    //}
 
     [Fact]
     public void Roll_DepthOfRollIsThree_OneRoll_MustMatch()
@@ -623,14 +663,14 @@ public class ProgramOperatorTests
         int depthOfRollOperation = 3;
         int numberOfRolls = 1;
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 1, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 2, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 3, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 4, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 5, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), depthOfRollOperation, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), numberOfRolls, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(2), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(3), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(4), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(5), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(depthOfRollOperation), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfRolls), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -654,14 +694,14 @@ public class ProgramOperatorTests
         int depthOfRollOperation = 3;
         int numberOfRolls = 2;
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 1, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 2, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 3, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 4, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 5, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), depthOfRollOperation, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), numberOfRolls, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(2), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(3), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(4), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(5), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(depthOfRollOperation), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfRolls), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -683,7 +723,7 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.InputNumber), 0, new Context() { Pause = null});
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.InputNumber), new List<Codel>().ToImmutableList(), new Context() { Pause = null});
 
         inputServiceMock.Verify(service => service.RequestIntegerInputAsync(), Times.Once);
     }
@@ -700,7 +740,7 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.InputNumber), 0, new Context() { Pause = pauseActionMock.Object });
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.InputNumber), new List<Codel>().ToImmutableList(), new Context() { Pause = pauseActionMock.Object });
 
         inputServiceMock.Verify(service => service.RequestIntegerInputAsync(), Times.Once);
         pauseActionMock.Verify(action => action.Invoke(), Times.Once);
@@ -716,7 +756,7 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.InputCharacter), 0, new Context() { Pause = null });
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.InputCharacter), new List<Codel>().ToImmutableList(), new Context() { Pause = null });
 
         inputServiceMock.Verify(service => service.RequestCharacterInputAsync(), Times.Once);
     }
@@ -733,7 +773,7 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.InputCharacter), 0, new Context()
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.InputCharacter), new List<Codel>().ToImmutableList(), new Context()
             {
                 Pause = pauseActionMock.Object
             });
@@ -744,17 +784,21 @@ public class ProgramOperatorTests
 
 
     [Fact]
-    public void OutputNumber_StackIsEmpty_MustThrow()
+    public void OutputNumber_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
+
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.OutputNumber),
-                0, null));
+        programOperator.ExecuteCommand(
+            new ColorCommand(PietColors.Blue, Command.Command.OutputNumber),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Fact]
@@ -766,8 +810,8 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 42, null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.OutputNumber), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(42), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.OutputNumber), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -775,17 +819,21 @@ public class ProgramOperatorTests
     }
 
     [Fact]
-    public void OutputCharacter_StackIsEmpty_MustThrow()
+    public void OutputCharacter_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
+        OnErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        Assert.Throws<InsufficientNumberOfElementsOnProgramStackException>(() =>
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.OutputCharacter),
-                0, null));
+
+        programOperator.ExecuteCommand(
+            new ColorCommand(PietColors.Blue, Command.Command.OutputCharacter),
+            new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
+
+        Assert.True(OnErrorActionWasTriggered);
     }
 
     [Fact]
@@ -797,8 +845,8 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), 'c', null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.OutputCharacter), 0, null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.OutputCharacter), new List<Codel>().ToImmutableList(), null);
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
