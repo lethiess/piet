@@ -1,0 +1,16 @@
+﻿<div class="my-test-class">
+
+    <p style="color: crimson">@Message</p>
+
+    <button @onclick="SubmitForm" class="btn btn-primary">Close</button>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+    [Parameter] public string? Message { get; set; }
+
+    async Task SubmitForm() => await BlazoredModal.CloseAsync();
+
+}
