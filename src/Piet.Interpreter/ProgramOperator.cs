@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Collections.Immutable;
+using Microsoft.Extensions.Logging;
 using Piet.Command;
+using Piet.Grid;
 using Piet.Interpreter.Exceptions;
 using Piet.Interpreter.Input;
 using Piet.Interpreter.Output;
@@ -31,7 +33,7 @@ namespace Piet.Interpreter
         {
             _programStack.Push(input);
             _currentCommandInfo.Value = input;
-            LogCommand(new CommandInfo(colorCommand, input));
+            LogCommand(_currentCommandInfo);
         }
 
         public void Reset()
@@ -39,10 +41,10 @@ namespace Piet.Interpreter
             _programStack.Clear();
         }
 
-        public void ExecuteCommand(ColorCommand colorCommand, int codelBlockSize, Context context)
+        public void ExecuteCommand(ColorCommand colorCommand, ImmutableList<Codel> codelBlock, Context context)
         {
-            _currentCommandInfo = new CommandInfo(colorCommand, null);
-            Execute(colorCommand, codelBlockSize, context);
+            _currentCommandInfo = new CommandInfo(colorCommand, codelBlock);
+            Execute(colorCommand, codelBlock.Count, context);
             LogCommand(_currentCommandInfo);
         }
 

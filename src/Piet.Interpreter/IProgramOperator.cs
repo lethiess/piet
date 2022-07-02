@@ -1,4 +1,6 @@
-﻿using Piet.Command;
+﻿using System.Collections.Immutable;
+using Piet.Command;
+using Piet.Grid;
 using Piet.Interpreter.Input;
 using Piet.Interpreter.Output;
 
@@ -10,5 +12,5 @@ public interface IProgramOperator
     IOutputService OutputService { get; }
     void SetInputValue(int input, ColorCommand colorCommand);
     void Reset();
-    void ExecuteCommand(ColorCommand colorCommand, int codelBlockSize, Context context);
+    void ExecuteCommand(ColorCommand colorCommand, ImmutableList<Codel> codelBlock, Context context);
 }

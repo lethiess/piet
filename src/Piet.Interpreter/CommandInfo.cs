@@ -1,4 +1,6 @@
-﻿using Piet.Command;
+﻿using System.Collections.Immutable;
+using Piet.Command;
+using Piet.Grid;
 
 namespace Piet.Interpreter;
 
@@ -9,12 +11,13 @@ public sealed record CommandInfo
     public int? OperandA { get; set; }
     public int? OperandB { get; set; }
 
+    public ImmutableList<Codel> CodelBlock { get; set; }
+
     public CommandInfo(
-        ColorCommand colorCommand, 
-        int? value
-        )
+        ColorCommand colorCommand,
+        ImmutableList<Codel> codelBlock)
     {
         ColorCommand = colorCommand;
-        Value = value;
+        CodelBlock = codelBlock;
     }
 }

@@ -133,7 +133,6 @@ namespace Piet.Web.Pages
 
         private void Run()
         {
-            _commandHistory.Clear();
             _output.Clear();
             var result = _interpreter.Run(_codelGrid);
 
@@ -235,8 +234,8 @@ namespace Piet.Web.Pages
             await messageForm.Result;
 
             _interpreter.Terminate();
+            
         }
-        
 
         private string GetSerializedCommand(CommandInfo command)
         {
@@ -246,20 +245,30 @@ namespace Piet.Web.Pages
             
             return command.ColorCommand.Command switch
             {
-                Command.Command.None => $"{command.ColorCommand.Command}",
-                Command.Command.Push => $"{command.ColorCommand.Command} ({value})",
-                Command.Command.Pop => $"{command.ColorCommand.Command} ({value})",
-                Command.Command.Switch => $"{command.ColorCommand.Command} ({value})",
-                Command.Command.Pointer => $"{command.ColorCommand.Command} ({value})",
+                Command.Command.None =>
+                    $"{command.ColorCommand.Command})",
+                Command.Command.Push => 
+                    $"{command.ColorCommand.Command} ({value})",
+                Command.Command.Pop => 
+                    $"{command.ColorCommand.Command} ({value})",
+                Command.Command.Switch => 
+                    $"{command.ColorCommand.Command} ({value})",
+                Command.Command.Pointer => 
+                    $"{command.ColorCommand.Command} ({value})",
                 Command.Command.InputCharacter =>
                     $"{command.ColorCommand.Command} ({value})",
-                Command.Command.InputNumber => $"{command.ColorCommand.Command} ({value})",
+                Command.Command.InputNumber => 
+                    $"{command.ColorCommand.Command} ({value})",
                 Command.Command.OutputCharacter =>
                     $"{command.ColorCommand.Command} ({value})",
-                Command.Command.OutputNumber => $"{command.ColorCommand.Command} ({value})",
-                Command.Command.Duplicate => $"{command.ColorCommand.Command} ({value})",
-                Command.Command.Not => $"{command.ColorCommand.Command} ({value})",
-                Command.Command.Greater => $"{command.ColorCommand.Command} ({value})",
+                Command.Command.OutputNumber =>
+                    $"{command.ColorCommand.Command} ({value})",
+                Command.Command.Duplicate => 
+                    $"{command.ColorCommand.Command} ({value})",
+                Command.Command.Not =>
+                    $"{command.ColorCommand.Command} ({value})",
+                Command.Command.Greater => 
+                    $"{command.ColorCommand.Command} ({value})",
                 Command.Command.Roll =>
                     $"{command.ColorCommand.Command} (depth: {operandA}, rolls: {operandB})",
                 Command.Command.Add =>
