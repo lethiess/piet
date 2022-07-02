@@ -15,6 +15,7 @@ public sealed class PietInterpreter
 
     private Codel _currentCodel = null!;
     private bool _initialized;
+    private bool _firstStep = true;
     private State _state;
 
     internal static Direction DirectionPointer = Direction.Right;
@@ -39,7 +40,16 @@ public sealed class PietInterpreter
         _logger.LogDebug("Get codel block for current codel: {_currentCodel}", _currentCodel);
         var codelBock = _codelBlockSearcher.GetCodelBock(_currentCodel).ToList();
         _logger.LogDebug($"Retrieved codel block of size {codelBock.Count}");
-        
+
+        if (_firstStep)
+        {
+            _programOperator.ExecuteCommand(
+                new ColorCommand(_currentCodel.Color, Command.Command.None), 
+                codelBock.Count, 
+                new Context());
+            _firstStep = false;
+        }
+
         _logger.LogDebug("Determine next codel");
         var nextCodelResult = _codelChooser.GetNextCodel(codelBock);
         _logger.LogDebug($"Next codel: {nextCodelResult.Codel}");
@@ -114,6 +124,7 @@ public sealed class PietInterpreter
         CodelChooserState = CodelChooser.Left;
         _state = State.Running;
         _initialized = true;
+        _firstStep = true;
     }
     private void Pause()
     {
