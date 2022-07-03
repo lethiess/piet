@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.Interpreter.UnitTests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piet.Web", "src\Piet.Web\Piet.Web.csproj", "{5D99599F-2A44-4AFE-B9B4-ACEAC14DD276}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piet.Web.UnitTests", "src\Piet.Web.UnitTests\Piet.Web.UnitTests.csproj", "{571334EA-F45B-4232-A4EB-EDEC8081DC7D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{5D99599F-2A44-4AFE-B9B4-ACEAC14DD276}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D99599F-2A44-4AFE-B9B4-ACEAC14DD276}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D99599F-2A44-4AFE-B9B4-ACEAC14DD276}.Release|Any CPU.Build.0 = Release|Any CPU
+		{571334EA-F45B-4232-A4EB-EDEC8081DC7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{571334EA-F45B-4232-A4EB-EDEC8081DC7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{571334EA-F45B-4232-A4EB-EDEC8081DC7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{571334EA-F45B-4232-A4EB-EDEC8081DC7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
