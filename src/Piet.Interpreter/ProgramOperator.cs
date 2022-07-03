@@ -43,7 +43,8 @@ namespace Piet.Interpreter
 
         public void ExecuteCommand(ColorCommand colorCommand, ImmutableList<Codel> codelBlock, Context context)
         {
-            _currentCommandInfo = new CommandInfo(colorCommand, codelBlock);
+            _currentCommandInfo =
+                new CommandInfo { ColorCommand = colorCommand, CodelBlock = codelBlock };
             Execute(colorCommand, codelBlock.Count, context);
             LogCommand(_currentCommandInfo);
         }

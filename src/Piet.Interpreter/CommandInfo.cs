@@ -12,12 +12,4 @@ public sealed record CommandInfo
     public int? OperandB { get; set; }
 
     public ImmutableList<Codel> CodelBlock { get; set; }
-
-    public CommandInfo(
-        ColorCommand colorCommand,
-        ImmutableList<Codel> codelBlock)
-    {
-        ColorCommand = colorCommand;
-        CodelBlock = codelBlock;
-    }
 }

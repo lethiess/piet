@@ -13,7 +13,7 @@ namespace Piet.Web.Pages
     public partial class PietProgram
     {
         [CascadingParameter] 
-        public IModalService Modal { get; set; } = default!;
+        public IModalService ModalService { get; set; } = default!;
 
         [Inject] 
         private ILoggerFactory LoggerFactory { get; init; } = default!;
@@ -35,17 +35,17 @@ namespace Piet.Web.Pages
         private const int InitialGridHeight = 15;
         private const int InitialGridWidth = 25;
 
-        private static int _gridHeight = InitialGridHeight;
-        private static int _gridWidth = InitialGridWidth;
-        private static PietColor _currentColor = PietColors.LightRed;
-        private static PietColor _colorBlack = PietColors.Black;
-        private static PietColor _colorWhite = PietColors.White;
+        private int _gridHeight = InitialGridHeight;
+        private int _gridWidth = InitialGridWidth;
+        private PietColor _currentColor = PietColors.LightRed;
+        private static readonly PietColor s_colorBlack = PietColors.Black;
+        private static readonly PietColor s_colorWhite = PietColors.White;
 
         private List<string> _output = new();
         private List<CommandInfo> _commandHistory = new();
 
-        private static CodelGrid _codelGrid = null!;
-        private static ColorCommand[,] _colorCommands = null!;
+        private CodelGrid _codelGrid = null!;
+        private ColorCommand[,] _colorCommands = null!;
 
         protected override void OnInitialized()
         {
@@ -61,8 +61,8 @@ namespace Piet.Web.Pages
             _colorCommands =
                 ColorCommandControl.GetColorCommands(_currentColor);
 
-            _interpreter = new Piet.Interpreter.PietInterpreter(
-                LoggerFactory.CreateLogger<Piet.Interpreter.PietInterpreter>(),
+            _interpreter = new PietInterpreter(
+                LoggerFactory.CreateLogger<PietInterpreter>(),
                 CodelChooser,
                 CodelBlockSearcher,
                 ProgramOperator
@@ -124,7 +124,7 @@ namespace Piet.Web.Pages
 
         private string GetCellName(ColorCommand colorCommand)
         {
-            if (_currentColor != _colorWhite && _currentColor != _colorBlack && colorCommand.Command != Command.Command.None)
+            if (_currentColor != s_colorWhite && _currentColor != s_colorBlack && colorCommand.Command != Command.Command.None)
             {
                 return colorCommand.Command.ToString();
             }
@@ -191,7 +191,7 @@ namespace Piet.Web.Pages
 
         private async Task ShowModalForCharacter()
         {
-            var messageForm = Modal.Show<MessageFormCharacter>();
+            var messageForm = ModalService.Show<MessageFormCharacter>();
             var result = await messageForm.Result;
 
             if (result.Cancelled is false)
@@ -206,7 +206,7 @@ namespace Piet.Web.Pages
 
         private async Task ShowModalForInteger()
         {
-            var messageForm = Modal.Show<MessageFormInteger>();
+            var messageForm = ModalService.Show<MessageFormInteger>();
             var result = await messageForm.Result;
 
             if (result.Cancelled is false)
@@ -230,23 +230,28 @@ namespace Piet.Web.Pages
                               Animation = ModalAnimation.FadeIn(2)
                           };
 
-            var messageForm = Modal.Show<ErrorMessage>("Error", parameters, options);
+            var messageForm = ModalService.Show<ErrorMessage>("Error", parameters, options);
             await messageForm.Result;
 
             _interpreter.Terminate();
             
         }
 
-        private string GetSerializedCommand(CommandInfo command)
+        internal static string GetSerializedCommand(CommandInfo command)
         {
-            string value = command.Value.HasValue ? command.Value.ToString() : "NaN";
             string operandA = command.OperandA.HasValue ? command.OperandA.ToString() : "NaN";
             string operandB = command.OperandB.HasValue ? command.OperandB.ToString() : "NaN";
+            string value = command.Value.HasValue ? command.Value.ToString() : "NaN";
+
+            if (command.ColorCommand.Command is Command.Command.OutputCharacter or Command.Command.InputCharacter && command.Value.HasValue)
+            {
+                value = ((char)command.Value).ToString();
+            }
             
             return command.ColorCommand.Command switch
             {
                 Command.Command.None =>
-                    $"{command.ColorCommand.Command})",
+                    $"{command.ColorCommand.Command}",
                 Command.Command.Push => 
                     $"{command.ColorCommand.Command} ({value})",
                 Command.Command.Pop => 
