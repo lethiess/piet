@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Piet.Color;
 using Piet.Command;
 using Piet.Interpreter;
@@ -404,6 +404,28 @@ namespace Piet.Web.UnitTests
         {
             var serializedCommand = PietProgram.GetSerializedCommand(commandInfo);
             Assert.Equal(expectedCommandDescription, serializedCommand);
+        }
+
+        [Theory]
+        [InlineData(PietInterpreter.CodelChooser.Right, "→")]
+        [InlineData(PietInterpreter.CodelChooser.Left, "←")]
+        public void MapCodelChooserState(PietInterpreter.CodelChooser codelChooser,
+            string expectedMapping)
+        {
+            var mapping = PietProgram.Map(codelChooser);
+            Assert.Equal(expectedMapping, mapping);
+        }
+
+        [Theory]
+        [InlineData(PietInterpreter.Direction.Right, "→")]
+        [InlineData(PietInterpreter.Direction.Left, "←")]
+        [InlineData(PietInterpreter.Direction.Up, "↑")]
+        [InlineData(PietInterpreter.Direction.Down, "↓")]
+        public void MapDirectionPointerState(PietInterpreter.Direction directionPointer,
+            string expectedMapping)
+        {
+            var mapping = PietProgram.Map(directionPointer);
+            Assert.Equal(expectedMapping, mapping);
         }
     }
 }

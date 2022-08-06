@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using FizzWare.NBuilder;
-using FizzWare.NBuilder.Dates;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 using Moq;
 using Piet.Color;
 using Piet.Command;
 using Piet.Grid;
-using Piet.Interpreter.Exceptions;
 using Piet.Interpreter.Input;
 using Piet.Interpreter.Output;
 
@@ -17,10 +15,10 @@ namespace Piet.Interpreter.UnitTests;
 
 public class ProgramOperatorTests
 {
-    private bool OnErrorActionWasTriggered = false;
+    private bool _onErrorActionWasTriggered = false;
     private void TestOnError()
     {
-        OnErrorActionWasTriggered = true;
+        _onErrorActionWasTriggered = true;
     }
 
     private static ImmutableList<Codel> GetFakeCodelBlockOfSize(int size)
@@ -162,7 +160,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Add_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
@@ -172,7 +170,7 @@ public class ProgramOperatorTests
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Add),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
 
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Theory]
@@ -200,7 +198,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Subtract_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
@@ -210,7 +208,7 @@ public class ProgramOperatorTests
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Subtract),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
 
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Theory]
@@ -239,7 +237,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Multiply_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
@@ -249,7 +247,7 @@ public class ProgramOperatorTests
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Multiply),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
 
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Theory]
@@ -278,7 +276,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Divide_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
@@ -288,13 +286,13 @@ public class ProgramOperatorTests
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Divide),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
 
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Fact]
     public void Divide_DivisionByZero_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
 
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
@@ -308,7 +306,7 @@ public class ProgramOperatorTests
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Divide),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
 
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Theory]
@@ -337,7 +335,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Modulo_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
@@ -346,13 +344,13 @@ public class ProgramOperatorTests
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Modulo),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Fact]
     public void Modulo_DivisionByZero_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
 
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
@@ -366,7 +364,7 @@ public class ProgramOperatorTests
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Modulo),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
 
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Theory]
@@ -395,7 +393,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Not_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
@@ -405,7 +403,7 @@ public class ProgramOperatorTests
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Not),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
 
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Theory]
@@ -432,7 +430,7 @@ public class ProgramOperatorTests
     [Fact]
     public void GreaterThan_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
 
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
@@ -442,7 +440,7 @@ public class ProgramOperatorTests
 
        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Greater),
                 new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError});
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Theory]
@@ -472,7 +470,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Pointer_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
@@ -482,7 +480,7 @@ public class ProgramOperatorTests
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pointer),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Theory]
@@ -510,7 +508,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Switch_StackIsEmpty_MThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
@@ -520,7 +518,7 @@ public class ProgramOperatorTests
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Switch),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
 
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Theory]
@@ -548,7 +546,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Duplicate_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
 
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
@@ -559,7 +557,7 @@ public class ProgramOperatorTests
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Duplicate),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
 
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Theory]
@@ -586,7 +584,7 @@ public class ProgramOperatorTests
     [Fact]
     public void Roll_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
@@ -598,14 +596,14 @@ public class ProgramOperatorTests
 
         
 
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Fact]
     public void Roll_InsufficientNumberOfElementsForRollOperation_ThrowsInternalException_MustInvoke_OnErrorAction
         ()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
 
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
@@ -623,33 +621,8 @@ public class ProgramOperatorTests
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
-
-    //[Fact]
-    //public void Roll_DepthOfRollsExceedsTheStackSize_ThrowsInternalException_MustInvoke_OnErrorAction()
-    //{
-    //    OnErrorActionWasTriggered = false;
-
-    //    var outputEventServiceMock = new Mock<IOutputService>();
-    //    var inputServiceMock = new Mock<IInputService>();
-
-    //    var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
-    //        outputEventServiceMock.Object, inputServiceMock.Object);
-
-
-    //    int depthOfRollOperation = -1;
-    //    int numberOfRolls = 1;
-    //    programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), null);
-    //    programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), null);
-    //    programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(depthOfRollOperation), null);
-    //    programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfRolls), null);
-
-    //    programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll),
-    //        new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
-        
-    //    Assert.True(OnErrorActionWasTriggered);
-    //}
 
     [Fact]
     public void Roll_DepthOfRollIsThree_OneRoll_MustMatch()
@@ -786,7 +759,7 @@ public class ProgramOperatorTests
     [Fact]
     public void OutputNumber_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
 
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
@@ -798,7 +771,7 @@ public class ProgramOperatorTests
             new ColorCommand(PietColors.Blue, Command.Command.OutputNumber),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
 
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Fact]
@@ -821,7 +794,7 @@ public class ProgramOperatorTests
     [Fact]
     public void OutputCharacter_StackIsEmpty_ThrowsInternalException_MustInvoke_OnErrorAction()
     {
-        OnErrorActionWasTriggered = false;
+        _onErrorActionWasTriggered = false;
         var outputEventServiceMock = new Mock<IOutputService>();
         var inputServiceMock = new Mock<IInputService>();
 
@@ -833,7 +806,7 @@ public class ProgramOperatorTests
             new ColorCommand(PietColors.Blue, Command.Command.OutputCharacter),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
 
-        Assert.True(OnErrorActionWasTriggered);
+        Assert.True(_onErrorActionWasTriggered);
     }
 
     [Fact]

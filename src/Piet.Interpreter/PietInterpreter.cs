@@ -8,7 +8,6 @@ namespace Piet.Interpreter;
 
 public sealed class PietInterpreter
 {
-    private EventHandler<InterpreterExceptionEventArgs>? PublishException;
     private readonly ICodelChooser _codelChooser;
     private readonly ICodelBlockSearcher _codelBlockSearcher;
     private readonly IProgramOperator _programOperator;
@@ -19,8 +18,8 @@ public sealed class PietInterpreter
     private bool _firstStep = true;
     private State _state;
 
-    internal static Direction DirectionPointer = Direction.Right;
-    internal static CodelChooser CodelChooserState = CodelChooser.Left;
+    public static Direction DirectionPointer = Direction.Right;
+    public static CodelChooser CodelChooserState = CodelChooser.Left;
 
     public PietInterpreter(
         ILogger<PietInterpreter> logger,

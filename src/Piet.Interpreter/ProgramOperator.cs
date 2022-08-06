@@ -12,7 +12,7 @@ namespace Piet.Interpreter
     {
         private readonly Stack<int> _programStack;
         private readonly ILogger<ProgramOperator> _logger;
-        private CommandInfo _currentCommandInfo;
+        private CommandInfo? _currentCommandInfo;
 
         public ProgramOperator(ILogger<ProgramOperator> logger,
             IOutputService outputService, IInputService inputService)
@@ -120,6 +120,7 @@ namespace Piet.Interpreter
                 OutputService.DispatchOutputExceptionEvent(e);
                 context.OnError?.Invoke();
             }
+            OutputService.DispatchOutputProgramOperatorUpdateEvent(_programStack);
         }
 
         private void LogCommand(CommandInfo info)

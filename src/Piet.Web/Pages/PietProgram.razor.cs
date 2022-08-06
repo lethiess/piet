@@ -46,6 +46,7 @@ namespace Piet.Web.Pages
 
         private CodelGrid _codelGrid = null!;
         private ColorCommand[,] _colorCommands = null!;
+        private Stack<int>? _programStack = new();
 
         protected override void OnInitialized()
         {
@@ -149,7 +150,9 @@ namespace Piet.Web.Pages
             ProgramOperator.InputService.CharacterRequest += InputServiceOnInputCharacterRequest;
 
             ProgramOperator.OutputService.OutputCommandLog += OutputCommandLog;
-            ProgramOperator.OutputService.OutputException += OutputException;
+            ProgramOperator.OutputService.InterpreterException += InterpreterException;
+
+            ProgramOperator.OutputService.ProgramOperatorUpdate += ProgramOperatorUpdate;
         }
 
         private void OutputCommandLog(object? sender, OutputCommandLogEventArg e)
@@ -158,9 +161,15 @@ namespace Piet.Web.Pages
             StateHasChanged();
         }
 
-        private async void OutputException(object? sender, InterpreterExceptionEventArgs e)
+        private async void InterpreterException(object? sender, InterpreterExceptionEventArgs e)
         {
             await ShowErrorModal(e.Message);
+        }
+
+        private void ProgramOperatorUpdate(object? sender, ProgramOperatorUpdateEventArgs e)
+        {
+            _programStack = e.CurrentInterpreterStack;
+            StateHasChanged();
         }
 
         private async void InputServiceOnIntegerRequest(object? sender, EventArgs e)
@@ -236,6 +245,22 @@ namespace Piet.Web.Pages
             _interpreter.Terminate();
             
         }
+
+        internal static string Map(PietInterpreter.CodelChooser codelChooser) =>
+            codelChooser switch
+            {
+                PietInterpreter.CodelChooser.Left => "←",
+                PietInterpreter.CodelChooser.Right => "→"
+            };
+
+        internal static string Map(PietInterpreter.Direction directionPointer) =>
+            directionPointer switch
+            {
+                PietInterpreter.Direction.Down => "↓",
+                PietInterpreter.Direction.Left => "←",
+                PietInterpreter.Direction.Up => "↑",
+                PietInterpreter.Direction.Right => "→",
+            };
 
         internal static string GetSerializedCommand(CommandInfo command)
         {

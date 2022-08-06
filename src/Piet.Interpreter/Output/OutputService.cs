@@ -7,7 +7,8 @@ public class OutputService : IOutputService
     public event EventHandler<OutputCharacterOperationEventArgs>? OutputCharacter;
     public event EventHandler<OutputIntegerOperationEventArgs>? OutputInteger;
     public event EventHandler<OutputCommandLogEventArg>? OutputCommandLog;
-    public event EventHandler<InterpreterExceptionEventArgs>? OutputException;
+    public event EventHandler<InterpreterExceptionEventArgs>? InterpreterException;
+    public event EventHandler<ProgramOperatorUpdateEventArgs>? ProgramOperatorUpdate;
 
     public void DispatchOutputCharacterEvent(char value)
     {
@@ -27,6 +28,11 @@ public class OutputService : IOutputService
     public void DispatchOutputExceptionEvent(InterpreterExceptionBase exception)
     {
         OnOutputExceptionOperation(new InterpreterExceptionEventArgs(exception.Message));
+    }
+
+    public void DispatchOutputProgramOperatorUpdateEvent(Stack<int> currentStack)
+    {
+        OnProgramOperatorUpdateOperation(new ProgramOperatorUpdateEventArgs(currentStack));
     }
 
     protected virtual void OnOutputCharacterOperation(OutputCharacterOperationEventArgs e)
@@ -49,7 +55,13 @@ public class OutputService : IOutputService
 
     protected virtual void OnOutputExceptionOperation(InterpreterExceptionEventArgs e)
     {
-        var handler = OutputException;
+        var handler = InterpreterException;
+        handler?.Invoke(this, e);
+    }
+
+    protected virtual void OnProgramOperatorUpdateOperation(ProgramOperatorUpdateEventArgs e)
+    {
+        var handler = ProgramOperatorUpdate;
         handler?.Invoke(this, e);
     }
 }
