@@ -234,10 +234,10 @@ namespace Piet.Web.Pages
             var parameters = new ModalParameters();
             parameters.Add(nameof(ErrorMessage.Message), message);
             var options = new ModalOptions()
-                          {
-                              DisableBackgroundCancel = true, 
-                              Animation = ModalAnimation.FadeIn(2)
-                          };
+            {
+                DisableBackgroundCancel = true,
+                Animation = ModalAnimation.FadeIn(2)
+            };
 
             var messageForm = ModalService.Show<ErrorMessage>("Error", parameters, options);
             await messageForm.Result;
