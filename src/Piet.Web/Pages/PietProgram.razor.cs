@@ -125,7 +125,7 @@ namespace Piet.Web.Pages
 
         private string GetCellName(ColorCommand colorCommand)
         {
-            if (_currentColor != s_colorWhite && _currentColor != s_colorBlack && colorCommand.Command != Command.Command.None)
+            if (_currentColor != s_colorWhite && _currentColor != s_colorBlack && colorCommand is not null && colorCommand.Command != Command.Command.None)
             {
                 return colorCommand.Command.ToString();
             }
@@ -250,7 +250,8 @@ namespace Piet.Web.Pages
             codelChooser switch
             {
                 PietInterpreter.CodelChooser.Left => "←",
-                PietInterpreter.CodelChooser.Right => "→"
+                PietInterpreter.CodelChooser.Right => "→",
+                _ => ""
             };
 
         internal static string Map(PietInterpreter.Direction directionPointer) =>
@@ -260,13 +261,14 @@ namespace Piet.Web.Pages
                 PietInterpreter.Direction.Left => "←",
                 PietInterpreter.Direction.Up => "↑",
                 PietInterpreter.Direction.Right => "→",
+                _ => ""
             };
 
         internal static string GetSerializedCommand(CommandInfo command)
         {
-            string operandA = command.OperandA.HasValue ? command.OperandA.ToString() : "NaN";
-            string operandB = command.OperandB.HasValue ? command.OperandB.ToString() : "NaN";
-            string value = command.Value.HasValue ? command.Value.ToString() : "NaN";
+            string operandA = command.OperandA.HasValue ? command.OperandA.Value.ToString() : "NaN";
+            string operandB = command.OperandB.HasValue ? command.OperandB.Value.ToString() : "NaN";
+            string value = command.Value.HasValue ? command.Value.Value.ToString() : "NaN";
 
             if (command.ColorCommand.Command is Command.Command.OutputCharacter or Command.Command.InputCharacter && command.Value.HasValue)
             {
@@ -311,6 +313,7 @@ namespace Piet.Web.Pages
                     $"{command.ColorCommand.Command} ({operandA} / {operandB} = {value})",
                 Command.Command.Modulo =>
                     $"{command.ColorCommand.Command} ({operandA} % {operandB} = {value})",
+                _ => $"{command.ColorCommand.Command}"
             };
         }
     }

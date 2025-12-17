@@ -131,13 +131,13 @@ namespace Piet.Interpreter
         private void None()
         {
             _logger.LogDebug(
-                $"Executing command {Command.Command.None}: Program state does not change.");
+                "Executing command {Command}: Program state does not change.", Command.Command.None);
         }
 
         private void Push(int codelBlockSize)
         {
             _logger.LogDebug(
-                $"Executing command {Command.Command.Push}: Push {codelBlockSize} on the stack.");
+                "Executing command {Command}: Push {CodelBlockSize} on the stack.", Command.Command.Push, codelBlockSize);
             _programStack.Push(codelBlockSize);
             _currentCommandInfo.Value = codelBlockSize;
         }
@@ -147,12 +147,12 @@ namespace Piet.Interpreter
             if (_programStack.Count == 0)
             {
                 _logger.LogDebug(
-                    $"Executing command {Command.Command.Pop}: Program stack is empty, can not pop a element.");
+                    "Executing command {Command}: Program stack is empty, can not pop a element.", Command.Command.Pop);
                 return;
             }
 
             _logger.LogDebug(
-                $"Executing command {Command.Command.Pop}: Pop {_programStack.Peek()} from the stack.");
+                "Executing command {Command}: Pop {StackTop} from the stack.", Command.Command.Pop, _programStack.Peek());
             _currentCommandInfo.Value = _programStack.Pop();
         }
 
@@ -434,7 +434,7 @@ namespace Piet.Interpreter
 
             var operand = _programStack.Pop();
             _currentCommandInfo.Value = operand;
-            _logger.LogDebug($"Numeric output value {operand}");
+            _logger.LogDebug("Numeric output value {Operand}", operand);
             OutputService.DispatchOutputIntegerEvent(operand);
         }
 
@@ -448,7 +448,7 @@ namespace Piet.Interpreter
 
             var operand = _programStack.Pop();
             _currentCommandInfo.Value = operand;
-            _logger.LogDebug($"Character output value{Convert.ToChar(operand)}");
+            _logger.LogDebug("Character output value{Character}", Convert.ToChar(operand));
             OutputService.DispatchOutputCharacterEvent((char)operand);
         }
     }

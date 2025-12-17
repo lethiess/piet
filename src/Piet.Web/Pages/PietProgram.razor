@@ -125,7 +125,7 @@
     </thead>
     
     <tbody>
-    @while (_programStack.Count > 0)
+    @while (_programStack is not null && _programStack.Count > 0)
     {
         <tr>
             <td>@(_programStack.Count - 1)</td>

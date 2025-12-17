@@ -47,7 +47,7 @@ public class ProgramOperatorTests
 
         var initialProgramStack = programOperator.GetProgramStack();
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.None), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.None), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStack = programOperator.GetProgramStack();
 
@@ -63,13 +63,13 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(2), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(3), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(4), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(2), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(3), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(4), new Context());
 
         var expectedProgramStackAsArray = programOperator.GetProgramStack();
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.None), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.None), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
         Assert.Equal(expectedProgramStackAsArray, currentProgramStackAsArray);
@@ -88,7 +88,7 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(codelBlockSize), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(codelBlockSize), new Context());
 
         var expectedProgramStackAsArray = programOperator.GetProgramStack();
         Assert.Single(expectedProgramStackAsArray);
@@ -107,7 +107,7 @@ public class ProgramOperatorTests
         const int stackSize = 100;
         for (int i = 0; i < stackSize; i++)
         {
-            programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(i), null);
+            programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(i), new Context());
         }
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
@@ -126,7 +126,7 @@ public class ProgramOperatorTests
 
         var initialProgramStack = programOperator.GetProgramStack();
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pop), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pop), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStack = programOperator.GetProgramStack();
 
@@ -142,12 +142,12 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(2), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(3), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(4), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(2), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(3), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(4), new Context());
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pop), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pop), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -184,10 +184,10 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), new Context());
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Add), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Add), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -223,10 +223,10 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), new Context());
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Subtract), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Subtract), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -262,10 +262,10 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), new Context());
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Multiply), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Multiply), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -300,8 +300,8 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(12), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(12), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), new Context());
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Divide),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
@@ -321,10 +321,10 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), new Context());
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Divide), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Divide), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -358,8 +358,8 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(12), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(12), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), new Context());
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Modulo),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
@@ -379,10 +379,10 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), new Context());
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Modulo), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Modulo), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -417,9 +417,9 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operand), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operand), new Context());
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Not), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Not), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -456,10 +456,10 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandA), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(operandB), new Context());
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Greater), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Greater), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -499,8 +499,8 @@ public class ProgramOperatorTests
 
         PietInterpreter.DirectionPointer = initialDirection;
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfPointerRotations), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pointer), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfPointerRotations), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Pointer), new List<Codel>().ToImmutableList(), new Context());
 
         Assert.Equal(expectedDirection, PietInterpreter.DirectionPointer);
     }
@@ -537,8 +537,8 @@ public class ProgramOperatorTests
 
         PietInterpreter.CodelChooserState = initialCodelChooserState;
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfSwitches), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Switch), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfSwitches), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Switch), new List<Codel>().ToImmutableList(), new Context());
 
         Assert.Equal(expectedCodelChooserState, PietInterpreter.CodelChooserState);
     }
@@ -571,8 +571,8 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(stackValue), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Duplicate), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(stackValue), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Duplicate), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -614,10 +614,10 @@ public class ProgramOperatorTests
 
         int depthOfRollOperation = 3;
         int numberOfRolls = 1;
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(depthOfRollOperation), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfRolls), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), new List<Codel>().ToImmutableList(), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(depthOfRollOperation), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfRolls), new Context());
 
         programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll),
             new List<Codel>().ToImmutableList(), new Context { OnError = TestOnError });
@@ -636,14 +636,14 @@ public class ProgramOperatorTests
         int depthOfRollOperation = 3;
         int numberOfRolls = 1;
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(2), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(3), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(4), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(5), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(depthOfRollOperation), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfRolls), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(2), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(3), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(4), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(5), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(depthOfRollOperation), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfRolls), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -667,14 +667,14 @@ public class ProgramOperatorTests
         int depthOfRollOperation = 3;
         int numberOfRolls = 2;
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(2), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(3), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(4), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(5), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(depthOfRollOperation), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfRolls), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(2), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(3), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(4), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(5), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(depthOfRollOperation), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(numberOfRolls), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.Roll), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -783,8 +783,8 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(42), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.OutputNumber), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(42), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.OutputNumber), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
@@ -818,8 +818,8 @@ public class ProgramOperatorTests
         var programOperator = new ProgramOperator(new NullLogger<ProgramOperator>(),
             outputEventServiceMock.Object, inputServiceMock.Object);
 
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), null);
-        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.OutputCharacter), new List<Codel>().ToImmutableList(), null);
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Green, Command.Command.Push), GetFakeCodelBlockOfSize(1), new Context());
+        programOperator.ExecuteCommand(new ColorCommand(PietColors.Blue, Command.Command.OutputCharacter), new List<Codel>().ToImmutableList(), new Context());
 
         var currentProgramStackAsArray = programOperator.GetProgramStack();
 
