@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Piet.Interpreter.Input;
 using Piet.Interpreter.Output;
 
@@ -10,11 +10,11 @@ public static class PietInterpreterServiceExtension
         this IServiceCollection services
     )
     {
-        services.AddTransient<ICodelChooser, CodelChooser>();
-        services.AddTransient<ICodelBlockSearcher, CodelBlockSearcher>();
-        services.AddTransient<IProgramOperator, ProgramOperator>();
-        services.AddTransient<IInputService, InputService>();
-        services.AddTransient<IOutputService, OutputService>();
+        services.AddScoped<ICodelChooser, CodelChooser>();
+        services.AddScoped<ICodelBlockSearcher, CodelBlockSearcher>();
+        services.AddScoped<IProgramOperator, ProgramOperator>();
+        services.AddScoped<IInputService, InputService>();
+        services.AddScoped<IOutputService, OutputService>();
         return services;
     }
 }

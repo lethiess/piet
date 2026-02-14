@@ -1,0 +1,34 @@
+---
+description: Piet language specification rules for interpreter correctness
+globs: "src/Piet.Interpreter/**/*.cs"
+alwaysApply: false
+---
+
+# Piet Language Semantics
+
+Reference: https://www.dangermouse.net/esoteric/piet.html
+
+## Stack Underflow
+- If an instruction needs values popped and there aren't enough, the instruction is **silently ignored**
+- Do NOT throw exceptions or terminate the program on stack underflow
+
+## Modulo
+- Result must have the **same sign as the divisor** (top value)
+- Use `((a % b) + b) % b` for correct floored modulo
+
+## Roll
+- First pop = number of rolls, second pop = depth
+- Depth must be >= 0; depth of 0 is a no-op
+- **Negative rolls** roll in the opposite direction (do NOT use `Math.Abs`)
+- A single positive roll buries the top element `depth` levels deep
+
+## White Codel Sliding
+- When entering a white region, slide in the DP direction
+- If the slide hits an edge or black block: rotate DP clockwise AND toggle CC
+- Retry sliding up to 4 times; if all fail, the program terminates
+- This is a **separate** retry mechanism from the normal 8-attempt edge retry
+
+## Program Termination
+- Normal termination: 8 failed attempts to leave a non-white color block
+- White block termination: 4 failed slide attempts from a white region
+- Division/modulo by zero: silently ignore (push operands back)

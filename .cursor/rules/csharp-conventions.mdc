@@ -1,0 +1,35 @@
+---
+description: C# coding conventions for this project
+globs: "**/*.cs"
+alwaysApply: false
+---
+
+# C# Conventions
+
+## Namespaces
+- Use file-scoped namespaces (`namespace Foo;` not `namespace Foo { }`)
+
+## Logging
+- Use `ILogger<T>` for all logging -- never `Console.WriteLine`
+- Use structured logging: `_logger.LogDebug("Value {Name}", value)` not string interpolation
+
+## Records and Immutability
+- Prefer `init` over `set` for record properties
+- Do not add mutable `{ get; set; }` to record types unless absolutely necessary
+
+## Error Handling
+- Never use `async void` except for event handlers, and always wrap body in try/catch
+- In Blazor components, use `await InvokeAsync(StateHasChanged)` for thread safety
+
+## Naming
+- Spelling matters: "Saturation" not "Satuation", "Block" not "Bock"
+- Use PascalCase for public members, _camelCase for private fields
+- Constants: PascalCase (e.g. `MaxRetryCount`) not UPPER_SNAKE
+
+## DI Lifetimes
+- Use `AddScoped` for interpreter services in Blazor WASM (behaves as singleton)
+- `AddTransient` only for truly stateless services
+
+## Null Safety
+- Nullable is enabled project-wide -- respect it
+- Always null-check optional fields before access (e.g. `_field?.Property`)

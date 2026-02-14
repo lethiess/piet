@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using Microsoft.Extensions.Logging;
 using Piet.Command;
 using Piet.Grid;
@@ -18,8 +18,12 @@ public sealed class PietInterpreter
     private bool _firstStep = true;
     private State _state;
 
-    public static Direction DirectionPointer = Direction.Right;
-    public static CodelChooser CodelChooserState = CodelChooser.Left;
+    // NOTE: Static mutable state -- acceptable for single-threaded Blazor WASM.
+    // For a multi-threaded host, these should be refactored into an injected
+    // InterpreterState instance shared between PietInterpreter, CodelChooser,
+    // and ProgramOperator.
+    public static Direction DirectionPointer { get; set; } = Direction.Right;
+    public static CodelChooser CodelChooserState { get; set; } = CodelChooser.Left;
 
     public PietInterpreter(
         ILogger<PietInterpreter> logger,
@@ -71,7 +75,6 @@ public sealed class PietInterpreter
             _programOperator.ExecuteCommand(colorCommand, codelBock, new Context()
                 {
                     Pause = PauseRequested,
-                    OnError = OnError,
                 });
             _logger.LogDebug($"Executed command: {colorCommand}");
         }
@@ -83,11 +86,6 @@ public sealed class PietInterpreter
     private void PauseRequested()
     {
         Pause();
-    }
-
-    private void OnError()
-    {
-        Terminate();
     }
 
     public PietInterpreterResult Run(ICodelGrid codelGrid)

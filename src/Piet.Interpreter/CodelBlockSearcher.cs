@@ -9,10 +9,8 @@ internal sealed class CodelBlockSearcher : ICodelBlockSearcher
     
     private bool NeighborHasValidCoordinates(int xPosition, int yPosition)
     {
-        return Enumerable.Range(0, CodelGrid.Width)
-                   .Contains(xPosition)
-               && Enumerable.Range(0, CodelGrid.Height)
-                   .Contains(yPosition);
+        return xPosition >= 0 && xPosition < CodelGrid.Width
+            && yPosition >= 0 && yPosition < CodelGrid.Height;
     }
     
     private ImmutableList<Codel> GetValidNeighbors(Codel codel)
@@ -20,8 +18,8 @@ internal sealed class CodelBlockSearcher : ICodelBlockSearcher
         var neighborCodels = new List<Codel>();
         var neighborCoordinates = new List<Coordinates>()
         {
-            new (codel.XPosition, codel.YPosition + 1), // top neighbor
-            new (codel.XPosition, codel.YPosition - 1), // bottom neighbor
+            new (codel.XPosition, codel.YPosition - 1), // top neighbor (Y decreases upward)
+            new (codel.XPosition, codel.YPosition + 1), // bottom neighbor (Y increases downward)
             new (codel.XPosition + 1, codel.YPosition), // right neighbor
             new (codel.XPosition - 1, codel.YPosition)  // left neighbor
         }.Where(coordinates => NeighborHasValidCoordinates(coordinates.X, coordinates.Y)).ToList();

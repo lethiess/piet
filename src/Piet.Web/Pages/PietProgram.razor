@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using Piet.Command
 @using Piet.Interpreter
 
@@ -9,15 +9,14 @@
     <table>
         <tbody>
         @*inspiration for basic html content: https://gabriellesc.github.io/piet/index.html*@
-        @for (var satuationIndex = 0; satuationIndex < ColorCommandControl.SatuationLevels; satuationIndex++)
+        @for (var saturationIndex = 0; saturationIndex < ColorCommandControl.SaturationLevels; saturationIndex++)
         {
             <tr>
                 @for (var hueIndex = 0; hueIndex < ColorCommandControl.HueLevels; hueIndex++)
                 {
-                    int i_local = satuationIndex;
+                    int i_local = saturationIndex;
                     int j_local = hueIndex;
-                    var colorCommand = _colorCommands[satuationIndex, hueIndex];
-                    var commandName = @colorCommand.Command;
+                    var colorCommand = _colorCommands[saturationIndex, hueIndex];
 
                     <td style='height: 30px; max-height: 30px; width: 130px; max-width: 130px; border: 1px solid black; background-color: rgb(@colorCommand.Color.R, @colorCommand.Color.G, @colorCommand.Color.B)' @onclick="@(e => UpdateColorCommand(i_local, j_local))">@GetCellName(colorCommand)</td>}
             </tr>
@@ -125,12 +124,16 @@
     </thead>
     
     <tbody>
-    @while (_programStack is not null && _programStack.Count > 0)
+    @if (_programStack is not null)
     {
-        <tr>
-            <td>@(_programStack.Count - 1)</td>
-            <td>@_programStack.Pop()</td>
-        </tr>
+        var stackSnapshot = _programStack.ToArray();
+        @for (var idx = 0; idx < stackSnapshot.Length; idx++)
+        {
+            <tr>
+                <td>@(stackSnapshot.Length - 1 - idx)</td>
+                <td>@stackSnapshot[idx]</td>
+            </tr>
+        }
     }
 
     </tbody>

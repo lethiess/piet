@@ -1,4 +1,4 @@
-﻿using Piet.Color;
+using Piet.Color;
 using Piet.Grid;
 
 namespace Piet.Interpreter;
@@ -55,15 +55,10 @@ internal sealed class CodelChooser : ICodelChooser
     }
 
     private bool CodelCoordinatesAreValid(Coordinates codelCoordinates) =>
-        PietInterpreter.DirectionPointer switch
-        {
-            PietInterpreter.Direction.Up => codelCoordinates.Y >= 0,
-            PietInterpreter.Direction.Right => codelCoordinates.X < CodelGrid.Width,
-            PietInterpreter.Direction.Down => codelCoordinates.Y < CodelGrid.Height,
-            PietInterpreter.Direction.Left => codelCoordinates.X >= 0,
-            _ => throw new ArgumentOutOfRangeException(
-                $"The value {PietInterpreter.DirectionPointer} of type {typeof(PietInterpreter.Direction)} is invalid in this context")
-        };
+        codelCoordinates.X >= 0
+        && codelCoordinates.X < CodelGrid.Width
+        && codelCoordinates.Y >= 0
+        && codelCoordinates.Y < CodelGrid.Height;
 
     private static Coordinates GetCoordinatesForNextCodelInDirectionOfDirectionPointer(Codel currentCodel) =>
         PietInterpreter.DirectionPointer switch
@@ -81,27 +76,67 @@ internal sealed class CodelChooser : ICodelChooser
         CodelResult result = new();
         var codelCandidate = GetNextCodelCandidate(transitionCodelCandidate);
 
-        while (codelCandidate is not null)
+        // If the first step is not into a white codel, use simple logic
+        if (codelCandidate is null || codelCandidate.Color == PietColors.Black)
         {
-            if (codelCandidate.Color != PietColors.Black)
+            return result;
+        }
+
+        if (codelCandidate.Color != PietColors.White)
+        {
+            result.Codel = codelCandidate;
+            return result;
+        }
+
+        // White codel sliding: per Piet spec, the interpreter slides across
+        // white blocks in the direction of the DP. If it hits an edge or black
+        // block, the DP is rotated clockwise and the CC is toggled, then it
+        // tries again from the same white entry point. After 4 attempts the
+        // program terminates (returned as null codel).
+        result.TraversedWhiteCodels = true;
+        const int maxWhiteSlideAttempts = 4;
+        var currentWhiteCodel = codelCandidate;
+
+        for (int attempt = 0; attempt < maxWhiteSlideAttempts; attempt++)
+        {
+            // Slide across white codels in the current DP direction
+            var slideCodel = currentWhiteCodel;
+            while (true)
             {
-                if (codelCandidate.Color == PietColors.White)
+                var nextCoords = GetCoordinatesForNextCodelInDirectionOfDirectionPointer(slideCodel);
+                if (!CodelCoordinatesAreValid(nextCoords))
                 {
-                    result.TraversedWhiteCodels = true;
-                    codelCandidate = GetNextCodelCandidate(codelCandidate);
-                }
-                else
-                {
-                    result.Codel = codelCandidate;
+                    // Hit grid edge
                     break;
                 }
+
+                var nextCodel = CodelGrid.GetCodel(nextCoords.X, nextCoords.Y);
+                if (nextCodel.Color == PietColors.Black)
+                {
+                    // Hit black block
+                    break;
+                }
+
+                if (nextCodel.Color == PietColors.White)
+                {
+                    slideCodel = nextCodel;
+                    continue;
+                }
+
+                // Found a non-white, non-black codel
+                result.Codel = nextCodel;
+                return result;
             }
-            else
+
+            // Sliding failed: rotate DP clockwise and toggle CC before next attempt
+            if (attempt < maxWhiteSlideAttempts - 1)
             {
-                break;
+                PietInterpreter.RotateDirectionPointerClockwise();
+                PietInterpreter.ToggleCodelChooser();
             }
         }
 
+        // All 4 attempts failed -- program should terminate
         return result;
     }
 

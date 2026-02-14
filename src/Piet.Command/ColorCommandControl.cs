@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using Piet.Color;
 
@@ -7,7 +7,7 @@ namespace Piet.Command;
 public static class ColorCommandControl
 {
     public const int HueLevels = 6;
-    public const int SatuationLevels = 3;
+    public const int SaturationLevels = 3;
 
     private static readonly ImmutableArray<ImmutableArray<Command>> _commandLookup =
         ImmutableArray.Create(
@@ -25,13 +25,13 @@ public static class ColorCommandControl
 
     private static (int,int) GetIndicesOfCurrentColor(PietColor color)
     {
-        for (int satuation = 0; satuation < SatuationLevels; satuation++)
+        for (int saturation = 0; saturation < SaturationLevels; saturation++)
         {
             for (int hue = 0; hue < HueLevels; hue++)
             {
-                if (_colorLookup[satuation][hue] == color)
+                if (_colorLookup[saturation][hue] == color)
                 {
-                    return (satuation, hue);
+                    return (saturation, hue);
                 }
             }
         }
@@ -46,32 +46,32 @@ public static class ColorCommandControl
         return offset >= 0 ? offset : HueLevels - Math.Abs(offset);
     }
 
-    private static int GetSatuationIndexOffset(int satuationIndex, int currentColorSatuationIndex)
+    private static int GetSaturationIndexOffset(int saturationIndex, int currentColorSaturationIndex)
     {
-        var offset = satuationIndex - currentColorSatuationIndex;
-        return offset >= 0 ? offset : SatuationLevels - Math.Abs(offset);
+        var offset = saturationIndex - currentColorSaturationIndex;
+        return offset >= 0 ? offset : SaturationLevels - Math.Abs(offset);
     }
 
-    private static Command GetCommand(int satuationIndex, int hueIndex,
-        int currentColorSatuationIndex, int currentColorHueIndex)
+    private static Command GetCommand(int saturationIndex, int hueIndex,
+        int currentColorSaturationIndex, int currentColorHueIndex)
     {
-        return _commandLookup[GetSatuationIndexOffset(satuationIndex, currentColorSatuationIndex)][
+        return _commandLookup[GetSaturationIndexOffset(saturationIndex, currentColorSaturationIndex)][
             GetHueIndexOffset(hueIndex, currentColorHueIndex)];
     }
     
     public static ColorCommand[,] GetColorCommands(PietColor currentColor)
     {
-        var (currentColorSatuationIndex, currentColorHueIndex) = GetIndicesOfCurrentColor(currentColor);
+        var (currentColorSaturationIndex, currentColorHueIndex) = GetIndicesOfCurrentColor(currentColor);
 
-        var colorCommands = new ColorCommand[SatuationLevels, HueLevels];
+        var colorCommands = new ColorCommand[SaturationLevels, HueLevels];
 
-        for (int satuationIndex = 0; satuationIndex < SatuationLevels; satuationIndex++)
+        for (int saturationIndex = 0; saturationIndex < SaturationLevels; saturationIndex++)
         {
             for (int hueIndex = 0; hueIndex < HueLevels; hueIndex++)
             {
-                colorCommands[satuationIndex, hueIndex] = new ColorCommand(
-                    _colorLookup[satuationIndex][hueIndex],
-                    GetCommand(satuationIndex, hueIndex, currentColorSatuationIndex,
+                colorCommands[saturationIndex, hueIndex] = new ColorCommand(
+                    _colorLookup[saturationIndex][hueIndex],
+                    GetCommand(saturationIndex, hueIndex, currentColorSaturationIndex,
                         currentColorHueIndex));
             }
         }
